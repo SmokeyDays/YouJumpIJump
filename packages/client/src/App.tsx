@@ -3,7 +3,7 @@ import './App.css';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
-import { GameResult, GameStage, GameState, GameStep, RoomState} from './regulates/Interfaces'
+import { GameStage, GameState, RoomState} from './regulates/Interfaces'
 import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
 import { PlayerOperation } from './regulates/signals';
@@ -17,10 +17,11 @@ interface AppState {
   gameState: GameState,
   signal: PlayerOperation,
   roomState: RoomState,
-  gameResult: GameResult,
+  gameResult: Record<string, number>,
   alertMessage: string | null,
 }
 
+// App: 是整个程序的主要类，这个类是整个 React 显示出的 html 的根。
 class App extends React.PureComponent<{},AppState> {
   messageID: number = 0;
   setPage(val: string) {
@@ -59,22 +60,20 @@ class App extends React.PureComponent<{},AppState> {
       userName: "请登录",
       gameState: {
         playerState: [],
-        automatonState: {
-          stage: GameStage.PREPARE,
-          step: GameStep.GAME_START,
-          /* 0: Alice, 1: Bob */
-          priority: 0,
-          turn: 0,
+        board: [],
+        globalState: {
           round: 0,
+          turn: 0,
+          stage: 0,
+          result: {}
         }
       },
       signal: PlayerOperation.NONE,
       roomState: {
         roomName: "",
         users: [],
-        decks: [],
       },
-      gameResult: GameResult.DRAW,
+      gameResult: {},
       alertMessage: null,
     };
     this.setPage = this.setPage.bind(this);
@@ -114,7 +113,6 @@ class App extends React.PureComponent<{},AppState> {
       this.setRoomState({
         roomName: "",
         users: [],
-        decks: [],
       });
     });
     socket.on("alert-message", (args) => {
