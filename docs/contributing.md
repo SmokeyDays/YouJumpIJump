@@ -25,3 +25,11 @@
 scope 指示了提交的作用域，表示提交影响的区域，可以不写。
 
 subject 指示了提交的内容。
+
+举例：
+
+```
+git commit -m "feat: added login feature"
+git commit -m "fix: unable to compile"
+git commit -m "docs: added the introduce page"
+```
