@@ -39,3 +39,6 @@ export interface PlayerState {
   hand: Card[],
   mastery: number,
 }
+
+// 服务端发送给客户端的格子集合
+export type SlotList = Array<[number, number, number]>; // t, x, y
