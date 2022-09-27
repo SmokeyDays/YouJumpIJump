@@ -1,0 +1,501 @@
+/* ======== GlobalSettings ======== */
+div,p {
+  cursor: default;
+}
+
+p {
+  margin: 0.2em;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* ======== GameFrame ======== */
+
+.game-scene {
+  /* position: absolute; */
+  width: 100%;
+  background-image:url('../assets/backgrounds/game-background.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+  min-height: 97vh;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+  font-size: calc(16px + vmin);
+  color: white;
+
+  margin: 30px,60px;
+}
+
+.my-displayer {
+  position: absolute;
+  height: 60%;
+  left: 60px;
+  right: 60px;
+  bottom: 30px;
+}
+
+.my-info {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  color: white;
+  text-align: right;
+}
+
+.my-sorcery,.my-zisurru,.my-equipment {
+  display: flex;
+  flex-direction: row;
+}
+
+.my-sorcery {
+  top: 0px;
+}
+
+.my-zisurru,.my-equipment {
+  position: absolute;
+  bottom: 160px;
+}
+
+.my-equipment {
+  left: 420px;
+}
+
+.my-library, .my-graveyard, .my-blackhole {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 5px;
+  width: 2.4em;
+  height: 2.4em;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.my-library {
+  bottom: 5px;
+  background-image: url(../assets/logos/library-logo.png);
+}
+
+.my-graveyard {
+  bottom: 50px;
+  background-image: url(../assets/logos/graveyard-logo.png);
+}
+
+.my-blackhole {
+  bottom: 95px;
+  background-image: url(../assets/logos/blackhole-logo.png);
+}
+
+.rival-displayer {
+  position: absolute;
+  height: 24%;
+  top: 5px;
+  left: 60px;
+  right: 60px;
+}
+
+.rival-info {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  color: white;
+  text-align: left;
+}
+
+.rival-sorcery,.rival-zisurru,.rival-equipment {
+  position: absolute;
+  bottom: -45px;
+  display: flex;
+  flex-direction: row;
+  transform: scale(0.75);
+}
+
+.rival-sorcery {
+  left: -120px;
+}
+
+.rival-zisurru {
+  left: 760px;
+}
+
+.rival-equipment {
+  left: 1100px;
+}
+
+
+.rival-library, .rival-graveyard, .rival-blackhole {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 2.4em;
+  height: 2.4em;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.rival-library {
+  top: 0px;
+  left: 100px;
+  background-image: url(../assets/logos/library-logo.png);
+}
+
+.rival-graveyard {
+  top: 0px;
+  left: 145px;
+  background-image: url(../assets/logos/graveyard-logo.png);
+}
+
+.rival-blackhole {
+  top: 45px;
+  left: 100px;
+  background-image: url(../assets/logos/blackhole-logo.png);
+}
+
+/* ======== GroundCard ======== */
+
+.card-ground,.card-ground-facedown {
+  position: relative;
+  margin: 0px 13px;
+  width: 100px;
+  height: 120px;
+  border-radius: 8px;
+  background-color: #eeeeee;
+  color: #000000;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.17);
+  text-align: center;
+}
+
+.card-ground-facedown {
+  background-image:url('../assets/backgrounds/card-back.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.card-ground-name {
+}
+
+.card-ground-power,.card-ground-durability,.card-ground-defense {
+  border-radius: 0.6em;
+  max-width: 2.4em;
+  min-width: 1.6em;
+  position: absolute;
+}
+
+.card-ground-power {
+  left: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #ff0000;
+  background-color: #ff6666;
+}
+
+.card-ground-durability {
+  left: 47%;
+  transform: translateX(-50%);
+  bottom: -1em;
+  border: 2px solid #0000ff;
+  background-color: #6666ff;
+}
+
+.card-ground-defense {
+  right: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #00ff00;
+  background-color: #66ff66;
+}
+
+.card-ground-counter {
+
+}
+
+.card-ground-tapped {
+  transform: rotate(20deg);
+}
+
+.is-spot-card {
+  box-sizing: border-box;
+	border: 2px solid #ff0000;
+}
+
+/* ======== CardDetail ======== */
+
+.card-detail {
+  border-radius: 24px;
+  position: absolute;
+  bottom: 220px;
+  right: 120px;
+  height: 240px;
+  width: 200px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.card-detail-name {
+  margin: 15px;
+}
+
+.card-detail-power,.card-detail-durability,.card-detail-defense {
+  border-radius: 0.6em;
+  text-align: center;
+  max-width: 2.4em;
+  min-width: 1.6em;
+  position: absolute;
+}
+
+.card-detail-power {
+  left: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #ff0000;
+  background-color: #ff6666;
+}
+
+.card-detail-durability {
+  left: 49%;
+  transform: translateX(-50%);
+  bottom: -1em;
+  border: 2px solid #0000ff;
+  background-color: #6666ff;
+}
+
+.card-detail-defense {
+  right: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #00ff00;
+  background-color: #66ff66;
+}
+
+.card-detail-sect, .card-detail-level, .card-detail-castCost, .card-detail-maintainCost {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.card-detail-sect, .card-detail-level {
+  border: 1px solid #000000;
+}
+
+.card-detail-sect {
+  width: 2.4em;
+  top: -1em;
+  left: -1.8em;
+}
+
+.card-detail-level {
+  width: 2em;
+  top: 0.4em;
+  left: -1.6em;
+}
+
+.card-detail-castCost, .card-detail-maintainCost {
+  border: 1px solid #000000;
+  border-radius: 100em;
+}
+
+.card-detail-castCost {
+  width: 2.4em;
+  height: 2.4em;
+  top: -1em;
+  right: -1em;
+}
+
+.card-detail-maintainCost {
+  width: 2em;
+  height: 2em;
+  top: 1.2em;
+  right: -0.8em;
+}
+
+.card-detail-info-frame {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  top: 0px;
+  width: 100px;
+  left: 210px;
+  height: 240px;
+}
+
+.card-detail-info {
+  border-radius: 0.4em;
+  background-color: #222222;
+  height: 2.4em;
+  width: 2.4em;
+  margin: 0.05em;
+  color: #dddddd;
+  text-align: center;
+}
+
+.card-detail-info-name {
+  font-size: 0.8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-detail-info-value {
+  font-size: 0.8em;
+}
+
+/* ======== CardHand ======== */
+
+.my-hand {
+  position: absolute;
+  left: 100px;
+  bottom: 5px;
+  width: 1000px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.rival-hand {
+  position: absolute;
+  left: 0px;
+  top: -10px;
+  width: 1600px;
+  display: flex;
+  flex-direction: row-reverse;
+  transform: scale(0.75);
+}
+
+.card-hand, .card-hand-facedown {
+  writing-mode: vertical-rl;
+  margin-right: -40px;
+  border-radius: 12px;
+  width: 100px;
+  height: 120px;
+  box-shadow: 4px 8px 20px 0px rgba(0, 0, 0, 0.25);
+  color: #000000;
+}
+
+.card-hand {
+  background-color: #ffffff
+}
+
+.card-hand-facedown {
+  background-image:url('../assets/backgrounds/card-back.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.my-hand .card-hand-name {
+  font-size: 14px;
+  margin: 0.2em;
+  writing-mode: vertical-rl;
+}
+
+.rival-hand .card-hand-facedown .card-hand-name {
+  font-size: 0px;
+}
+
+/* ======== Progress Info ======== */
+
+.progress-displayer {
+  padding: 5px;
+}
+
+.progress-info-btn {
+	height: 3rem;
+	width: 3rem;
+
+	font-size: 2rem;
+	text-align: center;
+	color: #868800;
+	user-select: none;
+
+	border: 2px solid #868800;
+	border-radius: 999px;
+	background-color: #ffffff;
+}
+
+/* ======== Practice Window ======== */
+.practice-choice-window {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.practice-choice-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #ab00ab;
+	user-select: none;
+
+	border: 2px solid #ab00ab;
+	background-color: #ffa2e3;
+}
+
+.practice-choice-title {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.practice-choice-list {
+  margin: .5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.practice-choice-option {
+  margin: 1em;
+  padding: .2em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+	user-select: none;
+	color: #1550ff;
+
+	border: 2px solid #ab00ab;
+  border-radius: 1em;
+  background-color: #ac7171;
+}
+
+.practice-choice-option-title {
+
+  font-size: 4em;
+}
+
+.pass-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #2dd2f4;
+	user-select: none;
+
+	border: 2px solid #2dd2f4;
+	background-color: #214896;
+}
+
+.cast-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #deda00;
+	user-select: none;
+
+	border: 2px solid #deda00;
+	background-color: #707222;
+}

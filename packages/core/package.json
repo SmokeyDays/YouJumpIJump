@@ -1,0 +1,19 @@
+{
+  "name": "@wuding-card/core",
+  "version": "0.1.0",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wuding-card/wuding.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/wuding-card/wuding/issues"
+  },
+  "homepage": "https://github.com/wuding-card/wuding#readme",
+  "scripts": {},
+  "dependencies": {
+    "@koishijs/utils": "^6.1.0",
+    "cordis": "^2.1.0"
+  }
+}

@@ -1,0 +1,69 @@
+.room-scene {
+  min-width: 100vh;
+  text-align: center;
+  background-color: rgb(105, 150, 200);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: baseline;
+  font-size: calc(16px + vmin);
+  color: black; 
+}
+
+.room-title {
+  margin: .75em;
+  font-size: 32px;
+}
+
+.room-body {
+  width: 100%;
+  height: 69vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  overflow-y: auto;
+}
+
+.room-user-box {
+  width: 200px;
+  height: 200px;
+  margin: .4em;
+  font-size: 40px;
+  border-style: solid;
+  border-color: black;
+  border-width: 5px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* User Box */
+
+
+.room-user-name {
+
+}
+
+.room-bottom {
+  margin: .5em;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-button {
+  margin: 1em 5em;
+  padding: .3em;
+  font-size: 28px;
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  border-radius: 15px;
+}

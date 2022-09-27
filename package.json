@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "client": "cd packages/client && npm start PUBLIC_URL=/wuding",
+    "lobby": "cd packages/lobby && npm run build && npm start"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/client",
+    "packages/lobby"
+  ],
+  "devDependencies": {
+    "@types/node": "16",
+    "esbuild": "^0.15.5",
+    "esbuild-register": "^3.3.3",
+    "eslint": "^8.22.0",
+    "typescript": "^4.7.4"
+  }
+}
