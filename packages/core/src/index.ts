@@ -1,58 +1,10 @@
 import { Context } from "cordis"
-import { Player } from './player'
-import * as lifecycle from './lifecycle'
-import { Deck, GameStage, GameStep } from "./regulates/type"
-import { WudingCoreOutputSignal } from "../WudingCore"
-export interface GameState {
-  playerState: Player[],
-  process: {
-    stage: GameStage,
-    step: GameStep,
-    /* 0: Alice, 1: Bob */
-    priority: number,
-    turn: number,
-    round: number,
-  }
-}
-declare module 'cordis' {
-  
-  export interface Context {
-    duel: GameState
-  }
-  export interface Events {
-    // duel event
-    'duel-start': (decks: Deck[]) => void
-    'duel-end': () => void
+import { GameState } from "./regulates/interfaces"
 
-    // turn event
-    'stage-prepare': (id: number) => void
-    'stage-battle': () => void
-    'stage-action': () => void
-    'stage-end': () => void
-
-    // player event
-    'player-cast': () => void
-    'player-draw': (id: number) => void
-    'player-grow': (id: number) => void
-    'player-discard': (id: number) => void
-    'player-attack': (id: number) => void
-    'player-damage': (id: number) => void
-    'player-shuffle': (id: number) => void
-
-    // card event
-    'card-place': () => void
-    'card-effect': () => void
-    'card-resolve': () => void
-    'card-untap': () => void
-
-    // socket event
-    'output-message': (signal: WudingCoreOutputSignal) => void
-  }
-}
 
 export function duelInit(app: Context) {
-  app.on('duel-start', (decks: Deck[]) => {
-    app.duel.playerState = [new Player(app, {id: 0, deck: decks[0]}), new Player(app, {id: 1, deck: decks[1]})];
+  app.on('duel-start', () => {
+    // app.duel.playerState = [new Player(app, {initialMastery: 10}), new Player(app, {initialMastery: 10})];
   });
   
   // app.socket.on('message', (msg) => {

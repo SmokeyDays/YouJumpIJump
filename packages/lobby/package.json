@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p .",
-    "start": "node ./js/App.js"
+    "start": "node ./js/lobby/App.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,9 @@
     "express": "^4.17.2",
     "socket.io": "^4.4.1",
     "ts-node": "^10.4.0",
-    "winston": "^3.8.1"
+    "winston": "^3.8.1",
+    "@koishijs/utils": "^6.1.0",
+    "cordis": "^2.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

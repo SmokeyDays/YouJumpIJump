@@ -1,6 +1,7 @@
 import { GameStage, GameState, IterateSignal, IterateSignalType, PlayerOperation, PlayerSignal } from "../regulates/interfaces";
 import { logger } from "../tools/Logger";
 import { User } from "./User";
+import { UJIJCore } from "../../core/UJIJCore"
 const defaultDeck1 = "swordAndFist";
 const defaultDeck2 = "cardNotEnough";
 
@@ -14,7 +15,7 @@ export class Room {
   users: User[] = [];
   iterateSignal: IterateSignal | null = null;
   roomName: string;
-  gameAutomaton: null = null;
+  game: UJIJCore | null = null;
 
   roomSizeLimit: number = 8;
 
@@ -23,6 +24,8 @@ export class Room {
   }
 
   startGame() {
+    this.game = new UJIJCore(() => {});
+    logger.verbose('Room %s started a new game.', this.roomName);
     this.renew();
   }
 
@@ -62,18 +65,20 @@ export class Room {
 
   gameStateGenerator(id: number) {
     // Todo: hide those infomations that are invisible for opponent.
-    if(this.gameAutomaton == null) {
+    if(this.game == null) {
       logger.error("Failed to get game state in room %s: GAME HASNOT STARTED", this.roomName);
       return null;
     }
-    if(this.iterateSignal?.type != IterateSignalType.REQUEST) {
-      logger.error("Failed to get iterate signal in room %s: GAME AUTOMATON NOT RUNNING", this.roomName);
-      return null;
-    }
-    const nowSignal = this.iterateSignal.state[0] == id? this.iterateSignal.state[1]: PlayerOperation.NONE;
+    // if(this.iterateSignal?.type != IterateSignalType.REQUEST) {
+    //   logger.error("Failed to get iterate signal in room %s: GAME AUTOMATON NOT RUNNING", this.roomName);
+    //   return null;
+    // }
+    // const nowSignal = this.iterateSignal.state[0] == id? this.iterateSignal.state[1]: PlayerOperation.NONE;
+    const nowSignal = null;
+    console.log(this.game.getGameState());
     return {
-      state: null,
-      signal: nowSignal,
+      state: this.game.getGameState(),
+      signal: {},
     };
   }
 
@@ -82,7 +87,7 @@ export class Room {
       roomName: this.roomName,
       users: this.users.map(i => i?.userName),
     };
-    if(this.gameAutomaton == null) {
+    if(this.game == null) {
       for(const i of this.users) {
         logger.verbose('Room %s renew to user %s', this, i?.userName);
         i?.emit('renew-room-state', roomState);
@@ -97,7 +102,7 @@ export class Room {
       }
     }else{
       for(let i = 0; i < this.users.length; ++i) {
-        logger.verbose('Gamestate %s renew to user %s with id %s', this.gameAutomaton, this.users[i]?.userName, i);
+        logger.verbose('Gamestate %s renew to user %s with id %s', 1, this.users[i]?.userName, i);
         this.users[i]?.emit('renew-game-state', this.gameStateGenerator(i));
       }
     }
@@ -120,7 +125,7 @@ export class Room {
       logger.warn("Player %s with ID %s sent signal. But no iterateSignal requesting in room %s", user.userName, userID, this.roomName);
       return;
     }
-    if(this.gameAutomaton == null){
+    if(this.game == null){
       logger.warn("Player %s with ID %s sent signal. But there's no game running in room %s", user.userName, userID, this.roomName);
       return;
     }
@@ -132,5 +137,4 @@ export class Room {
     this.renew();
     return;
   }
-
 }

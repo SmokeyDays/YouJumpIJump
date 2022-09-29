@@ -1,13 +1,4 @@
-/* ======== GameProcess And Signal ======== */
-
-import internal from "stream";
-import { Deck } from "./type";
-
-/* ======== RoomState ======== */
-export interface RoomState {
-  roomName: string,
-  users: string[],
-}
+import { Player } from "../player";
 
 export enum GameStage {
   INSTANT_ACTION,
@@ -23,6 +14,8 @@ export type Board = Array<Record<number, Record<number, Slot>>>;
 
 export type Card = string;
 
+export type Position = [number, number, number];
+
 export interface GameState {
   board: Board,
   player: Player[],
@@ -34,12 +27,6 @@ export interface GameState {
   }
 }
 
-export interface Player {
-  alive: boolean,
-  position: [number, number, number], // 是否存活, 层数, x, y
-  hand: Card[],
-  mastery: number,
-}
 
 // 服务端发送给客户端的格子集合
 export type SlotList = Array<[number, number, number]>; // t, x, y

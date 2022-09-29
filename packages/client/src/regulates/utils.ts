@@ -1,6 +1,6 @@
 import counterDictionary from "../assets/text/counter.json";
 import cardDescription from "../assets/text/cardDescription.json";
-import { CardState, GameStage, GameState } from "./Interfaces";
+import { GameStage, GameState } from "./Interfaces";
 
 export const CounterDictionary: Record<string,string> = counterDictionary;
 
@@ -63,17 +63,4 @@ export function getUUID() {
       v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
-}
-
-export function getCardStateByID(state: GameState, id: number): CardState | null {
-  for(const player of state.playerState) {
-    for(const i in player.groundState) {
-      for(const card of player.groundState[i]) {
-        if(card.UID === id) {
-          return card;
-        }
-      }
-    }
-  }
-  return null;
 }

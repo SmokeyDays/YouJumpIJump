@@ -20,7 +20,6 @@ interface AppState {
   gameResult: Record<string, number>,
   alertMessage: string | null,
 }
-
 // App: 是整个程序的主要类，这个类是整个 React 显示出的 html 的根。
 class App extends React.PureComponent<{},AppState> {
   messageID: number = 0;
@@ -59,9 +58,9 @@ class App extends React.PureComponent<{},AppState> {
       pageName: "LoginPage",
       userName: "请登录",
       gameState: {
-        playerState: [],
+        player: [],
         board: [],
-        globalState: {
+        global: {
           round: 0,
           turn: 0,
           stage: 0,
@@ -84,8 +83,8 @@ class App extends React.PureComponent<{},AppState> {
     // Register listeners on the messages that changes the whole application.
     
     socket.on("renew-game-state", (args) => {
-      this.setGameState(args.state);
       console.log(args);
+      this.setGameState(args.state);
       if(args.signal === PlayerOperation.NONE) {
         this.setSignal(PlayerOperation.NONE);
         socket.emit("player-signal-ingame", {type: PlayerOperation.NONE, state: null});
@@ -146,7 +145,7 @@ class App extends React.PureComponent<{},AppState> {
         break;
       }
       case "GameEndPage":{
-        content = <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>;
+        content = <GameEndPage backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>; 
         break;
       }
       default:{
