@@ -10,8 +10,9 @@ export class Slot {
   isBursted: boolean = true;
 }
 // Tiers from top to bottom are marked as 0, 1 and 2
-export type Board = Array<Record<number, Record<number, Slot>>>;
-
+export type Board = Record<string, Slot>;
+/*let a : Board = {};
+let b: Slot = a[[1, 2, 3].toString()];*/
 export type Card = string;
 
 export type Position = [number, number, number];

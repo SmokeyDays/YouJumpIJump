@@ -3,7 +3,7 @@ import { Player } from "./player"
 import { Board, GameStage } from "./regulates/interfaces"
 
 export class GameState {
-  board: Board = [{}, {}, {}];
+  board: Board = {};
   player: Player[] = [];
   global: {
     round: number,
@@ -24,4 +24,5 @@ export class GameState {
       result: {},
     }
   }
-}
+  
+} 
