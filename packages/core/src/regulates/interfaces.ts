@@ -19,3 +19,17 @@ export type Position = [number, number, number];
 
 // 服务端发送给客户端的格子集合
 export type SlotList = Array<[number, number, number]>; // t, x, y
+
+export type CardParameter = {
+  type: "move",
+  val: Position
+} | {
+  type: "none",
+  val: null
+} | {
+  type: "recast",
+  val: Card[]
+} | {
+  type: "spy",
+  val: [Position, Position, Position]
+}
