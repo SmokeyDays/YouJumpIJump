@@ -1,5 +1,5 @@
 import { Context } from "cordis"
-import { Card, Position } from "./regulates/interfaces";
+import { Card, Position, CardPara } from "./regulates/interfaces";
 import { Deck } from "./regulates/type"
 
 // const enum Level {
@@ -10,6 +10,10 @@ const cardConfig = {
   cardTimesList: [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 0]
 }
 
+function rand(start,end){
+	return parseInt(Math.random()*(end-start+1)+start);
+}
+
 export class Player {
   alive: boolean = true;
   position: Position = [0, 0, 0]; // 是否存活, 层数, x, y
@@ -17,6 +21,8 @@ export class Player {
   library: Card[] = [];
   magician: boolean = false;
   mastery: number;
+  passby: Position[];
+  prayer: number;
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
     this.initLibrary();
@@ -66,100 +72,224 @@ export class Player {
       return;
     }
   }
-  playCard(ctx: Context, cardId: string, newpos?: Position) {
-    ctx.gameState.board[this.position.toString()].isBursted = true;
+  playCard(ctx: Context, cardId: string, para: CardPara) {
     const pos = this.position;
+    this.passby.push(pos);
     switch(cardId) {
       case cardConfig.cardNameList[0]: {
-        for(let i = Math.min(newpos[1], pos[1]); i <= Math.max(newpos[1], pos[1]); i++) {
-          const cur = [pos[0], i, pos[2]];
-          ctx.gameState.board[cur.toString()].isBursted = true;
+        if(para.type == 'move') {
+          for(let i = Math.min(para.val[1], pos[1]); i <= Math.max(para.val[1], pos[1]); i++) {
+            const cur:Position = [pos[0], i, pos[2]];
+            this.passby.push(cur);
+          }
+          this.position = para.val;
         }
         break;
       }
       case cardConfig.cardNameList[1]: {
-        for(let i = Math.min(newpos[2], pos[2]); i <= Math.max(newpos[2], pos[2]); i++) {
-          const cur = [pos[0], pos[1], i];
-          ctx.gameState.board[cur.toString()].isBursted = true;
+        if(para.type == 'move') {
+          for(let i = Math.min(para.val[2], pos[2]); i <= Math.max(para.val[2], pos[2]); i++) {
+            const cur:Position = [pos[0], pos[1], i];
+            this.passby.push(cur);
+          }
+          this.position = para.val;
         }
         break;
       }
       case cardConfig.cardNameList[2]: {
-        const delta = Math.abs(newpos[1] - pos[1]);
-        const mn1 = Math.min(newpos[1], pos[1]), mn2 = Math.min(newpos[1], pos[1]);
-        for(let i = 0; i <= delta; i++) {
-          const cur = [pos[0], mn1 + delta, mn2 + delta];
-          ctx.gameState.board[cur.toString()].isBursted = true;
+        if(para.type == 'move') {
+          const delta = Math.abs(para.val[1] - pos[1]);
+          const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+          for(let i = 0; i <= delta; i++) {
+            const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
+            this.passby.push(cur);
+          }
+          this.position = para.val;
         }
         break;
       }
       case cardConfig.cardNameList[3]: {
-        ctx.gameState.board[newpos.toString()].isBursted = true;
+        if(para.type == 'move') {
+          this.passby.push(para.val);
+          this.position = para.val;
+        }
         break;
       }
       case cardConfig.cardNameList[4]: {
-        ctx.gameState.board[newpos.toString()].isBursted = true;
-        let tot = 0;
-        for(let i = 0; i < this.hand.length; i++) {
-          if(this.hand[i] == "3") {
-            tot++;
+        if(para.type == 'move') {
+          let tot = 0;
+          for(let i = 0; i < this.hand.length; i++) {
+            if(this.hand[i] == "3") {
+              tot++;
+            }
           }
-        }
-        if(tot == 3) {
-          this.mastery++;
+          if(tot == 3) {
+            this.mastery++;
+          }
+          this.position = para.val;
         }
         break;
       }
       case cardConfig.cardNameList[5]: {
-        ctx.gameState.board[pos.toString()].isBursted = true;
-        const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
-        for(let i = 0; i < dx.length; i++) {
-          let cur = [newpos[0], newpos[1] + dx[i], newpos[2] + dy[i]];
-          ctx.gameState.board[cur.toString()].isBursted = true;
+        if(para.type == 'move') {
+          this.passby.push(pos);
+          const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
+          for(let i = 0; i < dx.length; i++) {
+            let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
+            this.passby.push(cur);
+          }
         }
         break;
       }
+
       case cardConfig.cardNameList[6]: {
-        
+        if(para.type == 'recast') {
+          this.recast(para.val);
+        }
         break;
       }
       case cardConfig.cardNameList[7]: {
+        this.magician = true;
+        this.hand.push('0');
         break;
       }
       case cardConfig.cardNameList[8]: {
+        this.prayer++;
         break;
       }
       case cardConfig.cardNameList[9]: {
+        if(para.type == 'spy') {
+          for(let i = 0; i < 3; i++) {
+            this.passby.push(para.val[i]);
+          }
+          this.position = para.val[2];
+        }
         break;
       }
       case cardConfig.cardNameList[10]: {
+        if(para.type == 'move') {
+          if(pos[1] != para.val[1] && pos[2] != para.val[2]) { //na
+            const delta = Math.abs(para.val[1] - pos[1]);
+            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+            for(let i = 0; i <= delta; i++) {
+              const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
+              this.passby.push(cur);
+            }
+          }
+          else if(pos[1] != para.val[1]) { //heng
+            for(let i = Math.min(para.val[1], pos[1]); i <= Math.max(para.val[1], pos[1]); i++) {
+              const cur:Position = [pos[0], i, pos[2]];
+              this.passby.push(cur);
+            }
+          }
+          else //pie
+          {
+            for(let i = Math.min(para.val[2], pos[2]); i <= Math.max(para.val[2], pos[2]); i++) {
+              const cur:Position = [pos[0], pos[1], i];
+              this.passby.push(cur);
+            }
+          }
+          this.position = para.val;
+          const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
+          for(let i = 0; i < dx.length; i++) {
+            let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
+            this.passby.push(cur);
+          }
+          this.position = para.val;
+        }
         break;
       }
       case cardConfig.cardNameList[11]: {
+        if(para.type == 'move') {
+          this.passby.push(para.val);
+          this.position = para.val;
+        }
         break;
       }
       case cardConfig.cardNameList[12]: {
+        if(para.type == 'move') {
+          this.passby.push(para.val);
+        }
         break;
       }
       case cardConfig.cardNameList[13]: {
+        if(para.type == 'move') {
+          if(pos[1] != para.val[1] && pos[2] != para.val[2]) { //na
+            const delta = Math.abs(para.val[1] - pos[1]);
+            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+            for(let i = 0; i <= delta; i++) {
+              const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
+              this.passby.push(cur);
+            }
+          }
+          else if(pos[1] != para.val[1]) { //heng
+            for(let i = Math.min(para.val[1], pos[1]); i <= Math.max(para.val[1], pos[1]); i++) {
+              const cur:Position = [pos[0], i, pos[2]];
+              this.passby.push(cur);
+            }
+          }
+          else //pie
+          {
+            for(let i = Math.min(para.val[2], pos[2]); i <= Math.max(para.val[2], pos[2]); i++) {
+              const cur:Position = [pos[0], pos[1], i];
+              this.passby.push(cur);
+            }
+          }
+          this.position = para.val;
+        }
         break;
       }
       case cardConfig.cardNameList[14]: {
+        this.mastery++;
+        this.hand.push('0');
         break;
       }
       case cardConfig.cardNameList[15]: {
+        if(para.type == 'move') {
+          let exist = [];
+          for(let i = 0; i < 3; i++) {
+            let size = 2 * (ctx.gameState.player.length - 1) + (3 - i);
+            for(let j = -size + 1; j < size; j++) {
+              for(let k = -size + 1; k < size; k++) {
+                if(ctx.gameState.board[[i, j, k].toString()].isBursted == false) {
+                  exist.push([i, j, k]);
+                }
+              }
+            }
+            let cur = rand(0,exist.length - 1);
+            this.position = exist[cur];
+            this.passby.push(exist[cur]);
+          }
+        }
         break;
       }
       case cardConfig.cardNameList[16]: {
+        for(let i = 0; i < this.mastery; i++) {
+          this.hand.push('0');
+        }
+        let up:Position = [pos[0] + 1, pos[1], pos[2]];
+        if(pos[0] != 2 && ctx.gameState.board[up.toString()].isBursted == false) {
+          this.position = up;
+          this.passby.push(up);
+        }
         break;
       }
       case cardConfig.cardNameList[17]: {
+        if(para.type == 'move') {
+          const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
+          let dr = rand(0, 5);
+          let fpos:Position = [pos[0], pos[1] + dx[dr], pos[2] + dx[dr]];
+          this.position = fpos;
+          this.passby.push(fpos);
+        }
         break;
       }
     }
     this.drawCard();
   }
-
+  Burst() {
+    
+  }
 }
 
 export namespace Player {
