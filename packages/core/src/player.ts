@@ -10,7 +10,7 @@ const cardConfig = {
   cardTimesList: [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 0]
 }
 
-function rand(start,end){
+function rand(start: any,end: any){
 	return parseInt(Math.random()*(end-start+1)+start);
 }
 
@@ -21,8 +21,8 @@ export class Player {
   library: Card[] = [];
   magician: boolean = false;
   mastery: number;
-  passby: Position[];
-  prayer: number;
+  passby: Position[] = [];
+  prayer: number = 0;
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
     this.initLibrary();
@@ -257,8 +257,8 @@ export class Player {
               }
             }
             let cur = rand(0,exist.length - 1);
-            this.position = exist[cur];
-            this.passby.push(exist[cur]);
+            this.position = exist[cur] as Position;
+            this.passby.push(exist[cur] as Position);
           }
         }
         break;

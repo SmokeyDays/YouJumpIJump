@@ -29,24 +29,21 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     console.log(this.props.gameState);
     return (
       <div>
+        <h1> test2</h1>
         {JSON.stringify(this.props.gameState)}
+        
         <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
-          <CardContainer
-          x={window.innerWidth/2}
-          y={window.innerHeight*5/6}
-          cardList={["test1","test2","test3","None"]}
-          cardWidth={200}
-          ></CardContainer>
+          {this.boards}
         </Layer>
       </Stage>
       </div>
     );
   }
 
-  panels: Board[] = [
+  boards: Board[] = [
     <Board radius={3} x={300} y={300} slotTemplate={<Slot color='red'></Slot> as unknown as Slot}></Board> as unknown as Board,
-    <Board radius={4} x={700} y={300} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
+    <Board radius={4} x={700}  y={300} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
     <Board radius={5} x={1200} y={300} slotTemplate={<Slot color='blue'></Slot> as unknown as Slot}></Board> as unknown as Board
   ]
 }
