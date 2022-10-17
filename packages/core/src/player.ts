@@ -1,5 +1,4 @@
 import { Context } from "cordis"
-import { boolean, string } from "schemastery";
 import { Card, Position, CardPara } from "./regulates/interfaces";
 import { Deck } from "./regulates/type"
 
@@ -21,10 +20,10 @@ export class Player {
   hand: Card[] = [];
   library: Card[] = [];
   magician: boolean = false;
-  mastery: number;
-  passby: Position[];
-  prayer: number;
-  laspos: Position;
+  mastery: number = 0;
+  passby: Position[] = [];
+  prayer: number = 0;
+  laspos: Position = [0, 0, 0];
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
     this.initLibrary();
@@ -371,7 +370,7 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[13]: {
-        let ply: Record<string, boolean>;
+        let ply: Record<string, boolean> = {};
         for(let i = 0; i < ctx.gameState.player.length; i++) {
           ply[ctx.gameState.player[i].position.toString()] = true;
         }
