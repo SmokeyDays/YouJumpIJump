@@ -1,6 +1,6 @@
 import { Context } from "cordis";
 import { Player } from "./player"
-import { Board, GameStage } from "./regulates/interfaces"
+import { Board, GameStage, Position } from "./regulates/interfaces"
 
 export class GameState {
   board: Board = {};
