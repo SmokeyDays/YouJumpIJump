@@ -1,4 +1,4 @@
-import React from "react";
+import { Component, ReactNode } from "react";
 import './Composition.css';
 
 export interface PopupWindowProps {
@@ -6,8 +6,8 @@ export interface PopupWindowProps {
 
 }
 
-export class FilterBackground extends React.Component {
-  render(): React.ReactNode {
+export class FilterBackground extends Component {
+  render(): ReactNode {
     return (
       <div className="filter-background">
         {this.props.children}
@@ -16,8 +16,8 @@ export class FilterBackground extends React.Component {
   }
 }
 
-export class PopupWindow extends React.Component<PopupWindowProps,{}> {
-  render(): React.ReactNode {
+export class PopupWindow extends Component<PopupWindowProps,{}> {
+  render(): ReactNode {
     return (
       <FilterBackground>
         <div className='popup-window'>
@@ -39,7 +39,7 @@ export interface PopupBtnState {
   showPopup: boolean,
 }
 
-export class PopupBtn extends React.Component<PopupBtnProps,PopupBtnState> {
+export class PopupBtn extends Component<PopupBtnProps,PopupBtnState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -72,7 +72,7 @@ interface AlertWindowProps {
   message: string,
 }
 
-export class AlertWindow extends React.Component<AlertWindowProps, {}> {
+export class AlertWindow extends Component<AlertWindowProps, {}> {
   render(): React.ReactNode {
     return (
       <div className='alert-message-window'>

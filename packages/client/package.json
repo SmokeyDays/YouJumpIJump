@@ -22,13 +22,14 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "konva": "^8.3.13",
     "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.2",
     "react-scripts": "5.0.0",
-    "socket.io": "^4.4.1",
-    "socket.io-client": "^4.4.1",
+    "socket.io": "^4.5.3",
+    "socket.io-client": "^4.5.3",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -36,11 +37,11 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.0",
-    "@types/node": "^16.11.21",
+    "@types/node": "^16.11.66",
     "@types/pubsub-js": "^1.8.3",
-    "@types/react": "^17.0.38",
+    "@types/react": "^17.0.50",
     "@types/react-dom": "^17.0.11",
-    "typescript": "^4.5.5"
+    "typescript": "^4.8.4"
   },
   "eslintConfig": {
     "extends": [
