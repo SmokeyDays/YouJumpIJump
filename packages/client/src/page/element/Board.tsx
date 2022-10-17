@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Line, Group} from 'react-konva';
+import { Text, Line, Group } from 'react-konva';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -96,13 +96,23 @@ class Board extends React.Component<BoardProps, BoardState> {
       scale: 1
     }
 
-    this.slotInfos[0] = { x: props.x, y: props.y, ix: 0, iy: 0 };
+    
+  }
+
+  componentDidMount() {
+    this.setState({})
+  }
+
+  updateSlotInfos() {
+    this.slotInfos = []
+    this.slotMap = {}
+    this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0 };
     this.slotMap['0,0'] = false;
 
     let cnt = 1;
-    const radius = props.slotTemplate.props.radius;
-    for (let i = 1; i < props.radius; i++) {
-      let xx = props.x + 2 * radius * i, yy = props.y;
+    const radius = this.props.slotTemplate.props.radius;
+    for (let i = 1; i < this.props.radius; i++) {
+      let xx = 2 * radius * i, yy = 0;
       let ix = i, iy = 0;
       for (let d = 0; d < 6; d++) {
         for (let j = 0; j < i; j++) {
@@ -123,12 +133,10 @@ class Board extends React.Component<BoardProps, BoardState> {
     }
   }
 
-  componentDidMount() {
-    this.setState({})
-  }
-
   render(): React.ReactNode {
 
+    this.updateSlotInfos();
+    console.log(this.props.x, this.props.y)
     let slots = this.slotInfos.map((value, index) => {
       return (
         <Slot
@@ -137,29 +145,26 @@ class Board extends React.Component<BoardProps, BoardState> {
           index={index}
           color={this.slotMap[`${value.ix},${value.iy}`] ? this.props.brokeColor : this.props.slotTemplate.props.color}
           radius={this.props.slotTemplate.props.radius}></Slot>
+           
       )
     });
 
     return (
-      <Group ref={dom => this.panelDom = dom}
-        
-        onClick={()=>this.setScale(2)}
+      <Group
         scaleX={this.state.scale}
         scaleY={this.state.scale}
-        width={200}
-        height={200}
-        offsetX={100}
-        offsetY={100}
-        >
-          {slots}
-        </Group>
+        x={this.props.x}
+        y={this.props.y}
+      >
+        {slots}
+      </Group>
     )
   }
 
   static defaultProps = {
     radius: 4,
-    x: window.innerWidth/2,
-    y: window.innerHeight/2,
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
     brokeColor: 'white',
     slotTemplate: (<Slot></Slot>) as unknown as Slot
   }
@@ -183,10 +188,6 @@ class Board extends React.Component<BoardProps, BoardState> {
   slotMap: {
     [key: string]: boolean
   } = {}
-
-  panelDom: any;
-  width = 0;
-  height = 0;
 }
 
 export default Board

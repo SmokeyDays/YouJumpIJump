@@ -25,7 +25,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
     static defaultProps = {
         x: window.innerWidth/2,
-        y: window.innerHeight*4/5,
+        y: window.innerHeight*7/8,
         cardWidth: 100,
         cardList: ["None", "test1", "test2", "test3"]
     }
