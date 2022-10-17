@@ -33,10 +33,10 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
         {JSON.stringify(this.props.gameState)}
         
         <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
-          {this.boards}
-        </Layer>
-      </Stage>
+          <Layer>
+            {this.boards}
+          </Layer>
+        </Stage>
       </div>
     );
   }
