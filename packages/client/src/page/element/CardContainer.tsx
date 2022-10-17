@@ -24,10 +24,10 @@ interface CardContainerState {
 class CardContainer extends React.Component<CardContainerProps, CardContainerState> {
 
     static defaultProps = {
-        x: 0,
-        y: 0,
+        x: window.innerWidth/2,
+        y: window.innerHeight*4/5,
         cardWidth: 100,
-        cardList: []
+        cardList: ["None", "test1", "test2", "test3"]
     }
 
     constructor(props) {

@@ -6,6 +6,7 @@ import CardContainer from './element/CardContainer';
 import { GameState } from "../regulates/Interfaces";
 import { PlayerOperation } from "../regulates/signals";
 import { PopupBtn } from "./Composition";
+import PlayerList from "./element/PlayerList";
 
 interface GamePageProps {
   gameState: GameState,
@@ -29,10 +30,11 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     console.log(this.props.gameState);
     return (
       <div>
-        <h1> test2</h1>
-        {JSON.stringify(this.props.gameState)}
-        
         <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Layer>
+          <PlayerList playList={this.props.gameState.player}></PlayerList>
+          <CardContainer></CardContainer>
+        </Layer>
         <Layer>
           {this.boards}
         </Layer>
@@ -42,9 +44,9 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   }
 
   boards: Board[] = [
-    <Board radius={3} x={300} y={300} slotTemplate={<Slot color='red'></Slot> as unknown as Slot}></Board> as unknown as Board,
-    <Board radius={4} x={700}  y={300} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
-    <Board radius={5} x={1200} y={300} slotTemplate={<Slot color='blue'></Slot> as unknown as Slot}></Board> as unknown as Board
+    <Board radius={5} slotTemplate={<Slot color='blue'></Slot> as unknown as Slot}></Board> as unknown as Board,
+    <Board radius={4} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
+    <Board radius={3} slotTemplate={<Slot color='red'></Slot> as unknown as Slot}></Board> as unknown as Board,
   ]
 }
 

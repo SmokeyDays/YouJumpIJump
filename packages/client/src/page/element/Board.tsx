@@ -158,8 +158,8 @@ class Board extends React.Component<BoardProps, BoardState> {
 
   static defaultProps = {
     radius: 4,
-    x: 500,
-    y: 300,
+    x: window.innerWidth/2,
+    y: window.innerHeight/2,
     brokeColor: 'white',
     slotTemplate: (<Slot></Slot>) as unknown as Slot
   }
