@@ -20,17 +20,10 @@ export class Player {
   hand: Card[] = [];
   library: Card[] = [];
   magician: boolean = false;
-<<<<<<< HEAD
-  mastery: number;
-  passby: Position[] = [];
-  prayer: number = 0;
-  laspos: Position = [0,0,0];
-=======
   mastery: number = 0;
   passby: Position[] = [];
   prayer: number = 0;
   laspos: Position = [0, 0, 0];
->>>>>>> 5710e35afd008bd4c22a6cdf531a3501219de8cc
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
     this.initLibrary();
