@@ -1,14 +1,9 @@
 import React from "react";
-import { Stage, Text, Layer, Line, Group, Rect } from 'react-konva';
-import Board from './element/Board';
-import { Slot } from './element/Board';
-import CardContainer from './element/CardContainer';
+import { Stage} from 'react-konva';
 import { GameState,Player } from "../regulates/Interfaces";
 import { PlayerOperation } from "../regulates/signals";
-import { PopupBtn } from "./Composition";
-import PlayerList from "./element/PlayerList";
-import GlobalState from "./element/GlobalState";
-import TopTitle from "./element/TopTitle";
+import GameCanvas from "./element/GameCanvas";
+import UI from "./element/UI";
 
 interface GamePageProps {
   gameState: GameState,
@@ -21,58 +16,6 @@ interface GamePageState {
   currentRound: number,
   currentPlayer: string,
 }
-
-interface UIProps {
-  playerList: Player[],
-  currentRound: number,
-  currentPlayer: string,
-  currentBoard: number,
-}
-class UI extends React.Component<UIProps> {
-  constructor(props) {
-    super(props)
-  }
-  render(): React.ReactNode {
-      return (
-        <Layer>
-          <TopTitle
-            currentBoard={this.props.currentBoard}
-            currentPlayer={this.props.currentPlayer}
-            currentRound={this.props.currentRound}></TopTitle>
-          <PlayerList playList={ this.props.playerList }></PlayerList>
-          <CardContainer></CardContainer>
-        </Layer>
-      )
-  }
-}
-
-interface GameCanvasProps {
-  currentBoard: number
-  
-}
-interface GameCanvasState {
-}
-class GameCanvas extends React.Component<GameCanvasProps> {
-
-  constructor(props) {
-    super(props)
-  }
-  
-  render(): React.ReactNode {
-      return (
-        <Layer draggable={true}>
-          { this.boards[this.props.currentBoard]}
-        </Layer>
-      )
-  }
-
-  boards: Board[] = [
-    <Board radius={2} slotTemplate={<Slot color='blue'></Slot> as unknown as Slot}></Board> as unknown as Board,
-    <Board radius={3} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
-    <Board radius={4} slotTemplate={<Slot color='red'></Slot> as unknown as Slot}></Board> as unknown as Board,
-  ]
-}
-
 class GamePage extends React.Component<GamePageProps,GamePageState> {
 
   constructor(props: any) {
