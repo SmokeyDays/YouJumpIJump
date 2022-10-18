@@ -24,9 +24,9 @@ class GameCanvas extends React.Component<GameCanvasProps> {
     }
 
     boards: Board[] = [
-        <Board radius={2} slotTemplate={<Slot color='blue'></Slot> as unknown as Slot}></Board> as unknown as Board,
-        <Board radius={3} slotTemplate={<Slot color='green'></Slot> as unknown as Slot}></Board> as unknown as Board,
-        <Board radius={4} slotTemplate={<Slot color='red'></Slot> as unknown as Slot}></Board> as unknown as Board,
+        <Board radius={2} slotTemplate={<Slot color='MediumAquamarine'></Slot> as unknown as Slot}></Board> as unknown as Board,
+        <Board radius={3} slotTemplate={<Slot color='LightSeaGreen'></Slot> as unknown as Slot}></Board> as unknown as Board,
+        <Board radius={4} slotTemplate={<Slot color='DarkCyan'></Slot> as unknown as Slot}></Board> as unknown as Board,
     ]
 }
 

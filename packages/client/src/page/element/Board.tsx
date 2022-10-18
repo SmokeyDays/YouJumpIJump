@@ -1,8 +1,10 @@
 import React from 'react';
 import { Text, Line, Group } from 'react-konva';
+import Center from './Center';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
+
 type SlotProps = typeof Slot.defaultProps & {
   radius?: number;
   color?: string;
@@ -23,7 +25,7 @@ export class Slot extends React.Component<SlotProps, SlotState> {
     radius: 30,
     color: 'blue',
     strokeWidth: 5,
-    stroke: 'black',
+    stroke: '#293047',
     x: 0,
     y: 0,
     index: 0
@@ -50,13 +52,15 @@ export class Slot extends React.Component<SlotProps, SlotState> {
           x={this.props.x}
           y={this.props.y}
         />
-        <Text
+        <Center
+          Type={Text}
           text={(this.props.index as number).toString()}
           fontSize={this.props.radius}
           x={this.props.x}
           y={this.props.y}
-        >
-        </Text>
+          fill={'#1b315e'}>
+
+        </Center>
       </Group>
     );
   }
@@ -96,7 +100,7 @@ class Board extends React.Component<BoardProps, BoardState> {
       scale: 1
     }
 
-    
+
   }
 
   componentDidMount() {
@@ -136,7 +140,6 @@ class Board extends React.Component<BoardProps, BoardState> {
   render(): React.ReactNode {
 
     this.updateSlotInfos();
-    console.log(this.props.x, this.props.y)
     let slots = this.slotInfos.map((value, index) => {
       return (
         <Slot
@@ -145,7 +148,7 @@ class Board extends React.Component<BoardProps, BoardState> {
           index={index}
           color={this.slotMap[`${value.ix},${value.iy}`] ? this.props.brokeColor : this.props.slotTemplate.props.color}
           radius={this.props.slotTemplate.props.radius}></Slot>
-           
+
       )
     });
 

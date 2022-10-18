@@ -21,6 +21,25 @@ const cardMap: {
     ["test3"]: new Card("test3", "none", "green"),
 }
 
+interface CardShowcaseProps {
+    card: string,
+    handleMainAct: any,
+    handleEffectAct: any,
+    cancel: any
+}
+
+class CardShowcase extends React.Component<CardShowcase> {
+
+    constructor(props) {
+        super(props)
+    }
+
+    render(): React.ReactNode {
+        return <Text></Text>
+    }
+}
+
+
 type CardContainerProps = typeof CardContainer.defaultProps & {
     x?: number,
     y?: number,
@@ -56,7 +75,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let cards = this.state.cardList.map((value, index) => {
             return (
                 <Rect
-                    onMouseEnter={() => { console.log(index); this.setState({ tipCard: index }) }}
+                    onMouseEnter={() => { this.setState({ tipCard: index }) }}
                     width={this.props.cardWidth}
                     height={this.props.cardWidth * 1.4}
                     offsetX={this.props.cardWidth / 2}
@@ -67,6 +86,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         })
 
         return (
+
             <Group
                 onMouseLeave={() => this.setState({ tipCard: null })}
                 x={this.props.x}
@@ -110,13 +130,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     padding={7}
                 ></Text>
             </Label>
-
-            // <Text
-            // text={`名称: ${card.name}\n\n描述: ${card.introduce}`}
-            // x={this.props.cardWidth*3*Math.cos(theta)}
-            // y={-this.props.cardWidth*3*Math.sin(theta)}
-            // fontSize={30}
-            // ></Text>
         )
     }
 }
