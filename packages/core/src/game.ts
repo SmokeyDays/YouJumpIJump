@@ -15,7 +15,7 @@ export class GameState {
   constructor(player: string[]) {
     this.totPlayer = player.length;
     for(let i = 0; i < player.length; ++i) {
-      this.player.push(new Player({initialMastery: this.totPlayer}));
+      this.player.push(new Player({initialMastery: this.totPlayer, name: player[i]}));
     }
     this.global = {
       round: 0,

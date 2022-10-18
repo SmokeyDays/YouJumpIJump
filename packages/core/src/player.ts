@@ -15,6 +15,7 @@ function rand(start: any,end: any){
 }
 
 export class Player {
+  name: string;
   alive: boolean = true;
   position: Position = [0, 0, 0]; // 是否存活, 层数, x, y
   hand: Card[] = [];
@@ -26,6 +27,7 @@ export class Player {
   laspos: Position = [0, 0, 0];
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
+    this.name = config.name;
     this.initLibrary();
     for(let i = 0; i < config.initialMastery; ++i) {
       this.drawCard();
@@ -711,6 +713,7 @@ export class Player {
 
 export namespace Player {
   export interface Config {
+    name: string,
     initialMastery: number
   }
 }
