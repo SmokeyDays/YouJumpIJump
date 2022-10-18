@@ -24,5 +24,13 @@ export class GameState {
       result: {},
     }
   }
-  
+  gamestart() {
+    
+  }
+  turn(player: number) {
+    //instant turn
+    
+    //main turn
+
+  }
 } 

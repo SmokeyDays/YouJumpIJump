@@ -688,7 +688,7 @@ export class Player {
       case cardConfig.cardNameList[17]: {
         if(para.type == 'move') {
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
-          let dr:number = rand(0, 5);
+          let dr:number = rand(1, 6);
           let fpos:Position = [pos[0], pos[1] + dx[dr], pos[2] + dx[dr]];
           this.position = fpos;
           this.passby.push(fpos);
