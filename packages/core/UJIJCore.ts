@@ -1,15 +1,6 @@
 import { Context } from "cordis";
 import { GameState } from "./src/game";
-
-export namespace UJIJ {
-  export interface InputSignal {
-
-  }
-  
-  export interface OutputSignal {
-  
-  }
-}
+import { CardPara, RequestSignal, SignalPara } from "./src/regulates/interfaces";
 
 declare module 'cordis' {
   export interface Context {
@@ -42,27 +33,28 @@ declare module 'cordis' {
     'card-untap': () => void
 
     // socket event
-    'output-message': (signal: UJIJ.OutputSignal) => void
+    'output-message': (signal: RequestSignal) => Promise<CardPara>
   }
 }
 
 export class UJIJCore {
   
   app: Context;
-  output: (signal: UJIJ.OutputSignal) => void;
+  req: (signal: RequestSignal) => Promise<CardPara>;
   // callback: (signal: UJIJ.OutputSignal) => void
-  constructor(callback: () => void) {
-    this.output = callback;
+  constructor(callback: (signal: RequestSignal) => Promise<CardPara>) {
+    this.req = callback;
     this.app = new Context();
     // this.app.plugin(duelInit);
     // bind message callback
-    // this.app.on('output-message', ((signal: WudingCoreOutputSignal) => {
-    //   this.output(signal);
-    // }).bind(this));
+    this.app.on('output-message', (async (signal: RequestSignal) => {
+      const ret = await this.req(signal);
+      return ret;
+    }).bind(this));
     this.startDuel();
   }
   startDuel() {
-    this.app.gameState = new GameState(["Alice", "Bob", "Cat"]);
+    this.app.gameState = new GameState(["Alice", "Bob", "Cat"], this.req);
   }
   getGameState() {
     return this.app.gameState;
