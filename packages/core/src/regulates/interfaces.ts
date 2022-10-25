@@ -30,6 +30,6 @@ export type CardPara = {
   type: "recast",
   val: Card[]
 } | {
-  type: "spy",
-  val: [Position, Position, Position]
+  type: "card",
+  val: Card
 }
