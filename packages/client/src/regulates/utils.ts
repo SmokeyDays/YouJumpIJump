@@ -18,10 +18,17 @@ export function counterTranslate(val: string): string {
   return val in CounterDictionary? CounterDictionary[val]: val;
 }
 
-export const CardDescription: Record<string,string> = cardDescription;
+export interface CardDesc {
+  id: string,
+  name: string,
+  desc: string,
+  lore: string,
+}
 
-export function getDescription(val: string): string {
-  return val in CardDescription?CardDescription[val]:"卡牌无描述";
+export const CardDescription: Record<string, CardDesc> = cardDescription;
+
+export function getDescription(id: string): string {
+  return CardDescription[id].desc!=""?CardDescription[id].desc:"卡牌无描述";
 }
 
 export const SectList: string[] = ["通用","奔雷","焚金","焚天","光华","飘渺","天灵","万法","元力"];

@@ -31,7 +31,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   }
 
   render() {
-    console.log(this.props.gameState);
+    //console.log(this.props.gameState);
     return (
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>

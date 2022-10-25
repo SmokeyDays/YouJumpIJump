@@ -1,5 +1,6 @@
 import React from 'react';
-import { Group, Rect, Tag, Text, Label } from 'react-konva';
+import { Group, Rect, Tag, Text, Label, Image as KImage} from 'react-konva';
+import { CardDescription, getDescription } from '../../regulates/utils';
 
 class Card {
     public name: string;
@@ -10,15 +11,6 @@ class Card {
         this.name = name;
         this.introduce = introduce;
     }
-}
-
-const cardMap: {
-    [key: string]: Card
-} = {
-    ["None"]: new Card("None", "none", "red"),
-    ["test1"]: new Card("test1", "none", "black"),
-    ["test2"]: new Card("test2", "none", "blue"),
-    ["test3"]: new Card("test3", "none", "green"),
 }
 
 interface CardShowcaseProps {
@@ -52,13 +44,30 @@ interface CardContainerState {
     tipCard?: number
 }
 
+function CutStr(str: string,count: number):string {
+    let result = ""
+    let amount = 0
+    for(let i=0;i<str.length;i++) {
+        if(str[i]==' ') {
+            amount -= 0.75
+        }
+        amount++
+        result+=str[i]
+        if(amount>=count) {
+            amount=0;
+            result+='\n'
+        }
+    }
+    return result;
+}
+
 class CardContainer extends React.Component<CardContainerProps, CardContainerState> {
 
     static defaultProps = {
         x: window.innerWidth / 2,
         y: window.innerHeight * 7 / 8,
         cardWidth: 100,
-        cardList: ["None", "test1", "test2", "test3"]
+        cardList: ["0", "2", "2", "3"]
     }
 
     constructor(props) {
@@ -73,16 +82,18 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let theta = 30;
         let mid = (this.state.cardList.length - 1) / 2;
         let cards = this.state.cardList.map((value, index) => {
+        let img = new Image(this.props.cardWidth,this.props.cardWidth * 1.4)
+        img.src= require("../../assets/cards/" + value + "_S.png");
             return (
-                <Rect
+                <KImage
                     onMouseEnter={() => { this.setState({ tipCard: index }) }}
                     width={this.props.cardWidth}
                     height={this.props.cardWidth * 1.4}
                     offsetX={this.props.cardWidth / 2}
                     offsetY={this.props.cardWidth * 1.2}
-                    fill={cardMap[value].color}
+                    image={img}
                     rotation={theta * (index - mid)}
-                ></Rect>)
+                ></KImage>)
         })
 
         return (
@@ -102,7 +113,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
     renderTip(index: number): React.ReactNode {
         let mid = (this.state.cardList.length - 1) / 2;
         let theta = (90 - 30 * (index - mid)) / 180 * Math.PI
-        let card = cardMap[this.state.cardList[index]];
+        let card = CardDescription[this.state.cardList[index]];
         return (
 
             <Label
@@ -124,7 +135,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                 >
                 </Tag>
                 <Text
-                    text={`名称: ${card.name}\n\n描述: ${card.introduce}`}
+                    text={`名称: ${card["name"]}\n\n${CutStr("描述:  "+getDescription(card["id"]),10)}`}
                     fill='white'
                     fontSize={20}
                     padding={7}

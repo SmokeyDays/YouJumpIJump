@@ -1,7 +1,8 @@
 import React from "react"
-import { Layer } from "react-konva"
+import { Layer, Text } from "react-konva"
 import { Player } from "../../regulates/Interfaces"
 import CardContainer from "./CardContainer"
+import {LinearLayout} from "./LinearLayout"
 import PlayerList from "./PlayerList"
 import TopTitle from "./TopTitle"
 
@@ -24,6 +25,12 @@ class UI extends React.Component<UIProps> {
                     currentRound={this.props.currentRound}></TopTitle>
                 <PlayerList playList={this.props.playerList}></PlayerList>
                 <CardContainer></CardContainer>
+                <LinearLayout x={100} y={100} orientation="vertical" padding={100}>
+                    <Text text="hhhh"></Text>
+                    <Text text="hhhhsfasvfa"></Text>
+                    <Text text="hhhhsfa"></Text>
+                    <Text text="hhhhsfa"></Text>
+                </LinearLayout>
             </Layer>
         )
     }

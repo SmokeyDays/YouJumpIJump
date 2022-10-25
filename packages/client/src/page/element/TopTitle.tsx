@@ -16,9 +16,7 @@ class TopTitle extends React.Component<TopTitleProps> {
 
     render(): React.ReactNode {
         return (
-
             <Group>
-
                 <Center
                     Type={Text}
                     text={`第${this.props.currentRound}个回合  当前是玩家${this.props.currentPlayer}的回合`}
