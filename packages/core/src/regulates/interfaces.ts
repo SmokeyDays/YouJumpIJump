@@ -33,3 +33,17 @@ export type CardPara = {
   type: "card",
   val: Card
 }
+
+export type SignalPara = {
+  type: 'recast',
+} | {
+  type: 'card',
+} | {
+  type: 'action',
+  pos: Position[]
+}
+
+export type RequestSignal = {
+  player: string,
+  para: SignalPara,
+}

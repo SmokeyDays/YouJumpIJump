@@ -1,8 +1,7 @@
 import { Context } from "cordis";
 import { globalAgent } from "http";
-import { string } from "schemastery";
 import { Player, cardConfig } from "./player"
-import { Board, GameStage, Position, CardPara, Card } from "./regulates/interfaces"
+import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
 
 export class GameState {
   board: Board = {};
@@ -14,7 +13,9 @@ export class GameState {
     result: Record<string, number> // 每名玩家的名次
   }
   totPlayer: number;
-  constructor(player: string[]) {
+  req: (signal: RequestSignal) => Promise<CardPara>;
+  constructor(player: string[], req: (signal: RequestSignal) => Promise<CardPara>) {
+    this.req = req;
     this.totPlayer = player.length;
     for(let i = 0; i < player.length; ++i) {
       this.player.push(new Player({initialMastery: this.totPlayer, name: player[i]}));
@@ -26,25 +27,32 @@ export class GameState {
       result: {},
     }
   }
-  recastSignal(str: string): CardPara{
-    const res: CardPara = {
-      type: "none",
-      val: null
-    };
+  async recastSignal(name: string): Promise<CardPara>{
+    const res = await this.req({
+      player: name,
+      para: {
+        type: 'recast'
+      }
+    });
     return res;
   }
-  cardSignal(str: string): CardPara{
-    const res: CardPara = {
-      type: "none",
-      val: null
-    };
+  async cardSignal(name: string): Promise<CardPara>{
+    const res = await this.req({
+      player: name,
+      para: {
+        type: 'card'
+      }
+    });
     return res;
   }
-  actionSignal(str: string, pos: Position[]): CardPara{
-    const res: CardPara = {
-      type: "none",
-      val: null
-    };
+  async actionSignal(name: string, pos: Position[]): Promise<CardPara>{
+    const res = await this.req({
+      player: name,
+      para: {
+        type: 'action',
+        pos: pos
+      }
+    });
     return res;
   }
   async gamestart() {
