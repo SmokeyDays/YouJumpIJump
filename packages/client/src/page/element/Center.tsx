@@ -16,9 +16,14 @@ class Center extends React.Component<any,{ width: number, height: number }> {
     }
 
     componentDidMount(): void{
-        if (this.state.width != this.refDom.current.width() || this.state.height != this.refDom.current.height()) {
-            this.setState({ width: this.refDom.current.width(), height: this.refDom.current.height()})
+        if(typeof this.refDom.current.width == 'number') {
+            [this.width,this.height]=[this.refDom.current.width,this.refDom.current.height]
         }
+        else {
+            
+            [this.width,this.height]=[this.refDom.current.width(),this.refDom.current.height()]
+        }
+        this.setState({ width: this.width, height: this.height})
 
     }
 
@@ -26,16 +31,18 @@ class Center extends React.Component<any,{ width: number, height: number }> {
         return (
             <this.props.Type
                 ref={this.refDom}
+                {...this.props}
                 offsetX={this.state.width / 2}
                 offsetY={this.state.height / 2}
-                {...this.props}
             >
 
             </this.props.Type>
         )
     }
 
-    refDom
+    refDom: any
+    width: number
+    height: number
 }
 
 export default Center
