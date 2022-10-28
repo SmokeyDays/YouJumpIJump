@@ -2,6 +2,7 @@ import { GameStage, GameState, IterateSignal, IterateSignalType, PlayerOperation
 import { logger } from "../tools/Logger";
 import { User } from "./User";
 import { UJIJCore } from "../../core/UJIJCore"
+import { CardPara } from "../../core/src/regulates/interfaces";
 const defaultDeck1 = "swordAndFist";
 const defaultDeck2 = "cardNotEnough";
 
@@ -24,7 +25,13 @@ export class Room {
   }
 
   startGame() {
-    this.game = new UJIJCore(() => {});
+    this.game = new UJIJCore(async (val) => {
+      const res: CardPara = {
+        type: "none",
+        val: null
+      }
+      return res;
+    });
     logger.verbose('Room %s started a new game.', this.roomName);
     this.renew();
   }

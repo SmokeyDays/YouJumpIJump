@@ -47,10 +47,10 @@ export class UJIJCore {
     this.app = new Context();
     // this.app.plugin(duelInit);
     // bind message callback
-    this.app.on('output-message', (async (signal: RequestSignal) => {
-      const ret = await this.req(signal);
-      return ret;
-    }).bind(this));
+    // this.app.on('output-message', (async (signal: RequestSignal) => {
+    //   const ret = await this.req(signal);
+    //   return ret;
+    // }).bind(this));
     this.startDuel();
   }
   startDuel() {
