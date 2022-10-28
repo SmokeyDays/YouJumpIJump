@@ -2,22 +2,35 @@ import React from 'react';
 import { Image as KImage, Rect } from 'react-konva';
 import LinearLayout from './LinearLayout';
 
-interface CardShowcaseProps {
+interface CardShowcaseState {
     cardId: string,
 }
 
-class CardShowcase extends React.Component<CardShowcaseProps> {
+class CardShowcase extends React.Component<any,CardShowcaseState> {
 
     constructor(props) {
         super(props)
+        if(CardShowcase.instance) {
+
+        }
+        CardShowcase.instance = React.createRef()
+        this.state = {
+            cardId: null
+        }
         this.width = window.innerWidth / 4
+    }
+
+    showCard(id: string) {
+        this.setState({cardId:id})
     }
 
     render(): React.ReactNode {
         let img = new Image()
-        img.src = require("../../assets/cards/0_S.png");
+        img.src = require(`../../assets/cards/${this.state.cardId}_S.png`);
         return (
+            this.state.cardId == null ? null : 
             <LinearLayout
+                ref = {CardShowcase.instance}
                 orientation='vertical'
                 x={window.innerWidth - this.width - 100}
                 y={100}
@@ -47,6 +60,8 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
             </LinearLayout>
         )
     }
+
+    static instance = null
     width: number
     height: number
 }

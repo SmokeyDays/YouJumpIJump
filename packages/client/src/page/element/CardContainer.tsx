@@ -1,42 +1,12 @@
 import React from 'react';
 import { Group, Rect, Tag, Text, Label, Image as KImage} from 'react-konva';
 import { CardDescription, getDescription } from '../../regulates/utils';
-
-class Card {
-    public name: string;
-    public introduce: string;
-    public color: string;
-    constructor(name: string, introduce: string, color: string) {
-        this.color = color;
-        this.name = name;
-        this.introduce = introduce;
-    }
-}
-
-interface CardShowcaseProps {
-    card: string,
-    handleMainAct: any,
-    handleEffectAct: any,
-    cancel: any
-}
-
-class CardShowcase extends React.Component<CardShowcase> {
-
-    constructor(props) {
-        super(props)
-    }
-
-    render(): React.ReactNode {
-        return <Text></Text>
-    }
-}
-
+import CardShowcase from './CardShowcase';
 
 type CardContainerProps = typeof CardContainer.defaultProps & {
     x?: number,
     y?: number,
     cardWidth?: number
-    cardList?: string[]
 }
 
 interface CardContainerState {
@@ -67,13 +37,16 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         x: window.innerWidth / 2,
         y: window.innerHeight * 7 / 8,
         cardWidth: 100,
-        cardList: ["0", "2", "2", "3"]
     }
 
     constructor(props) {
         super(props)
+        if(CardContainer.instance) {
+
+        }
+        CardContainer.instance = React.createRef()
         this.state = {
-            cardList: this.props.cardList,
+            cardList: [],
             tipCard: null
         }
     }
@@ -87,6 +60,10 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
             return (
                 <KImage
                     onMouseEnter={() => { this.setState({ tipCard: index }) }}
+                    onMouseDown={()=> {
+                        CardShowcase.instance.current.showCard(this.state.cardList[index]);
+                        this.removeCard(index);
+                    }}
                     width={this.props.cardWidth}
                     height={this.props.cardWidth * 1.4}
                     offsetX={this.props.cardWidth / 2}
@@ -99,13 +76,14 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         return (
 
             <Group
+                ref = {CardContainer.instance}
                 onMouseLeave={() => this.setState({ tipCard: null })}
                 x={this.props.x}
                 y={this.props.y}
             >
 
                 {cards}
-                {this.state.tipCard != null ? this.renderTip(this.state.tipCard) : <Text></Text>}
+                {this.state.tipCard != null && this.renderTip(this.state.tipCard)}
             </Group>
         )
     }
@@ -143,6 +121,22 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
             </Label>
         )
     }
+
+    setCard(newCardList: string[]) {
+        this.setState({cardList:newCardList})
+    }
+
+    addCard(cardId: string) {
+        this.state.cardList.push(cardId)
+        this.setState({})
+    }
+
+    removeCard(index: number) {
+        this.state.cardList.splice(index,1)
+        this.setState({})
+    }
+
+    static instance = null
 }
 
 export default CardContainer

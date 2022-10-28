@@ -17,7 +17,6 @@ class UI extends React.Component<UIProps> {
         super(props)
     }
 
-
     render(): React.ReactNode {
         return (
             <Layer>
@@ -27,7 +26,7 @@ class UI extends React.Component<UIProps> {
                     currentRound={this.props.currentRound}></TopTitle>
                 <PlayerList playList={this.props.playerList}></PlayerList>
                 <CardContainer></CardContainer>
-                <CardShowcase cardId="0"></CardShowcase>
+                <CardShowcase></CardShowcase>
             </Layer>
         )
     }
