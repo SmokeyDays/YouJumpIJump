@@ -31,7 +31,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   }
 
   render() {
-    console.log(this.props.gameState);
+    //console.log(this.props.gameState);
     return (
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
@@ -40,7 +40,8 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
           currentBoard={this.state.currentBoard}
           currentPlayer={this.state.currentPlayer}
           currentRound={this.state.currentRound}
-          playerList={this.props.gameState.player}></UI>
+          playerList={this.props.gameState.player}
+          ></UI>
       </Stage>
       </div>
     );
