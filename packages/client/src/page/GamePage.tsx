@@ -50,7 +50,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
 
   componentDidMount(){
     document.addEventListener("keydown", this.handleKeyDown)
-    CardContainer.instance.current.setCard(["0","2","3","AH"])
+    CardContainer.instance.setCard(["0","2","3","AH"])
   }
  
   componentWillUnmount(){
@@ -60,7 +60,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   handleKeyDown(e) {
     let lastBoard = this.state.currentBoard
     switch(e.keyCode) {
-      case 38: this.setState({currentBoard:(lastBoard+2)%3}); this.setState({}); break;
+      case 38: this.setState({currentBoard:(lastBoard+2)%3});break;
       case 40: this.setState({currentBoard:(lastBoard+1)%3}); break;
     }
   }

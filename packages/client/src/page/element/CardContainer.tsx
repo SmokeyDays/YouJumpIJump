@@ -10,8 +10,8 @@ type CardContainerProps = typeof CardContainer.defaultProps & {
 }
 
 interface CardContainerState {
-    cardList?: string[]
-    tipCard?: number
+    cardList: string[]
+    tipCard: number
 }
 
 function CutStr(str: string,count: number):string {
@@ -44,10 +44,10 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         if(CardContainer.instance) {
 
         }
-        CardContainer.instance = React.createRef()
+        CardContainer.instance = this
         this.state = {
             cardList: [],
-            tipCard: null
+            tipCard: null,
         }
     }
 
@@ -61,8 +61,11 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                 <KImage
                     onMouseEnter={() => { this.setState({ tipCard: index }) }}
                     onMouseDown={()=> {
-                        CardShowcase.instance.current.showCard(this.state.cardList[index]);
+                        if(!this.isShowingCard) {
+                        CardShowcase.instance.showCard(this.state.cardList[index]);
                         this.removeCard(index);
+                        this.isShowingCard=true;
+                    }
                     }}
                     width={this.props.cardWidth}
                     height={this.props.cardWidth * 1.4}
@@ -76,7 +79,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         return (
 
             <Group
-                ref = {CardContainer.instance}
                 onMouseLeave={() => this.setState({ tipCard: null })}
                 x={this.props.x}
                 y={this.props.y}
@@ -133,10 +135,11 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
     removeCard(index: number) {
         this.state.cardList.splice(index,1)
-        this.setState({})
+        this.setState({tipCard: null})
     }
 
     static instance = null
+    isShowingCard: boolean = false
 }
 
 export default CardContainer

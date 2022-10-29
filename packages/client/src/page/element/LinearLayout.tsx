@@ -1,6 +1,5 @@
 import React from 'react';
 import { Group, Text, Image as KImage, Rect } from 'react-konva';
-import { threadId } from 'worker_threads';
 
 interface LayoutElementProps {
     transmitToParent: any
@@ -51,6 +50,8 @@ class LayoutElement extends React.Component<any> {
     }
 }
 
+const XAlign = ['left', 'center', 'right'] as const
+const YAlign = ['top', 'middle', 'bottom'] as const
 type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     x?: number,
     y?: number,
@@ -61,7 +62,12 @@ type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     width?: number,
     height?: number,
     background?: string,
-    align?: 'left' | 'center' | 'right'
+    xAlign?: typeof XAlign[number]
+    yAlign?: typeof YAlign[number]
+    onClick?: any,
+    onMouseDown?: any,
+    onMouseUp?: any,
+    onMouseLeave?: any,
 }
 
 class LinearLayout extends React.Component<LinearLayoutProps, {}> {
@@ -91,11 +97,11 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
 
         }
         if (this.restChildren == 0) {
-            if(this.props.orientation=='horizontal') {
-                this.cwidth-=this.props.padding
+            if (this.props.orientation == 'horizontal') {
+                this.cwidth -= this.props.padding
             }
             else {
-                this.cheight-=this.props.padding
+                this.cheight -= this.props.padding
             }
             this.width = Math.max(this.props.width, this.cwidth)
             this.height = Math.max(this.props.height, this.cheight)
@@ -103,10 +109,34 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         }
     }
 
+    getSuitableY(accumulate: number, height: number) {
+
+        if (this.props.orientation == 'vertical') {
+            switch (this.props.yAlign) {
+                case 'top':
+                    return accumulate;
+                case 'middle':
+                    return (this.height - this.cheight) / 2 + accumulate
+                case 'bottom':
+                    return this.height - this.cheight + accumulate
+            }
+        }
+        else {
+            switch (this.props.yAlign) {
+                case 'top':
+                    return 0;
+                case 'middle':
+                    return (this.height - height) / 2
+                case 'bottom':
+                    return this.height - height
+            }
+        }
+    }
+
     getSuitableX(accumulate: number, width: number) {
 
         if (this.props.orientation == 'horizontal') {
-            switch (this.props.align) {
+            switch (this.props.xAlign) {
                 case 'left':
                     return accumulate;
                 case 'center':
@@ -116,7 +146,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
             }
         }
         else {
-            switch (this.props.align) {
+            switch (this.props.xAlign) {
                 case 'left':
                     return 0;
                 case 'center':
@@ -154,7 +184,8 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                     x += this.whInfos[index].w + this.props.padding
                     return (
                         <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
-                            x={this.getSuitableX(nowX,0)}
+                            x={this.getSuitableX(nowX, 0)}
+                            y={this.getSuitableY(0, this.whInfos[index].h)}
                         >
                             {value.props.children}
                         </LayoutElement>
@@ -168,7 +199,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                     y += this.whInfos[index].h + this.props.padding
                     return (
                         <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
-                            y={nowY}
+                            y={this.getSuitableY(nowY,0)}
                             x={this.getSuitableX(0, this.whInfos[index].w)}
                         >
                             {value.props.children}
@@ -198,6 +229,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         }
         return (
             <Group
+                {...this.props}
                 x={this.props.x}
                 y={this.props.y}
                 offsetX={this.props.offsetX}
@@ -218,7 +250,8 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         width: 0,
         height: 0,
         background: null,
-        align: 'left',
+        xAlign: 'left',
+        yAlign: 'top',
     }
 
     restChildren: number
