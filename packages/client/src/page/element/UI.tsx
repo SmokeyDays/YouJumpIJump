@@ -44,6 +44,7 @@ class UI extends React.Component<UIProps> {
                 >
                     <CardShowcase
                         width={showcaseWidth}
+                        parentRef={'1'}
                     ></CardShowcase>
                 </LinearLayout>
 

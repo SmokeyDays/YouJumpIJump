@@ -43,7 +43,6 @@ class GameCanvas extends React.Component<GameCanvasProps, GameCanvasState> {
         for(let i of slotList) {
             tmp[i[0]].push(`${i[1]},${i[2]}`)
         }
-        console.log(tmp)
         this.setState({ accessSlotList: tmp })
     }
 

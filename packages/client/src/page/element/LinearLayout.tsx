@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group, Text, Image as KImage, Rect } from 'react-konva';
+import { Group, Text, Image as KImage, Rect, Label } from 'react-konva';
 
 interface LayoutElementProps {
     transmitToParent: any
@@ -12,19 +12,23 @@ class LayoutElement extends React.Component<any> {
     height: number
     constructor(props) {
         super(props)
-        this.refDom = React.createRef()
+        this.refDom = null
     }
 
-    componentDidMount(): void {
-        if (typeof this.refDom.current.width == 'number') {
-            this.props.transmitToParent(this.width = this.refDom.current.width, this.height = this.refDom.current.height)
+    componentDidUpdate(): void {
+        if (typeof this.refDom.width == 'number') {
+            this.props.transmitToParent(this.width = this.refDom.width, this.height = this.refDom.height)
         } else {
-            this.props.transmitToParent(this.width = this.refDom.current.width(), this.height = this.refDom.current.height())
+            this.props.transmitToParent(this.width = this.refDom.width(), this.height = this.refDom.height())
         }
     }
 
-    adject() {
-
+    componentDidMount(): void {
+        if (typeof this.refDom.width == 'number') {
+            this.props.transmitToParent(this.width = this.refDom.width, this.height = this.refDom.height)
+        } else {
+            this.props.transmitToParent(this.width = this.refDom.width(), this.height = this.refDom.height())
+        }
     }
 
     render(): React.ReactNode {
@@ -32,19 +36,43 @@ class LayoutElement extends React.Component<any> {
         if (typeof this.props.Type == 'string') {
             switch (this.props.Type) {
                 case 'Text':
-                    element = <Text ref={this.refDom} {...this.props}>{this.props.children}</Text>
+                    element = <Text {...this.props}
+                        ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+
+                    >{this.props.children}</Text>
                     break;
                 case 'Image':
-                    element = <KImage image={null} ref={this.refDom} {...this.props}>{this.props.children}</KImage>
+                    element = <KImage image={null} {...this.props}
+                        ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+
+                    >{this.props.children}</KImage>
                     break;
                 case 'Rect':
-                    element = <Rect ref={this.refDom} {...this.props}>{this.props.children}</Rect>
+                    element = <Rect {...this.props}
+                        ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+                    >{this.props.children}</Rect>
                     break;
-                default: element = <Text ref={this.refDom} fontSize={40} text="未记录此类型"></Text>
+                case 'Label':
+                    element = <Label {...this.props}
+                        ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+                    >{this.props.children}</Label>
+                    break;
+                default: element = <Text fontSize={40} text="未记录此类型"
+                ></Text>
             }
         }
         else {
-            element = <this.props.Type ref={this.refDom} {...this.props}>{this.props.children}</this.props.Type>
+            if (this.props.parentRef != undefined) {
+                element = <this.props.Type {...this.props}
+                    ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+                    parentRef={this}
+                >{this.props.children}</this.props.Type>
+            }
+            else {
+                element = <this.props.Type {...this.props}
+                    ref={e => { this.refDom = e; this.props.ref && this.props.ref(e) }}
+                >{this.props.children}</this.props.Type>
+            }
         }
         return element;
     }
@@ -68,6 +96,8 @@ type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     onMouseDown?: any,
     onMouseUp?: any,
     onMouseLeave?: any,
+    reff?: any,
+    k?: string,
 }
 
 class LinearLayout extends React.Component<LinearLayoutProps, {}> {
@@ -85,27 +115,45 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
     }
 
     getChildInfo(index: number, width: number, height: number) {
-        this.whInfos[index] = { w: width, h: height }
-        this.restChildren--;
-        if (this.props.orientation == 'horizontal') {
-            this.cwidth += width + this.props.padding
-            this.cheight = Math.max(this.cheight, height)
-        }
-        else {
-            this.cheight += height + this.props.padding
-            this.cwidth = Math.max(this.cwidth, width)
 
-        }
         if (this.restChildren == 0) {
+
+            if (this.whInfos[index].w == width && this.whInfos[index].h == height) return
             if (this.props.orientation == 'horizontal') {
-                this.cwidth -= this.props.padding
+                this.cwidth += width + this.props.padding - this.whInfos[index].w
+                this.cheight = Math.max(this.cheight, height)
             }
             else {
-                this.cheight -= this.props.padding
+                this.cheight += height + this.props.padding - this.whInfos[index].h
+                this.cwidth = Math.max(this.cwidth, width)
             }
-            this.width = Math.max(this.props.width, this.cwidth)
-            this.height = Math.max(this.props.height, this.cheight)
+
+            this.whInfos[index] = { w: width, h: height }
             this.setState({})
+        }
+        else {
+            this.whInfos[index] = { w: width, h: height }
+            this.restChildren--;
+            if (this.props.orientation == 'horizontal') {
+                this.cwidth += width + this.props.padding
+                this.cheight = Math.max(this.cheight, height)
+            }
+            else {
+                this.cheight += height + this.props.padding
+                this.cwidth = Math.max(this.cwidth, width)
+
+            }
+            if (this.restChildren == 0) {
+                if (this.props.orientation == 'horizontal') {
+                    this.cwidth -= this.props.padding
+                }
+                else {
+                    this.cheight -= this.props.padding
+                }
+                this.width = Math.max(this.props.width, this.cwidth)
+                this.height = Math.max(this.props.height, this.cheight)
+                this.setState({})
+            }
         }
     }
 
@@ -158,6 +206,10 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
     }
 
     render(): React.ReactNode {
+
+        if (this.props.reff) {
+            this.props.reff(this)
+        }
         let array: any[] = React.Children.toArray(this.props.children)
         let newChildren
         let bg: any = null
@@ -199,7 +251,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                     y += this.whInfos[index].h + this.props.padding
                     return (
                         <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
-                            y={this.getSuitableY(nowY,0)}
+                            y={this.getSuitableY(nowY, 0)}
                             x={this.getSuitableX(0, this.whInfos[index].w)}
                         >
                             {value.props.children}
@@ -230,6 +282,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         return (
             <Group
                 {...this.props}
+                ref={null}
                 x={this.props.x}
                 y={this.props.y}
                 offsetX={this.props.offsetX}
@@ -252,6 +305,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         background: null,
         xAlign: 'left',
         yAlign: 'top',
+        reff: null,
     }
 
     restChildren: number

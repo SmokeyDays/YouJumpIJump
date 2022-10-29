@@ -13,6 +13,7 @@ interface CardShowcaseProps {
     x?: number
     y?: number
     width: number
+    parentRef?: any
 }
 class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState> {
 
@@ -23,9 +24,10 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         }
         CardShowcase.instance = this
         this.state = {
-            cardId: null
+            cardId: null,
         }
         this.width = this.props.width
+        this.height = 500
         this.refDom = null
     }
 
@@ -34,8 +36,17 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     }
 
     componentDidMount(): void {
-        //this.height = this.refDom.height
-        this.height=this.width*1.7
+        if(this.refDom) this.height = this.refDom.height
+    }
+
+    componentDidUpdate(): void {
+        if(this.refDom)
+        {
+            if(this.height==this.refDom.height) return
+            this.height = this.refDom.height
+            this.props.parentRef.setState({})
+            
+        }
     }
 
     render(): React.ReactNode {
@@ -43,13 +54,13 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         let img = new Image()
         img.src = require(`../../assets/cards/${this.state.cardId}_B.png`);
         let card = CardDescription[this.state.cardId]
-        let bFont = this.width / 10
-        let mFont = this.width / 12
-        let sFont = this.width / 18
-        let bHeight = this.width / 6
+        let bFont = Math.max(20, this.width / 10)
+        let mFont = Math.max(18, this.width / 12)
+        let sFont = Math.max(16, this.width / 18)
+        let bHeight = Math.max(20, this.width / 6)
         return (
             <LinearLayout
-                ref={e=>this.refDom=e}
+                reff={(e)=>{this.refDom=e}}
                 orientation='vertical'
                 x={this.props.x}
                 y={this.props.y}
@@ -109,7 +120,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     }
 
     static instance = null
-    refDom
+    refDom: any
     width: number
     height: number
 }

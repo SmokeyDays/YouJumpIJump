@@ -1,6 +1,7 @@
 import React from 'react';
 import { Player } from '../../regulates/Interfaces';
 import { Group, Text, Label, Tag } from 'react-konva';
+import LinearLayout from './LinearLayout';
 
 interface PlayerListProps {
     playList?: Player[]
@@ -23,13 +24,18 @@ class PlayerList extends React.Component<PlayerListProps> {
 
     }
 
+    componentDidMount(): void {
+        this.height = this.refDom.height
+        this.width = this.refDom.width
+    }
+
     render(): React.ReactNode {
+        let fontSize = Math.max(15, Math.min(20,window.innerWidth/100))
+        let padding = Math.max(6, Math.min(10,window.innerWidth/200))
         let players = this.props.playList.map((val, index) => {
             return (
 
-                <Label
-                    y={50 * index}
-                >
+                <Label>
                     <Tag
                         fill={index < PlayerList.colorList.length ? PlayerList.colorList[index]:'grey'}
                         lineJoin='round'
@@ -45,20 +51,27 @@ class PlayerList extends React.Component<PlayerListProps> {
                         (val.alive ? "存活" : "死亡") +
                         `  智识: ${val.mastery}` +
                         `  位置: 第${val.position[0] + 1}层 ${val.position[1]}, ${val.position[2]}`}
-                        fontSize={20}
-                        padding={7}
+                        fontSize={fontSize}
+                        padding={padding}
                     ></Text>
                 </Label>)
         })
         return (
-            <Group
+            <LinearLayout
+            
+            reff={(e)=>{this.refDom=e}}
             {...this.props}
+            orientation='vertical'
+            padding={padding}
             >
                 {players}
-            </Group>
+            </LinearLayout>
         )
     }
 
+    refDom: any
+    width: number = 0
+    height: number = 0
 }
 
 export default PlayerList
