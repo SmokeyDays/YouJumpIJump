@@ -15,15 +15,11 @@ type SlotProps = typeof Slot.defaultProps & {
   index?: number;
 }
 
-interface SlotState {
-  color?: string;
-}
-
-export class Slot extends React.Component<SlotProps, SlotState> {
+export class Slot extends React.Component<SlotProps> {
 
   static defaultProps = {
     radius: 30,
-    color: 'blue',
+    color: 'DarkCyan',
     strokeWidth: 5,
     stroke: '#293047',
     x: 0,
@@ -66,24 +62,15 @@ export class Slot extends React.Component<SlotProps, SlotState> {
   }
 };
 
-type BoardProps = typeof Board.defaultProps & {
-  radius?: number,
-  x?: number,
-  y?: number,
-  brokeColor?: string,
-  slotTemplate?: Slot
+interface BoardProps {
+  boardInfo: BoardInfo,
+  accessSlotList: string[],
 }
 
 interface BoardState {
-  scale?: number
+  scale: number,
 }
-class Board extends React.Component<BoardProps, BoardState> {
-
-  //设置格子是否破碎
-  setSlot(ix: number, iy: number, isBroken: boolean) {
-    this.slotMap[`${ix},${iy}`] = !this.slotMap[`${ix},${iy}`];
-    this.setState({});
-  }
+export class Board extends React.Component<BoardProps, BoardState> {
 
   //放大棋盘
   setScale(scale: number) {
@@ -92,62 +79,33 @@ class Board extends React.Component<BoardProps, BoardState> {
 
   constructor(props: BoardProps) {
     super(props);
-
-    this.setSlot = this.setSlot.bind(this);
     this.setScale = this.setScale.bind(this);
-
     this.state = {
-      scale: 1
+      scale: 1,
     }
-
-
   }
 
   componentDidMount() {
-    this.setState({})
   }
 
-  updateSlotInfos() {
-    this.slotInfos = []
-    this.slotMap = {}
-    this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0 };
-    this.slotMap['0,0'] = false;
 
-    let cnt = 1;
-    const radius = this.props.slotTemplate.props.radius;
-    for (let i = 1; i < this.props.radius; i++) {
-      let xx = 2 * radius * i, yy = 0;
-      let ix = i, iy = 0;
-      for (let d = 0; d < 6; d++) {
-        for (let j = 0; j < i; j++) {
-          this.slotInfos[cnt] = {
-            x: xx,
-            y: yy,
-            ix: ix,
-            iy: iy
-          }
-          this.slotMap[`${ix},${iy}`] = false;
-          cnt++;
-          ix += Board.directions[d][0];
-          iy += Board.directions[d][1];
-          xx += Board.directions[d][2] * 2 * radius;
-          yy += Board.directions[d][3] * 2 * radius;
-        }
-      }
-    }
-  }
 
   render(): React.ReactNode {
 
-    this.updateSlotInfos();
-    let slots = this.slotInfos.map((value, index) => {
+    let info = this.props.boardInfo;
+    console.log(this.props.accessSlotList)
+    let slots = info.slotInfos.map((value, index) => {
       return (
         <Slot
+          {...info.slotTemplate.props}
           x={value.x}
           y={value.y}
           index={index}
-          color={this.slotMap[`${value.ix},${value.iy}`] ? this.props.brokeColor : this.props.slotTemplate.props.color}
-          radius={this.props.slotTemplate.props.radius}></Slot>
+          key={index}
+          color={value.isBroken ? info.brokeColor : info.slotTemplate.props.color}
+          stroke={this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
+        >
+        </Slot>
 
       )
     });
@@ -156,21 +114,75 @@ class Board extends React.Component<BoardProps, BoardState> {
       <Group
         scaleX={this.state.scale}
         scaleY={this.state.scale}
-        x={this.props.x}
-        y={this.props.y}
       >
         {slots}
       </Group>
     )
   }
 
-  static defaultProps = {
-    radius: 4,
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
-    brokeColor: 'white',
-    slotTemplate: (<Slot></Slot>) as unknown as Slot
+}
+
+export class BoardInfo {
+  constructor(radius = 3, brokeColor = 'white',
+    accessColor = 'green', slotTemplate = <Slot></Slot>) {
+    this.radius = radius
+    this.accessColor = accessColor
+    this.brokeColor = brokeColor
+    this.slotTemplate = slotTemplate
+    this.initSlotInfos()
+
   }
+
+  setSlotStatus(ix: number, iy: number, isBroken: boolean) {
+    this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
+  }
+
+  initSlotInfos() {
+    this.slotInfos = []
+    this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0, isBroken: false };
+    this.slotMap['0,0']=0
+
+    let cnt = 1;
+    const radius = this.slotTemplate.props.radius;
+    for (let i = 1; i < this.radius; i++) {
+      let xx = 2 * radius * i, yy = 0;
+      let ix = i, iy = 0;
+      for (let d = 0; d < 6; d++) {
+        for (let j = 0; j < i; j++) {
+          this.slotInfos[cnt] = {
+            x: xx,
+            y: yy,
+            ix: ix,
+            iy: iy,
+            isBroken: false,
+          }
+          this.slotMap[`${ix},${iy}`] = cnt;
+          cnt++;
+          ix += BoardInfo.directions[d][0];
+          iy += BoardInfo.directions[d][1];
+          xx += BoardInfo.directions[d][2] * 2 * radius;
+          yy += BoardInfo.directions[d][3] * 2 * radius;
+        }
+      }
+    }
+  }
+
+  radius: number
+  brokeColor: string
+  accessColor: string
+  slotTemplate: React.ReactElement
+
+  slotInfos: {
+    x: number,
+    y: number,
+    ix: number,
+    iy: number,
+    isBroken: boolean,
+  }[] = [];
+
+  slotMap: {
+    [key: string]: number
+  } = {}
 
   static directions: number[][] = [
     [0, 1, -dx, -dy],
@@ -180,17 +192,4 @@ class Board extends React.Component<BoardProps, BoardState> {
     [1, 0, 1, 0],
     [1, 1, dx, -dy],
   ]
-
-  slotInfos: {
-    x: number,
-    y: number,
-    ix: number,
-    iy: number
-  }[] = [];
-
-  slotMap: {
-    [key: string]: boolean
-  } = {}
 }
-
-export default Board

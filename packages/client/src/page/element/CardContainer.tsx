@@ -14,23 +14,6 @@ interface CardContainerState {
     tipCard: number
 }
 
-function CutStr(str: string,count: number):string {
-    let result = ""
-    let amount = 0
-    for(let i=0;i<str.length;i++) {
-        if(str[i]==' ') {
-            amount -= 0.75
-        }
-        amount++
-        result+=str[i]
-        if(amount>=count) {
-            amount=0;
-            result+='\n'
-        }
-    }
-    return result;
-}
-
 class CardContainer extends React.Component<CardContainerProps, CardContainerState> {
 
     static defaultProps = {
@@ -115,7 +98,8 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                 >
                 </Tag>
                 <Text
-                    text={`名称: ${card["name"]}\n\n${CutStr("描述:  "+getDescription(card["id"]),10)}`}
+                    text={`名称:   ${card["name"]}\n\n描述:   ${card["desc"]}`}
+                    width={this.props.cardWidth*2}
                     fill='white'
                     fontSize={20}
                     padding={7}

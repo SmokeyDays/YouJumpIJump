@@ -36,7 +36,10 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     return (
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
-          <GameCanvas currentBoard={this.state.currentBoard}></GameCanvas>
+          <GameCanvas
+          x={window.innerWidth/2}
+          y={window.innerHeight/2}
+          ></GameCanvas>
           <UI
           currentBoard={this.state.currentBoard}
           currentPlayer={this.state.currentPlayer}
@@ -57,11 +60,17 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     document.removeEventListener("keydown", this.handleKeyDown)
   }
 
+  setCurrentBoard(index: number) {
+    this.setState({currentBoard:index})
+    GameCanvas.instance.setCurrentBoard(index)
+  }
+
   handleKeyDown(e) {
     let lastBoard = this.state.currentBoard
+    console.log('key:'+e.keyCode)
     switch(e.keyCode) {
-      case 38: this.setState({currentBoard:(lastBoard+2)%3});break;
-      case 40: this.setState({currentBoard:(lastBoard+1)%3}); break;
+      case 38: this.setCurrentBoard((lastBoard+2)%3);break;
+      case 40: this.setCurrentBoard((lastBoard+1)%3); break;
     }
   }
 

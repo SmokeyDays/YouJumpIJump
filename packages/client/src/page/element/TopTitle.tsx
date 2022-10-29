@@ -1,11 +1,14 @@
 import React, { Fragment } from 'react';
-import { Group, Text, } from 'react-konva';
+import { Text, } from 'react-konva';
 import Center from './Center';
+import LinearLayout from './LinearLayout';
 
 interface TopTitleProps {
     currentBoard: number
     currentPlayer: string
     currentRound: number
+    x?: number
+    y?: number
 }
 
 
@@ -16,22 +19,23 @@ class TopTitle extends React.Component<TopTitleProps> {
 
     render(): React.ReactNode {
         return (
-            <Group>
-                <Center
+            <Center
+                Type={LinearLayout}
+                {...this.props}
+                orientation='vertical'
+                xAlign='center'
+                padding={20}
+            >
+                <Text
                     Type={Text}
                     text={`第${this.props.currentRound}个回合  当前是玩家${this.props.currentPlayer}的回合`}
                     fontSize={20}
-                    x={window.innerWidth * 0.5}
-                    y={window.innerHeight * 0.15}
-                    fill={'#1b315e'}></Center>
-                <Center
-                    Type={Text}
+                    fill={'#1b315e'}></Text>
+                <Text
                     text={`第${this.props.currentBoard + 1}层`}
                     fontSize={20}
-                    x={window.innerWidth * 0.5}
-                    y={window.innerHeight * 0.2}
-                    fill={'#1b315e'}></Center>
-            </Group>
+                    fill={'#1b315e'}></Text>
+            </Center>
         )
     }
 

@@ -4,6 +4,8 @@ import { Group, Text, Label, Tag } from 'react-konva';
 
 interface PlayerListProps {
     playList?: Player[]
+    x?: number,
+    y?: number
 }
 
 class PlayerList extends React.Component<PlayerListProps> {
@@ -49,7 +51,9 @@ class PlayerList extends React.Component<PlayerListProps> {
                 </Label>)
         })
         return (
-            <Group x={20} y={20}>
+            <Group
+            {...this.props}
+            >
                 {players}
             </Group>
         )

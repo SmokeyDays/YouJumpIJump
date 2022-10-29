@@ -79,7 +79,6 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         let rExb2: RegExp = /#([\da-f]{2})([\da-f]{2})([\da-f]{2})/g //?
         let x = rExb1.exec(rgb)
         let y = rExb2.exec(addRgb)
-        console.log(x, y)
         if (x && y) {
             let r, g, b: number;
             if (minus) {
@@ -94,7 +93,6 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
                 b = Math.min(255, parseInt(x[3], 16) + parseInt(y[3], 16))
             }
             let result = '#' + (r+256).toString(16).slice(1,3) + (g+256).toString(16).slice(1,3) + (b+256).toString(16).slice(1,3);
-            console.log(result)
             return result
         }
         return null;
