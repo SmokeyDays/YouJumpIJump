@@ -39,7 +39,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let mid = (this.state.cardList.length - 1) / 2;
         let cards = this.state.cardList.map((value, index) => {
         let img = new Image(this.props.cardWidth,this.props.cardWidth * 1.4)
-        img.src= require("../../assets/cards/" + value + "_S.png");
+        img.src= require(`../../assets/cards/${value}_Small.png`);
             return (
                 <KImage
                     onMouseEnter={() => { this.setState({ tipCard: index }) }}

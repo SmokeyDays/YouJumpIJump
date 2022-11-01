@@ -1,6 +1,8 @@
 import React from 'react';
-import { Text, Line, Group } from 'react-konva';
+import { Text, Line, Group, Circle } from 'react-konva';
 import Center from './Center';
+import { Player } from '../../regulates/Interfaces';
+import PlayerList from './PlayerList';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -65,6 +67,7 @@ export class Slot extends React.Component<SlotProps> {
 interface BoardProps {
   boardInfo: BoardInfo,
   accessSlotList: string[],
+  playerState: Player[],
 }
 
 interface BoardState {
@@ -110,12 +113,48 @@ export class Board extends React.Component<BoardProps, BoardState> {
       )
     });
 
+    let players = this.props.playerState.map((value, index) => {
+      if (value.position)
+        return (
+          <Group
+            x={info.slotInfos[info.slotMap[`${value.position[1]},${value.position[2]}`]].x}
+            y={info.slotInfos[info.slotMap[`${value.position[1]},${value.position[2]}`]].y}>
+
+            {value.magician &&
+              <Circle
+                fill='#dec674'
+                radius={info.slotTemplate.props.radius * 0.8}
+              >
+              </Circle>
+            }
+            <Circle
+              fill={index < PlayerList.colorList.length ? PlayerList.colorList[index] : 'grey'}
+              radius={info.slotTemplate.props.radius * 0.7}
+            >
+            </Circle>
+            <Center
+              Type={Text}
+              text={value.name.slice(0, Math.min(6, value.name.length))}
+              fontSize={info.slotTemplate.props.radius / 2}
+            ></Center>
+            <Center
+              Type={Text}
+              text={value.prayer > 0 ? value.prayer : null}
+              fontSize={info.slotTemplate.props.radius / 2}
+              y={-info.slotTemplate.props.radius / 2}
+              fill="#9b95c9"
+            ></Center>
+          </Group>
+        )
+    })
+
     return (
       <Group
         scaleX={this.state.scale}
         scaleY={this.state.scale}
       >
         {slots}
+        {players}
       </Group>
     )
   }
@@ -124,7 +163,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
 
 export class BoardInfo {
   constructor(radius = 3, brokeColor = 'white',
-    accessColor = 'green', slotTemplate = <Slot></Slot>) {
+    accessColor = 'green', slotTemplate = <Slot></Slot>,) {
     this.radius = radius
     this.accessColor = accessColor
     this.brokeColor = brokeColor
@@ -141,7 +180,7 @@ export class BoardInfo {
   initSlotInfos() {
     this.slotInfos = []
     this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0, isBroken: false };
-    this.slotMap['0,0']=0
+    this.slotMap['0,0'] = 0
 
     let cnt = 1;
     const radius = this.slotTemplate.props.radius;

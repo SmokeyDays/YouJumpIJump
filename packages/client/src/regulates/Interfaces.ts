@@ -39,6 +39,10 @@ export interface Player {
   position: [number, number, number], // 是否存活, 层数, x, y
   hand: Card[],
   mastery: number,
+  name: string,
+  prayer: number,
+  magician: false,
+  passby: [number, number, number][],
 }
 
 // 服务端发送给客户端的格子集合

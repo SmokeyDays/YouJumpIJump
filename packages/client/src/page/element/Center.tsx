@@ -5,7 +5,7 @@ interface CenterProps {
     Type: any
 } 
 
-class Center extends React.Component<any,{ width: number, height: number }> {
+class Center extends React.Component<any ,{ width: number, height: number }> {
     constructor(props) {
         super(props)
         this.refDom = React.createRef()
@@ -28,6 +28,7 @@ class Center extends React.Component<any,{ width: number, height: number }> {
     }
 
     render(): React.ReactNode {
+       // console.log(this.props.text, this.state.width)
         return (
             <this.props.Type
                 ref={this.refDom}

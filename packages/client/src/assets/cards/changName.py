@@ -21,9 +21,9 @@ for filename in files:
             elif(filename.find("捺")!=-1):
                 newName+="N"
         if(filename.find("大")!=-1):
-            newName+="_B.png"
+            newName+="_Big.png"
         else:
-            newName+="_S.png"
+            newName+="_Small.png"
         cmd = "copy \"./"+ filename + "\" \"./" + newName + "\""
         print(cmd)
         print(os.system(cmd))

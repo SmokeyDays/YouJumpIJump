@@ -8,7 +8,7 @@ import PlayerList from "./PlayerList"
 import TopTitle from "./TopTitle"
 
 interface UIProps {
-    playerList: Player[],
+    playerList: (Player & {numberPos: number})[],
     currentRound: number,
     currentPlayer: string,
     currentBoard: number,
