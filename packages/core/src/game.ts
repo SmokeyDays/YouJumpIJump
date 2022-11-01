@@ -1,5 +1,6 @@
 import { Context } from "cordis";
 import { globalAgent } from "http";
+import { off } from "process";
 import { Player, cardConfig } from "./player"
 import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
 
@@ -51,8 +52,31 @@ export class GameState {
     }
   }
 
-  async gameStart() {
-
+  async gameMain() {
+    this.gameStart();
+    while(this.totPlayer > 1) {
+      for(let i = 0; i < this.player.length; i++) {
+        if(this.player[i].alive) {
+          await this.turn(i);
+          if(this.totPlayer < 2) {
+            break;
+          }
+        }
+        if(this.player[i].prayer > 0) {
+          this.player[i].prayer--;
+          i--;
+        }
+      }
+    }
+    if(this.totPlayer == 1) {
+      for(let i = 0; i < this.player.length; i++) {
+        if(this.player[i].alive) {
+          this.global.result[this.player[i].name] = 1;
+          break;
+        }
+      }
+    }
+    this.gameEnd();
   }
 
   async recastSignal(name: string): Promise<CardPara>{
@@ -84,7 +108,7 @@ export class GameState {
     });
     return res;
   }
-  async gamestart() {
+  async gameStart() {
     for(let i = 0; i < this.player.length; i++) {
       for(let j = 0; j < i; j++) {
         const res: CardPara = await this.recastSignal(this.player[i].name);

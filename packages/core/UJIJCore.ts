@@ -58,9 +58,7 @@ export class UJIJCore {
     this.app.gameState = new GameState(players, this.req, () => {
       this.onGameEnd();
     });
-  }
-  gameStart() {
-    this.app.gameState.gameStart();
+    this.app.gameState.gameMain();
   }
   getGameState() {
     return this.app.gameState;
