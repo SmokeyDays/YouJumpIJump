@@ -118,10 +118,7 @@ export class Room {
         }
       }
     }
-    return {
-      state: this.game.getGameState(),
-      signal: {},
-    };
+    return gameState;
   }
 
   async renew() {
@@ -148,35 +145,5 @@ export class Room {
         await this.users[i]?.emit('renew-game-state', this.gameStateGenerator(i));
       }
     }
-  }
-
-  iterate(user: User, signal: PlayerSignal) {
-    let userID: number = -1;
-    if(user.userName == this.users[0]?.userName) {
-      userID = 0;
-    }else if(user.userName == this.users[1]?.userName){
-      userID = 1;
-    }
-    if(userID == -1) {
-      logger.error("Player %s sent signal %s while not exist in room %s.", user.userName, signal, this.roomName);
-      return;
-    }else{
-      logger.verbose("Player %s with ID %s sent signal %s to room %s.", user.userName, userID, signal, this.roomName);
-    }
-    if(this.iterateSignal == null || this.iterateSignal.type != IterateSignalType.REQUEST){
-      logger.warn("Player %s with ID %s sent signal. But no iterateSignal requesting in room %s", user.userName, userID, this.roomName);
-      return;
-    }
-    if(this.game == null){
-      logger.warn("Player %s with ID %s sent signal. But there's no game running in room %s", user.userName, userID, this.roomName);
-      return;
-    }
-    if(userID != this.iterateSignal.state[0] || signal.type != this.iterateSignal.state[1]) {
-      logger.verbose("Player %s with ID %s sent signal %s. But not match iterateSignal %s in room %s.", user.userName, userID, signal, this.iterateSignal.state, this.roomName);
-      return;
-    }
-    logger.silly("Game iterate and got new iterateSignal %s in room %s", this.iterateSignal, this.roomName);
-    this.renew();
-    return;
   }
 }
