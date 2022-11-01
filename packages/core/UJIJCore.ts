@@ -41,9 +41,11 @@ export class UJIJCore {
   
   app: Context;
   req: (signal: RequestSignal) => Promise<CardPara>;
+  onGameEnd: () => void;
   // callback: (signal: UJIJ.OutputSignal) => void
-  constructor(callback: (signal: RequestSignal) => Promise<CardPara>) {
-    this.req = callback;
+  constructor(reqSignal: (signal: RequestSignal) => Promise<CardPara>, onGameEnd: () => void) {
+    this.req = reqSignal;
+    this.onGameEnd = onGameEnd;
     this.app = new Context();
     // this.app.plugin(duelInit);
     // bind message callback
@@ -51,10 +53,12 @@ export class UJIJCore {
     //   const ret = await this.req(signal);
     //   return ret;
     // }).bind(this));
-    this.startDuel();
   }
-  startDuel() {
-    this.app.gameState = new GameState(["Alice", "Bob", "Cat"], this.req);
+  startDuel(players: string[]) {
+    this.app.gameState = new GameState(players, this.req, () => {
+      this.onGameEnd();
+    });
+    this.app.gameState.gameMain();
   }
   getGameState() {
     return this.app.gameState;
