@@ -38,6 +38,7 @@ export type SignalPara = {
   type: 'recast',
 } | {
   type: 'card',
+  stage: "main" | "instant"
 } | {
   type: 'action',
   pos: Position[]

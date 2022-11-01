@@ -14,7 +14,9 @@ export class GameState {
   }
   totPlayer: number;
   req: (signal: RequestSignal) => Promise<CardPara>;
-  constructor(player: string[], req: (signal: RequestSignal) => Promise<CardPara>) {
+  gameEnd: () => void;
+  constructor(player: string[], req: (signal: RequestSignal) => Promise<CardPara>, gameEnd: () => void) {
+    this.gameEnd = gameEnd;
     this.req = req;
     this.totPlayer = player.length;
     for(let i = 0; i < player.length; ++i) {
@@ -27,6 +29,11 @@ export class GameState {
       result: {},
     }
   }
+
+  async gameStart() {
+
+  }
+
   async recastSignal(name: string): Promise<CardPara>{
     const res = await this.req({
       player: name,
@@ -36,11 +43,12 @@ export class GameState {
     });
     return res;
   }
-  async cardSignal(name: string): Promise<CardPara>{
+  async cardSignal(name: string, inst: boolean): Promise<CardPara>{
     const res = await this.req({
       player: name,
       para: {
-        type: 'card'
+        type: 'card',
+        stage: inst? "instant": "main",
       }
     });
     return res;
@@ -84,7 +92,7 @@ export class GameState {
     ist['2'] = ist['5'] = ist['6'] = ist['7'] = ist['J'] = ist['BJ'] = ist['RJ'] = true;
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
     mov['10'] = mov['J'] = mov['0'] = mov['4'] = mov['9'] = true;
-    let res: CardPara = await this.cardSignal(this.player[id].name);
+    let res: CardPara = await this.cardSignal(this.player[id].name, inst);
     if(res != null && res.type == 'card') {
       if(!inst || (inst && ist[res.val])) {
         if(mov[res.val]) {
@@ -109,9 +117,9 @@ export class GameState {
   async turn(id: number) {
     this.player[id].turnBegin();
     //instant turn
-    this.action(id, true);
+    await this.action(id, true);
     //main turn
-    this.action(id, false);
+    await this.action(id, false);
     //burst and drop
     for(let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
@@ -125,5 +133,4 @@ export class GameState {
       }
     }
   }
-  
 } 
