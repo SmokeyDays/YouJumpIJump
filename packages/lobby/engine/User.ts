@@ -7,8 +7,8 @@ export class User {
   socket: any; // The handle got by socket.io.
   userName: string | null = null;
   room: Room | null = null;
-  emit(type: string, para: any) {
-    this.socket.emit(type, para);
+  async emit(type: string, para: any) {
+    await this.socket.emit(type, para);
   }
   joinRoom(name: string) {
       const roomManager = RoomManager.getInstance();
