@@ -71,3 +71,10 @@ export function getUUID() {
     return v.toString(16);
   });
 }
+export function isInstant(card: string) {
+  const instantCardList: string[] = ["2", "5", "6", "7", "8", "J", "BJ", "RJ"];
+  if(instantCardList.indexOf(card) > -1) {
+    return true;
+  }
+  return false;
+}

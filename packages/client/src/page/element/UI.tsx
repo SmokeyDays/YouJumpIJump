@@ -10,8 +10,9 @@ import TopTitle from "./TopTitle"
 interface UIProps {
     playerList: (Player & {numberPos: number})[],
     currentRound: number,
-    currentPlayer: string,
+    turn: number,
     currentBoard: number,
+    stage: number,
 }
 class UI extends React.Component<UIProps> {
     constructor(props) {
@@ -24,13 +25,16 @@ class UI extends React.Component<UIProps> {
             <Layer>
                 <TopTitle
                     x={window.innerWidth / 2}
-                    y={window.innerHeight / 5}
+                    y={window.innerHeight / 9}
                     currentBoard={this.props.currentBoard}
-                    currentPlayer={this.props.currentPlayer}
-                    currentRound={this.props.currentRound}></TopTitle>
+                    currentPlayer={this.props.playerList[this.props.turn].name}
+                    currentRound={this.props.currentRound}
+                    stage = {this.props.stage}
+                    ></TopTitle>
                 <PlayerList
                     x={20}
                     y={20}
+                    trun = {this.props.turn}
                     playList={this.props.playerList}></PlayerList>
                 <CardContainer
                     x={window.innerWidth / 2}
@@ -45,6 +49,7 @@ class UI extends React.Component<UIProps> {
                     <CardShowcase
                         width={showcaseWidth}
                         parentRef={'1'}
+                        stage = {this.props.stage}
                     ></CardShowcase>
                 </LinearLayout>
 

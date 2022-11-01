@@ -14,6 +14,7 @@ interface CardShowcaseProps {
     y?: number
     width: number
     parentRef?: any
+    stage: number
 }
 class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState> {
 
@@ -83,26 +84,20 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                     xAlign='center'
                     padding={sFont / 3}
                 >
-                    <KButton
-                        background='#ffd400'
-                        width={this.width / 2 - sFont}
-                        height={bHeight}
-                        text="附加行动"
-                        fontSize={mFont}>
 
-                    </KButton>
-
+                    
                     <KButton
                         background='#1d953f'
                         width={this.width / 2 - sFont}
                         height={bHeight}
-                        text="主要行动"
+                        text="打出"
                         fontSize={mFont}>
-
                     </KButton>
-                </LinearLayout>
+
+                    
+                    
                 <KButton
-                    width={this.width * 2 / 3}
+                    width={this.width / 2 - sFont}
                     height={bHeight}
                     background="#bb1111"
                     text="取消"
@@ -115,6 +110,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 >
 
                 </KButton>
+                </LinearLayout>
             </LinearLayout>
         )
     }

@@ -7,7 +7,8 @@ import { stringToArray } from 'konva/lib/shapes/Text';
 interface PlayerListProps {
     playList?: (Player & { numberPos: number })[]
     x?: number,
-    y?: number
+    y?: number,
+    trun: number
 }
 
 class PlayerList extends React.Component<PlayerListProps> {
@@ -59,7 +60,7 @@ class PlayerList extends React.Component<PlayerListProps> {
                     </Label>
                     <Label>
                         <Tag
-                            fill={'#d3d7d4'}
+                            fill={val.alive? ( this.props.trun == index ? '#41b349' : '#d3d7d4'):'#46485f'}
                             lineJoin='round'
                             shadowColor='grey'
                             shadowBlur={10}
@@ -69,8 +70,9 @@ class PlayerList extends React.Component<PlayerListProps> {
                         >
                         </Tag>
                         <Text text={
+                            val.alive ?
                             `  智识: ${val.mastery}` +
-                            `  位置: 第${val.position[0] + 1}层 ${val.numberPos}`}
+                            `  位置: 第${val.position[0] + 1}层 ${val.numberPos}`:'Dead!!!'}
                             fontSize={fontSize}
                             padding={padding}
                             width={200}
