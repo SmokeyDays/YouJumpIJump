@@ -7,8 +7,8 @@ export class User {
   socket: any; // The handle got by socket.io.
   userName: string | null = null;
   room: Room | null = null;
-  emit(type: string, para: any) {
-    this.socket.emit(type, para);
+  async emit(type: string, para: any) {
+    await this.socket.emit(type, para);
   }
   joinRoom(name: string) {
       const roomManager = RoomManager.getInstance();
@@ -87,18 +87,6 @@ export class User {
       }
       this.room.removeUser(this);
       socket.emit("leave-room-successful");
-    });
-    // Transport ingame signals.
-    socket.on("player-signal-ingame",  (val: PlayerSignal) => {
-      if(this.userName == null) {
-        logger.warn('User with socket id %s try send a ingame signal but never login.', socket.id);
-        return;
-      }
-      if(this.room == null) {
-        logger.warn('User %s try to sent a ingame signal but never in any room.', this.userName);
-        return;
-      }
-      this.room.iterate(this, val);
     });
   }
 }
