@@ -88,17 +88,5 @@ export class User {
       this.room.removeUser(this);
       socket.emit("leave-room-successful");
     });
-    // Transport ingame signals.
-    socket.on("player-signal-ingame",  (val: PlayerSignal) => {
-      if(this.userName == null) {
-        logger.warn('User with socket id %s try send a ingame signal but never login.', socket.id);
-        return;
-      }
-      if(this.room == null) {
-        logger.warn('User %s try to sent a ingame signal but never in any room.', this.userName);
-        return;
-      }
-      this.room.iterate(this, val);
-    });
   }
 }
