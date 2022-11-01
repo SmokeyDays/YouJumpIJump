@@ -3,6 +3,10 @@ import { globalAgent } from "http";
 import { Player, cardConfig } from "./player"
 import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
 
+function randomsort(a: string, b: string): number{
+  return Math.random()>.5 ? -1 : 1;
+}
+
 export class GameState {
   board: Board = {};
   player: Player[] = [];
@@ -19,6 +23,23 @@ export class GameState {
     this.totPlayer = player.length;
     for(let i = 0; i < player.length; ++i) {
       this.player.push(new Player({initialMastery: this.totPlayer, name: player[i]}));
+    }
+    player.sort(randomsort);
+    for(let i = 0; i < 3; i++) {
+      let size: number = 2 * (this.player.length - 1) + (3 - i);
+      for(let j = -size + 1; j < size; j++) {
+        for(let k = -size + 1; k < size; k++) {
+          this.board[[i, j, k].toString()].isBursted = true;
+        }
+      }
+    }
+    for(let i = 0; i < 3; i++) {
+      let size: number = 2 * (this.player.length - 1) + (3 - i);
+      for(let j = -size - 5; j <= size + 5; j++) {
+        for(let k = -size - 5; k <= size + 5; k++) {
+          this.board[[i, j, k].toString()].isBursted = !this.board[[i, j, k].toString()].isBursted;
+        }
+      }
     }
     this.global = {
       round: 0,
