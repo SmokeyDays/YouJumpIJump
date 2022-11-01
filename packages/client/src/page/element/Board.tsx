@@ -133,6 +133,7 @@ export class BoardInfo {
 
   }
 
+  //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
     this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
   }
