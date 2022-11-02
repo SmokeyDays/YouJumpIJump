@@ -49,10 +49,19 @@ export class Room {
     return res;
   }
 
-  startGame() {
-    this.game = new UJIJCore(this.requester.bind(this));
+  gameEnd() {
+
+  }
+
+  async startGame() {
+    this.game = new UJIJCore(this.requester.bind(this), this.gameEnd.bind(this));
     logger.verbose('Room %s started a new game.', this.roomName);
-    this.renew();
+    const userNameList: string[] = [];
+    this.users.forEach((val) => {
+      userNameList.push(val.userName !== null? val.userName: "无名玩家");
+    });
+    this.game.startDuel(userNameList);
+    await this.renew();
   }
 
   addUser(user: User): boolean {
@@ -111,6 +120,7 @@ export class Room {
     // const nowSignal = this.iterateSignal.state[0] == id? this.iterateSignal.state[1]: PlayerOperation.NONE;
     const nowSignal = null;
     const gameState = this.game.getGameState();
+    console.log(this.game.app.gameState);
     for(const pl of gameState.player) {
       if(pl.name !== this.users[id].userName) {
         for(let i = 0; i < pl.hand.length; ++i) {
@@ -131,15 +141,7 @@ export class Room {
         logger.verbose('Room %s renew to user %s', this, i?.userName);
         i?.emit('renew-room-state', roomState);
       }
-    }else if(this.iterateSignal?.type === IterateSignalType.GAME_END){
-      for(let i = 0; i < this.users.length; ++i) {
-        logger.verbose('Game Result %s renew to user %s with id %s', this.iterateSignal.state, this.users[i]?.userName, i);
-        this.users[i]?.emit('room-game-end', {
-          gameResult: this.iterateSignal.state,
-          roomState: roomState,
-        });
-      }
-    }else{
+    } else {
       for(let i = 0; i < this.users.length; ++i) {
         logger.verbose('Gamestate %s renew to user %s with id %s', 1, this.users[i]?.userName, i);
         await this.users[i]?.emit('renew-game-state', this.gameStateGenerator(i));
