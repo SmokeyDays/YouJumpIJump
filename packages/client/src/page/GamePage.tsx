@@ -45,7 +45,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   render() {
-    //console.log(this.props.gameState);
+    // console.log(this.props.gameState);
     return (
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
@@ -55,7 +55,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
             boardInfo={this.state.boards[this.state.currentBoard]}
             accessSlotList={this.state.accessSlotList[this.state.currentBoard]}
             playerState={this.state.gameState.player.map(
-              (v, i) => v.alive && v.position[0] == this.state.currentBoard && v)}
+              (v, i) => v.alive && v.position[0] === this.state.currentBoard && v)}
           ></GameCanvas>
           <UI
             stage = {this.state.gameState.global.stage}
@@ -78,6 +78,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown)
+    console.log(CardContainer.instance);
     CardContainer.instance.setCard(["0", "2", "3", "AH"])
   }
 

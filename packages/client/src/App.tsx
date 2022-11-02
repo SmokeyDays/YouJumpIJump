@@ -82,15 +82,9 @@ class App extends React.PureComponent<{},AppState> {
 
     // Register listeners on the messages that changes the whole application.
     
-    socket.on("renew-game-state", (args) => {
-      console.log(args);
-      this.setGameState(args.state);
-      if(args.signal === PlayerOperation.NONE) {
-        this.setSignal(PlayerOperation.NONE);
-        socket.emit("player-signal-ingame", {type: PlayerOperation.NONE, state: null});
-      }else{
-        this.setSignal(args.signal);
-      }
+    socket.on("renew-game-state", (state) => {
+      console.log(state);
+      this.setGameState(state);
       this.setPage("GamePage");
     });
     socket.on("user-login-successful", (args) => {

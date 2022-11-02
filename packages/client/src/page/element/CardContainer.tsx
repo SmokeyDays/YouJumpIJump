@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group, Rect, Tag, Text, Label, Image as KImage} from 'react-konva';
-import { CardDescription, getDescription } from '../../regulates/utils';
+import { CardDescription, getDescription, ImgsManager } from '../../regulates/utils';
 import CardShowcase from './CardShowcase';
 
 type CardContainerProps = typeof CardContainer.defaultProps & {
@@ -22,6 +22,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         cardWidth: 100,
     }
 
+    static instance = null
     constructor(props) {
         super(props)
         if(CardContainer.instance) {
@@ -39,7 +40,8 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let mid = (this.state.cardList.length - 1) / 2;
         let cards = this.state.cardList.map((value, index) => {
         let img = new Image(this.props.cardWidth,this.props.cardWidth * 1.4)
-        img.src= require(`../../assets/cards/${value}_Small.png`);
+        
+        img.src= ImgsManager.getInstance().getImg(`${value}_Small.png`);
             return (
                 <KImage
                     onMouseEnter={() => { this.setState({ tipCard: index }) }}
@@ -122,7 +124,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         this.setState({tipCard: null})
     }
 
-    static instance = null
     isShowingCard: boolean = false
 }
 

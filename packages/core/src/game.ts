@@ -30,17 +30,21 @@ export class GameState {
     player.sort(randomsort);
     for(let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for(let j = -size + 1; j < size; j++) {
-        for(let k = -size + 1; k < size; k++) {
-          this.board[[i, j, k].toString()].isBursted = true;
+      for(let j = -size - 5; j <= size + 5; j++) {
+        for(let k = -size - 5; k <= size + 5; k++) {
+          this.board[[i, j, k].toString()] = {
+            isBursted: false
+          }
         }
       }
     }
     for(let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for(let j = -size - 5; j <= size + 5; j++) {
-        for(let k = -size - 5; k <= size + 5; k++) {
-          this.board[[i, j, k].toString()].isBursted = !this.board[[i, j, k].toString()].isBursted;
+      for(let j = -size + 1; j < size; j++) {
+        for(let k = -size + 1; k < size; k++) {
+          this.board[[i, j, k].toString()] = {
+            isBursted: true
+          }
         }
       }
     }

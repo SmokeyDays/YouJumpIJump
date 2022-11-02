@@ -2,6 +2,28 @@ import counterDictionary from "../assets/text/counter.json";
 import cardDescription from "../assets/text/cardDescription.json";
 import { GameStage, GameState } from "./Interfaces";
 
+export class ImgsManager {
+  // Singleton
+  
+  private static instance: ImgsManager;
+  reqImgs;
+  paths: IterableIterator<number>;
+  private constructor() {
+    this.reqImgs = require.context('../assets/cards', true, /\.png$/);
+    this.paths = this.reqImgs.keys()
+  }
+  static getInstance() {
+    if(!this.instance) {
+      this.instance = new ImgsManager();
+    }
+    return this.instance;
+  }
+  
+  getImg(path: string) {
+    return this.reqImgs("./" + path);
+  }
+}
+
 export const CounterDictionary: Record<string,string> = counterDictionary;
 
 export const AttributeList: Record<string,string> = {

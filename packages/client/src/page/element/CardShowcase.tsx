@@ -3,7 +3,7 @@ import { Image as KImage, Text } from 'react-konva';
 import KButton from './KButton';
 import LinearLayout from './LinearLayout';
 import CardContainer from './CardContainer';
-import { CardDescription } from '../../regulates/utils';
+import { CardDescription, ImgsManager } from '../../regulates/utils';
 
 interface CardShowcaseState {
     cardId: string,
@@ -53,7 +53,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     render(): React.ReactNode {
         if (this.state.cardId == null) return null
         let img = new Image()
-        img.src = require(`../../assets/cards/${this.state.cardId}_Big.png`);
+        img.src = ImgsManager.getInstance().getImg(`${this.state.cardId}_Big.png`);
         let card = CardDescription[this.state.cardId]
         let bFont = Math.max(20, this.width / 10)
         let mFont = Math.max(18, this.width / 12)
