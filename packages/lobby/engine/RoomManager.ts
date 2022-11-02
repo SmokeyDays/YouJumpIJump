@@ -3,7 +3,6 @@ import { Room } from "./Room";
 
 
 export class RoomManager {
-  roomMap: Record<string, Room> = {};
   // Singleton
   private static instance: RoomManager;
   private constructor() {}
@@ -13,6 +12,8 @@ export class RoomManager {
     }
     return this.instance;
   }
+  
+  roomMap: Record<string, Room> = {};
   
 
   createRoom(roomName: string) {

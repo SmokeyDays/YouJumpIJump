@@ -53,6 +53,7 @@ class App extends React.PureComponent<{},AppState> {
     }, dur * 1000);
   }
   constructor(props: any){
+    
     super(props);
     this.state = {
       pageName: "LoginPage",

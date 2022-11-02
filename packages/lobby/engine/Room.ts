@@ -56,11 +56,13 @@ export class Room {
   async startGame() {
     this.game = new UJIJCore(this.requester.bind(this), this.gameEnd.bind(this));
     logger.verbose('Room %s started a new game.', this.roomName);
+    
     const userNameList: string[] = [];
     this.users.forEach((val) => {
       userNameList.push(val.userName !== null? val.userName: "无名玩家");
     });
     this.game.startDuel(userNameList);
+
     await this.renew();
   }
 

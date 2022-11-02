@@ -22,7 +22,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         cardWidth: 100,
     }
 
-    static instance = null
+    static instance = null;
     constructor(props) {
         super(props)
         if(CardContainer.instance) {
