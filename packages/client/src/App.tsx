@@ -61,6 +61,7 @@ class App extends React.PureComponent<{},AppState> {
       gameState: {
         player: [],
         board: [],
+        toPlayer: 1,
         global: {
           round: 0,
           turn: 0,

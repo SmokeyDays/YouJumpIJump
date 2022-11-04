@@ -52,11 +52,14 @@ export class Slot extends React.Component<SlotProps> {
         />
         <Center
           Type={Text}
-          text={(this.props.index as number).toString()}
-          fontSize={this.props.radius}
+          typeProps = {{
+            
+          text: (this.props.index as number).toString(),
+          fontSize: this.props.radius,
+          fill: '#1b315e'
+          }}
           x={this.props.x}
-          y={this.props.y}
-          fill={'#1b315e'}>
+          y={this.props.y}>
 
         </Center>
       </Group>
@@ -134,15 +137,23 @@ export class Board extends React.Component<BoardProps, BoardState> {
             </Circle>
             <Center
               Type={Text}
-              text={value.name.slice(0, Math.min(6, value.name.length))}
-              fontSize={info.slotTemplate.props.radius / 2}
+              typeProps = {
+                {
+                  
+              text: value.name.slice(0, Math.min(6, value.name.length)),
+              fontSize: info.slotTemplate.props.radius / 2
+                }
+              }
             ></Center>
             <Center
               Type={Text}
-              text={value.prayer > 0 ? value.prayer : null}
-              fontSize={info.slotTemplate.props.radius / 2}
+              typeProps = {{
+
+                text: value.prayer > 0 ? value.prayer : null,
+                fontSize: info.slotTemplate.props.radius / 2,
+                fill: "#9b95c9"
+              }}
               y={-info.slotTemplate.props.radius / 2}
-              fill="#9b95c9"
             ></Center>
           </Group>
         )

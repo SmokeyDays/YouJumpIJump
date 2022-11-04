@@ -7,6 +7,8 @@ import GameCanvas from "./element/GameCanvas";
 import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
 
+
+export let LocalPlayer = null 
 interface GamePageProps {
   gameState: GameState,
   signal: PlayerOperation,
@@ -17,11 +19,11 @@ interface GamePageState {
   showingCard: string | "",
   currentBoard: number,
   currentRound: number,
-  currentPlayer: string,
   accessSlotList: string[][],
   gameState: GameState,
   signal: PlayerOperation,
 }
+
 class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   constructor(props: any) {
@@ -34,12 +36,14 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       ],
       showingCard: "",
       currentBoard: 0,
-      currentPlayer: "1",
       currentRound: 1,
       accessSlotList: [[], [], []],
       gameState: this.props.gameState,
       signal: this.props.signal
     };
+
+    LocalPlayer = 1 - 1;
+    console.log("GamePage", LocalPlayer, this.props.gameState.toPlayer)
 
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }

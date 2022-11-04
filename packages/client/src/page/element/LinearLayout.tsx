@@ -108,10 +108,13 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         this.restChildren = React.Children.count(this.props.children)
         this.whInfos = new Array(this.restChildren)
         this.cwidth = this.cheight = 0
+        this.width = this.height = 0
     }
 
     componentDidMount(): void {
-
+        this.width = Math.max(this.props.width, this.cwidth)
+        this.height = Math.max(this.props.height, this.cheight)
+        this.setState({})
     }
 
     getChildInfo(index: number, width: number, height: number) {

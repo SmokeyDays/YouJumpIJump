@@ -26,6 +26,7 @@ export type Card = string;
 export interface GameState {
   board: Board,
   player: Player[],
+  toPlayer: number,
   global: {
     round: number,
     turn: number,

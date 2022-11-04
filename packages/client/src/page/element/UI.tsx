@@ -1,6 +1,7 @@
 import React from "react"
 import { Layer } from "react-konva"
 import { Player } from "../../regulates/Interfaces"
+import { LocalPlayer } from "../GamePage"
 import CardContainer from "./CardContainer"
 import CardShowcase from "./CardShowcase"
 import LinearLayout from "./LinearLayout"
@@ -27,7 +28,9 @@ class UI extends React.Component<UIProps> {
                     x={window.innerWidth / 2}
                     y={window.innerHeight / 9}
                     currentBoard={this.props.currentBoard}
-                    currentPlayer={this.props.playerList[this.props.turn].name}
+                    currentPlayer={LocalPlayer == this.props.turn ? '你' : this.props.playerList[this.props.turn].name}
+                    
+                    turn={this.props.turn}
                     currentRound={this.props.currentRound}
                     stage = {this.props.stage}
                     ></TopTitle>
