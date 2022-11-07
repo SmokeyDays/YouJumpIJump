@@ -6,12 +6,16 @@ import CardContainer from "./element/CardContainer";
 import GameCanvas from "./element/GameCanvas";
 import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
+import { socket } from "../communication/connection";
+import { Card, CardPara, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
 
 
 export let LocalPlayer = null
+export let CurrentBoard = 0
+
 interface GamePageProps {
   gameState: GameState,
-  signal: PlayerOperation,
+  localPlayer: number,
 }
 
 interface GamePageState {
@@ -21,13 +25,16 @@ interface GamePageState {
   currentRound: number,
   accessSlotList: string[][],
   gameState: GameState,
-  signal: PlayerOperation,
+  isInRecast: boolean,
 }
 
 class GamePage extends React.Component<GamePageProps, GamePageState> {
 
+  static instance: GamePage
+
   constructor(props: any) {
     super(props);
+    GamePage.instance = this
     this.state = {
       boards: [
         new BoardInfo(2, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
@@ -39,12 +46,34 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       currentRound: 1,
       accessSlotList: [[], [], []],
       gameState: this.props.gameState,
-      signal: this.props.signal
+      isInRecast: false,
     };
 
-    LocalPlayer = 1 - 1;
+    LocalPlayer = this.props.localPlayer;
     console.log("GamePage", LocalPlayer, this.props.gameState.toPlayer)
 
+    socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
+      console.log('new state', val.state);
+      this.setState({ gameState: val.state })
+    })
+    socket.on('request-signal', (val: SignalPara) => {
+      console.log('signal',val);
+      switch (val.type) {
+        case 'recast':
+          this.setState({isInRecast: true})
+          break;
+        case 'card':
+          if (val.stage) {
+
+          }
+          else {
+
+          }
+          break;
+        case 'action':
+          break;
+      }
+    })
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -93,6 +122,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   setCurrentBoard(index: number) {
+    CurrentBoard = index
     this.setState({ currentBoard: index })
   }
 

@@ -4,6 +4,7 @@ import Center from './Center';
 import { Player } from '../../regulates/Interfaces';
 import PlayerList from './PlayerList';
 import { socket } from '../../communication/connection';
+import { CurrentBoard } from '../GamePage';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -119,8 +120,9 @@ export class Board extends React.Component<BoardProps, BoardState> {
               if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
                 socket.emit('resolve-signal',{
                   type: "move", 
-                  val: []
+                  val: [CurrentBoard,value.x,value.y]
                 })
+                console.log("emit","move",[CurrentBoard,value.x,value.y])
               }
             }
           }
