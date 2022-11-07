@@ -19,6 +19,7 @@ interface AppState {
   roomState: RoomState,
   gameResult: Record<string, number>,
   alertMessage: string | null,
+  localPlayer: number,
 }
 // App: 是整个程序的主要类，这个类是整个 React 显示出的 html 的根。
 class App extends React.PureComponent<{},AppState> {
@@ -31,8 +32,8 @@ class App extends React.PureComponent<{},AppState> {
     this.setState({roomState: val});
   }
 
-  setGameState(val: GameState) {
-    this.setState({gameState: val});
+  setGameState(val: GameState, localPlayer: number) {
+    this.setState({gameState: val, localPlayer: localPlayer});
   }
 
   setSignal(val: PlayerOperation) {
@@ -61,7 +62,6 @@ class App extends React.PureComponent<{},AppState> {
       gameState: {
         player: [],
         board: [],
-        toPlayer: 1,
         global: {
           round: 0,
           turn: 0,
@@ -76,6 +76,7 @@ class App extends React.PureComponent<{},AppState> {
       },
       gameResult: {},
       alertMessage: null,
+      localPlayer: 0
     };
     this.setPage = this.setPage.bind(this);
     this.setGameState = this.setGameState.bind(this);
@@ -85,8 +86,8 @@ class App extends React.PureComponent<{},AppState> {
     // Register listeners on the messages that changes the whole application.
     
     socket.on("renew-game-state", (val) => {
-      console.log(val);
-      this.setGameState(val.state);
+      
+      this.setGameState(val.state, val.localPlayer);
       this.setPage("GamePage");
     });
     socket.on("user-login-successful", (args) => {
@@ -140,7 +141,7 @@ class App extends React.PureComponent<{},AppState> {
         break;
       }
       case "GamePage":{
-        content = <GamePage gameState={this.state.gameState} signal={this.state.signal}/>;
+        content = <GamePage gameState={this.state.gameState} localPlayer={this.state.localPlayer}/>;
         break;
       }
       case "RoomPage":{

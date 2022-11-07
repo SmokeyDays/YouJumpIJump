@@ -105,7 +105,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
     constructor(props) {
         super(props)
         this.getChildInfo = this.getChildInfo.bind(this)
-        this.restChildren = React.Children.count(this.props.children)
+        this.childrenCount = this.restChildren = React.Children.count(this.props.children)
         this.whInfos = new Array(this.restChildren)
         this.cwidth = this.cheight = 0
         this.width = this.height = 0
@@ -217,6 +217,10 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         let newChildren
         let bg: any = null
 
+        if(this.childrenCount!=array.length) {
+            this.childrenCount = this.restChildren = array.length;
+        }
+
         if (this.restChildren > 0) {
             newChildren = array.map((value, index) => {
                 return (
@@ -312,6 +316,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
     }
 
     restChildren: number
+    childrenCount: number
     whInfos: { w: number, h: number }[]
     width: number
     height: number

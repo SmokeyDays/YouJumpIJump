@@ -34,7 +34,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
         }
         CardContainer.instance = this
-        console.log("!!!", this)
         this.state = {
             cardList: [],
             tipCard: null,

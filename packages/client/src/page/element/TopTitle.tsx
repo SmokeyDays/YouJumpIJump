@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Text, } from 'react-konva';
+import { socket } from '../../communication/connection';
 import { LocalPlayer } from '../GamePage';
 import Center from './Center';
 import KButton from './KButton';
@@ -62,7 +63,10 @@ class TopTitle extends React.Component<TopTitleProps> {
                         width={100}
                         height={50}
                         background={"#bb1111"}
-                        onClick={() => console.log(this.props.currentPlayer, "jump out")}
+                        onClick={() => {
+                            console.log(this.props.currentPlayer, "jump out");
+                            socket.emit('resolve-signal',{type: 'none',  val: null})
+                        }}
                     >
                     </KButton>)}
             </Center>

@@ -133,7 +133,9 @@ export class Board extends React.Component<BoardProps, BoardState> {
     });
 
     let playerCount: {[key:string]:[number,number]} ={}
+    console.log("***",this.props.playerState)
     for( let value of this.props.playerState) {
+      if(!value.alive||value.position[0]!=CurrentBoard) continue;
       if( playerCount[`${value.position[1]},${value.position[2]}`] != null) {
         playerCount[`${value.position[1]},${value.position[2]}`][0] ++;
       }
@@ -141,8 +143,10 @@ export class Board extends React.Component<BoardProps, BoardState> {
         playerCount[`${value.position[1]},${value.position[2]}`] =[1,0];
       }
     }
-    let players = this.props.playerState.map((value, index) => {
-      if (value.position)
+    let players = []
+
+    this.props.playerState.forEach((value, index) => {
+      if (value.position&&value.alive&&value.position[0]==CurrentBoard)
       {
         let pos = `${value.position[1]},${value.position[2]}`
         let radius = info.slotTemplate.props.radius * 0.9 / playerCount[pos][0]
@@ -151,7 +155,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
         let offetX = 2 * radius * (playerCount[pos][1]-mid) - radius
         console.log("index",index, offetX,(playerCount[pos][1]-mid), radius)
         
-        return (
+        players.push(
           <Group
             x={offetX + info.slotInfos[info.slotMap[pos]].x}
             y={info.slotInfos[info.slotMap[pos]].y}>
@@ -219,7 +223,10 @@ export class BoardInfo {
 
   //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
-    this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
+    let index = this.slotMap[`${ix},${iy}`]
+    if(index != null) {
+      this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
+    }
   }
 
   initSlotInfos() {

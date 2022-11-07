@@ -37,9 +37,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     GamePage.instance = this
     this.state = {
       boards: [
-        new BoardInfo(2, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
-        new BoardInfo(3, 'white', 'green', <Slot color='LightSeaGreen'></Slot>),
-        new BoardInfo(4, 'white', 'green', <Slot color='DarkCyan'></Slot>),
+        new BoardInfo(9, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
+        new BoardInfo(10, 'white', 'green', <Slot color='LightSeaGreen'></Slot>),
+        new BoardInfo(11, 'white', 'green', <Slot color='DarkCyan'></Slot>),
       ],
       showingCard: "",
       currentBoard: 0,
@@ -49,22 +49,23 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       isInRecast: false,
     };
 
+        
     LocalPlayer = this.props.localPlayer;
-    console.log("GamePage", LocalPlayer, this.props.gameState.toPlayer)
+    console.log("GamePageLocalplayer", LocalPlayer)
 
     socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
-      console.log('new state', val.state);
+      console.log('!!!renew-game-state',val);
+      this.loadGameState(val.state)
       this.setState({ gameState: val.state })
     })
     socket.on('request-signal', (val: SignalPara) => {
-      console.log('signal',val);
+      console.log('!!!request-signal',val);
       switch (val.type) {
         case 'recast':
           this.setState({isInRecast: true})
           break;
         case 'card':
-          if (val.stage) {
-
+          if (val.stage=='main') {
           }
           else {
 
@@ -109,11 +110,23 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     );
   }
 
+  loadGameState(state: GameState) {
+    console.log('new state', state);
+      let boards = state.board
+      for( let i in boards) {
+        for(let j in boards[i]) {
+          for( let k in boards[i][j]) {
+            this.state.boards[i].setSlotStatus(Number(i),Number(j),boards[i][j][k].isBursted)
+          }
+        }
+      }
+      CardContainer.instance.setCard(state.player[LocalPlayer].hand);
+  }
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown)
     if (CardContainer.instance != null) {
-      console.log(CardContainer.instance);
-      CardContainer.instance.setCard(["0", "2", "3", "AH"])
+      this.loadGameState(this.state.gameState)
     }
   }
 
@@ -144,8 +157,8 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     let lastBoard = this.state.currentBoard
     console.log('key:' + e.keyCode)
     switch (e.keyCode) {
-      case 38: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
-      case 40: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
+      case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
+      case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
       case 37: LocalPlayer = 1;
         this.setState({}); break;
       case 39: this.state.gameState.player[1].alive = false
