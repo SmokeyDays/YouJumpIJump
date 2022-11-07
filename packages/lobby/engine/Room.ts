@@ -34,15 +34,17 @@ export class Room {
       logger.error("Request player action Failed: player %s not found.", val.player);
       return noneRes;
     }
+    await this.renew();
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<CardPara>((resolve, reject) => {
-      setTimeout(()=>{
-        logger.error("Request player action Failed: %s action time out.", val.player);
-        resolve(noneRes);
-      },60*1000)
       targetUser.socket.once("resolve-signal", (para: CardPara) => {
         resolve(para);
       })
+      setTimeout(()=>{
+        logger.error("Request player action Failed: %s action time out.", val.player);
+        resolve(noneRes);
+        targetUser.socket.off("resolve-signal");
+      },60*1000)
     });
     targetUser.socket.off("resolve-signal");
     await this.renew();
@@ -123,14 +125,21 @@ export class Room {
     const nowSignal = null;
     const gameState = this.game.getGameState();
     console.log(this.game.app.gameState);
-    for(const pl of gameState.player) {
+    let idx = -1;
+    for(let plid = 0; plid < gameState.player.length; ++plid) {
+      const pl = gameState.player[plid];
       if(pl.name !== this.users[id].userName) {
         for(let i = 0; i < pl.hand.length; ++i) {
-          pl.hand[i] = "0";
+          // pl.hand[i] = "0";
         }
+      } else {
+        idx = plid;
       }
     }
-    return gameState;
+    return {
+      state: gameState,
+      localPlayer: idx,
+    };
   }
 
   async renew() {
