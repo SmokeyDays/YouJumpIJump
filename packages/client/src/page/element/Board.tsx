@@ -3,6 +3,7 @@ import { Text, Line, Group, Circle } from 'react-konva';
 import Center from './Center';
 import { Player } from '../../regulates/Interfaces';
 import PlayerList from './PlayerList';
+import { socket } from '../../communication/connection';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -15,8 +16,8 @@ type SlotProps = typeof Slot.defaultProps & {
   x?: number;
   y?: number;
   index?: number;
+  onClick?: () => void;
 }
-
 export class Slot extends React.Component<SlotProps> {
 
   static defaultProps = {
@@ -26,7 +27,8 @@ export class Slot extends React.Component<SlotProps> {
     stroke: '#293047',
     x: 0,
     y: 0,
-    index: 0
+    index: 0,
+    onClick: ()=>{}
   }
 
   points: Array<number> = new Array<number>;
@@ -40,7 +42,9 @@ export class Slot extends React.Component<SlotProps> {
 
   render(): React.ReactNode {
     return (
-      <Group>
+      <Group
+        onClick={()=>this.props.onClick()}
+      >
         <Line
           points={this.points}
           closed={true}
@@ -110,29 +114,56 @@ export class Board extends React.Component<BoardProps, BoardState> {
           key={index}
           color={value.isBroken ? info.brokeColor : info.slotTemplate.props.color}
           stroke={this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
+          onClick={
+            ()=>{
+              if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
+                socket.emit('resolve-signal',{
+                  type: "move", 
+                  val: []
+                })
+              }
+            }
+          }
         >
         </Slot>
 
       )
     });
 
+    let playerCount: {[key:string]:[number,number]} ={}
+    for( let value of this.props.playerState) {
+      if( playerCount[`${value.position[1]},${value.position[2]}`] != null) {
+        playerCount[`${value.position[1]},${value.position[2]}`][0] ++;
+      }
+      else {
+        playerCount[`${value.position[1]},${value.position[2]}`] =[1,0];
+      }
+    }
     let players = this.props.playerState.map((value, index) => {
       if (value.position)
+      {
+        let pos = `${value.position[1]},${value.position[2]}`
+        let radius = info.slotTemplate.props.radius * 0.9 / playerCount[pos][0]
+        let mid = playerCount[pos][0]/2
+        playerCount[pos][1]++;
+        let offetX = 2 * radius * (playerCount[pos][1]-mid) - radius
+        console.log("index",index, offetX,(playerCount[pos][1]-mid), radius)
+        
         return (
           <Group
-            x={info.slotInfos[info.slotMap[`${value.position[1]},${value.position[2]}`]].x}
-            y={info.slotInfos[info.slotMap[`${value.position[1]},${value.position[2]}`]].y}>
+            x={offetX + info.slotInfos[info.slotMap[pos]].x}
+            y={info.slotInfos[info.slotMap[pos]].y}>
 
             {value.magician &&
               <Circle
                 fill='#dec674'
-                radius={info.slotTemplate.props.radius * 0.8}
+                radius={radius }
               >
               </Circle>
             }
             <Circle
               fill={index < PlayerList.colorList.length ? PlayerList.colorList[index] : 'grey'}
-              radius={info.slotTemplate.props.radius * 0.7}
+              radius={radius * 0.9}
             >
             </Circle>
             <Center
@@ -140,8 +171,8 @@ export class Board extends React.Component<BoardProps, BoardState> {
               typeProps = {
                 {
                   
-              text: value.name.slice(0, Math.min(6, value.name.length)),
-              fontSize: info.slotTemplate.props.radius / 2
+              text: value.name[0],
+              fontSize: radius 
                 }
               }
             ></Center>
@@ -150,13 +181,14 @@ export class Board extends React.Component<BoardProps, BoardState> {
               typeProps = {{
 
                 text: value.prayer > 0 ? value.prayer : null,
-                fontSize: info.slotTemplate.props.radius / 2,
+                fontSize: radius / 2,
                 fill: "#9b95c9"
               }}
-              y={-info.slotTemplate.props.radius / 2}
+              y={-radius / 2}
             ></Center>
           </Group>
         )
+            }
     })
 
     return (

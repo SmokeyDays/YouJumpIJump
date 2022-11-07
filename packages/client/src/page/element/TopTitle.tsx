@@ -13,6 +13,8 @@ interface TopTitleProps {
     y?: number
     stage: number
     turn: number
+    otherTip?: string
+    canJump?: boolean
 }
 
 
@@ -45,15 +47,24 @@ class TopTitle extends React.Component<TopTitleProps> {
                     fontSize={20}
                     fill={'#1b315e'}></Text>
 
-                    {LocalPlayer == this.props.turn &&
-                        (<KButton
-                            text='跳过'
-                            width={100}
-                            height={50}
-                            background={"#bb1111"}
-                            onClick={() => console.log(this.props.currentPlayer, "jump out")}
-                        >
-                        </KButton>)}
+                {this.props.otherTip &&
+                    <Text
+                    text={this.props.otherTip}
+                    fontSize={20}
+                    fill={'#1b315e'}>
+
+                    </Text>
+                }
+
+                {LocalPlayer == this.props.turn &&
+                    (<KButton
+                        text='跳过'
+                        width={100}
+                        height={50}
+                        background={"#bb1111"}
+                        onClick={() => console.log(this.props.currentPlayer, "jump out")}
+                    >
+                    </KButton>)}
             </Center>
         )
     }

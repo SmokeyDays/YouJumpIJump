@@ -1,16 +1,20 @@
 import React from 'react';
-import { Group, Rect, Tag, Text, Label, Image as KImage} from 'react-konva';
+import { Group, Rect, Tag, Text, Label, Image as KImage } from 'react-konva';
 import { CardDescription, getDescription, ImgsManager } from '../../regulates/utils';
 import CardShowcase from './CardShowcase';
+import KButton from './KButton';
+import LinearLayout from './LinearLayout';
 
 type CardContainerProps = typeof CardContainer.defaultProps & {
     x?: number,
     y?: number,
-    cardWidth?: number
+    cardWidth?: number,
+    isInRecast?: boolean,
 }
 
 interface CardContainerState {
     cardList: string[]
+    selectedCardList: number[]
     tipCard: number
 }
 
@@ -20,18 +24,21 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         x: window.innerWidth / 2,
         y: window.innerHeight * 7 / 8,
         cardWidth: 100,
+        isInRecast: false,
     }
 
     static instance = null;
     constructor(props) {
         super(props)
-        if(CardContainer.instance) {
+        if (CardContainer.instance) {
 
         }
         CardContainer.instance = this
+        console.log("!!!", this)
         this.state = {
             cardList: [],
             tipCard: null,
+            selectedCardList: []
         }
     }
 
@@ -39,26 +46,60 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let theta = 30;
         let mid = (this.state.cardList.length - 1) / 2;
         let cards = this.state.cardList.map((value, index) => {
-        let img = new Image(this.props.cardWidth,this.props.cardWidth * 1.4)
-        
-        img.src= ImgsManager.getInstance().getImg(`${value}_Small.png`);
+            let img = new Image(this.props.cardWidth, this.props.cardWidth * 1.4)
+            img.src = ImgsManager.getInstance().getImg(`${value}_Small.png`);
+            let isSelected: boolean = this.state.selectedCardList.findIndex((value) => value == index) != -1
+
             return (
-                <KImage
-                    onMouseEnter={() => { this.setState({ tipCard: index }) }}
-                    onMouseDown={()=> {
-                        if(!this.isShowingCard) {
-                        CardShowcase.instance.showCard(this.state.cardList[index]);
-                        this.removeCard(index);
-                        this.isShowingCard=true;
-                    }
-                    }}
-                    width={this.props.cardWidth}
-                    height={this.props.cardWidth * 1.4}
+
+                <Group
+
                     offsetX={this.props.cardWidth / 2}
                     offsetY={this.props.cardWidth * 1.2}
-                    image={img}
                     rotation={theta * (index - mid)}
-                ></KImage>)
+                >
+
+                    <LinearLayout
+                        background={isSelected ? 'red' : null}
+                        xAlign='center'
+                        yAlign='middle'
+                        width={this.props.cardWidth * 1.1}
+                        height={this.props.cardWidth * 1.5}
+                    >
+                        <KImage
+                            onMouseEnter={() => { this.setState({ tipCard: index }) }}
+                            onMouseDown={() => {
+                                if (this.props.isInRecast) {
+                                    let tmp: number = this.state.selectedCardList.findIndex((value) => value == index);
+                                    if (tmp != -1) {
+                                        this.state.selectedCardList.splice(tmp, 1)
+                                    }
+                                    else {
+                                        this.state.selectedCardList.push(index)
+                                    }
+                                    this.setState({})
+
+                                }
+                                else {
+                                    if (!this.isShowingCard) {
+                                        CardShowcase.instance.showCard(this.state.cardList[index]);
+                                        this.removeCard(index);
+                                        this.isShowingCard = true;
+                                    }
+                                    else {
+                                        CardShowcase.instance.backCard()
+                                        CardShowcase.instance.showCard(this.state.cardList[index]);
+                                        this.removeCard(index);
+                                        this.isShowingCard = true;
+                                    }
+                                }
+                            }}
+                            width={this.props.cardWidth}
+                            height={this.props.cardWidth * 1.4}
+                            image={img}
+                        ></KImage>
+                    </LinearLayout>
+                </Group>)
         })
 
         return (
@@ -71,6 +112,21 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
                 {cards}
                 {this.state.tipCard != null && this.renderTip(this.state.tipCard)}
+                {this.props.isInRecast && 
+                <KButton
+                    x={-this.props.cardWidth*0.35}
+                    y={-this.props.cardWidth*1.8}
+                    height={this.props.cardWidth*0.3}
+                    width={this.props.cardWidth*0.7}
+                    background='#555555'
+                    text='确定'
+                    fontColor='white'
+                    fontSize={18}
+                    onClick={()=>{console.log('recast')}}
+                >
+
+                </KButton>
+                }
             </Group>
         )
     }
@@ -101,7 +157,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                 </Tag>
                 <Text
                     text={`名称:   ${card["name"]}\n\n描述:   ${card["desc"]}`}
-                    width={this.props.cardWidth*2}
+                    width={this.props.cardWidth * 2}
                     fill='white'
                     fontSize={20}
                     padding={7}
@@ -111,7 +167,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
     }
 
     setCard(newCardList: string[]) {
-        this.setState({cardList:newCardList})
+        this.setState({ cardList: newCardList })
     }
 
     addCard(cardId: string) {
@@ -120,8 +176,8 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
     }
 
     removeCard(index: number) {
-        this.state.cardList.splice(index,1)
-        this.setState({tipCard: null})
+        this.state.cardList.splice(index, 1)
+        this.setState({ tipCard: null })
     }
 
     isShowingCard: boolean = false

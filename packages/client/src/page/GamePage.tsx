@@ -8,7 +8,7 @@ import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
 
 
-export let LocalPlayer = null 
+export let LocalPlayer = null
 interface GamePageProps {
   gameState: GameState,
   signal: PlayerOperation,
@@ -62,9 +62,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
               (v, i) => v.alive && v.position[0] === this.state.currentBoard && v)}
           ></GameCanvas>
           <UI
-            stage = {this.state.gameState.global.stage}
+            stage={this.state.gameState.global.stage}
             currentBoard={this.state.currentBoard}
-            turn = {this.state.gameState.global.turn}
+            turn={this.state.gameState.global.turn}
             currentRound={this.state.gameState.global.round}
             playerList={this.props.gameState.player.map(
               (v) => {
@@ -82,8 +82,10 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown)
-    console.log(CardContainer.instance);
-    CardContainer.instance.setCard(["0", "2", "3", "AH"])
+    if (CardContainer.instance != null) {
+      console.log(CardContainer.instance);
+      CardContainer.instance.setCard(["0", "2", "3", "AH"])
+    }
   }
 
   componentWillUnmount() {
@@ -112,17 +114,15 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     let lastBoard = this.state.currentBoard
     console.log('key:' + e.keyCode)
     switch (e.keyCode) {
-      case 38: this.setCurrentBoard((lastBoard + this.state.boards.length-1) % this.state.boards.length); break;
+      case 38: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
-      case 37: this.state.gameState.player[1].position = [1, 0, 2];
-        this.state.gameState.player[1].prayer = 3;
-        this.state.gameState.player[2].position = [0, 1, 1];
+      case 37: LocalPlayer = 1;
         this.setState({}); break;
       case 39: this.state.gameState.player[1].alive = false
         this.setState({}); break;
       case 13:
         let global = this.state.gameState.global
-        global.round ++;
+        global.round++;
         this.state.gameState.global.turn = (this.state.gameState.global.turn + global.stage) % this.state.gameState.player.length;
         global.stage = global.stage ^ 1;
         this.setState({})

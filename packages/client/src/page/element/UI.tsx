@@ -50,6 +50,7 @@ class UI extends React.Component<UIProps> {
                     height={window.innerHeight}
                 >
                     <CardShowcase
+                        turn={this.props.turn}
                         width={showcaseWidth}
                         parentRef={'1'}
                         stage = {this.props.stage}
