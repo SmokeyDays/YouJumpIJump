@@ -111,13 +111,20 @@ class App extends React.PureComponent<{},AppState> {
       });
     });
     socket.on("alert-message", (args) => {
-      PubSub.publish('alert-pubsub-message',args);
+      PubSub.publish('alert-pubsub-message',{
+        str: args,
+        dur: 1,
+      });
     });
   }
 
   componentDidMount(): void {
     PubSub.subscribe("alert-pubsub-message", (msg, data) => {
-      this.sendAlertMessage(data);
+      if(data.dur === undefined) {
+        this.sendAlertMessage(data.str);
+      } else {
+        this.sendAlertMessage(data.str, data.dur)
+      }
     });
   }
 
