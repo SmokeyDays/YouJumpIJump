@@ -51,7 +51,7 @@ export class GameState {
             PosS.push([i, j, k]);
           }
           this.board[[i, j, k].toString()] = {
-            isBursted: false
+            isBursted: !Player.inRange(this, [i, j, k])
           }
         }
       }
