@@ -4,10 +4,12 @@ import KButton from './KButton';
 import LinearLayout from './LinearLayout';
 import CardContainer from './CardContainer';
 import { CardDescription, ImgsManager, isInstant } from '../../regulates/utils';
-import { LocalPlayer } from '../GamePage';
+import GamePage, { LocalPlayer } from '../GamePage';
+import { socket } from '../../communication/connection';
 
 interface CardShowcaseState {
     cardId: string,
+    isEnable: boolean,
 }
 
 interface CardShowcaseProps {
@@ -28,10 +30,17 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         CardShowcase.instance = this
         this.state = {
             cardId: null,
+            isEnable: true,
         }
         this.width = this.props.width
         this.height = 500
         this.refDom = null
+    }
+
+    clearState() {
+        GamePage.instance.setAccessSlotList([])
+        this.setState({isEnable: true})
+        this.backCard()
     }
 
     showCard(id: string) {
@@ -77,7 +86,9 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 width={this.width}
                 xAlign='center'
                 padding={this.width / 30}
+                background='#78cdd1'
             >
+                <Text></Text>
                 <Text text={card['name']} fontSize={bFont}></Text>
                 <KImage
                     image={img}
@@ -89,6 +100,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 <Text fontSize={sFont / 3}></Text>
                 <Text text={card['lore']} width={this.width - sFont} fontSize={sFont}></Text>
                 {this.renderButtons()}
+                <Text></Text>
             </LinearLayout>
         )
     }
@@ -107,7 +119,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 text="取消"
                 fontSize={mFont}
                 onClick={() => {
-                    this.backCard();
+                    this.clearState();
                 }}
             ></KButton>
         )
@@ -137,7 +149,14 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 width={this.width / 2 - sFont}
                                 height={bHeight}
                                 text="迅捷"
-                                fontSize={mFont}>
+                                fontSize={mFont}
+                                isEnable={this.state.isEnable}
+                                onClick={()=>{
+                                    console.log(this.state.cardId, "main run")
+                                    socket.emit('get-available-pos', {card:this.state.cardId})
+                                    this.setState({isEnable: false})
+                                }}
+                                >
                             </KButton>
                             {this.renderCancalButton()}
                         </LinearLayout>]
@@ -161,7 +180,14 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         width={this.width / 2 - sFont}
                         height={bHeight}
                         text="主要"
-                        fontSize={mFont}>
+                        fontSize={mFont}
+                        isEnable={this.state.isEnable}
+                        onClick={()=>{
+                            console.log(this.state.cardId, "main run")
+                            socket.emit('get-available-pos', {card:this.state.cardId})
+                            this.setState({isEnable: false})
+                        }}
+                        >
                     </KButton>
                     {this.renderCancalButton()}
                 </LinearLayout>]
@@ -169,7 +195,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         }
     }
 
-    static instance = null
+    static instance: CardShowcase = null
     refDom: any
     width: number
     height: number

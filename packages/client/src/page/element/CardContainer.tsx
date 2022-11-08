@@ -1,6 +1,8 @@
 import React from 'react';
 import { Group, Rect, Tag, Text, Label, Image as KImage } from 'react-konva';
+import { socket } from '../../communication/connection';
 import { CardDescription, getDescription, ImgsManager } from '../../regulates/utils';
+import GamePage from '../GamePage';
 import CardShowcase from './CardShowcase';
 import KButton from './KButton';
 import LinearLayout from './LinearLayout';
@@ -16,6 +18,7 @@ interface CardContainerState {
     cardList: string[]
     selectedCardList: number[]
     tipCard: number
+    isInRecast: boolean
 }
 
 class CardContainer extends React.Component<CardContainerProps, CardContainerState> {
@@ -37,11 +40,16 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         this.state = {
             cardList: [],
             tipCard: null,
-            selectedCardList: []
+            selectedCardList: [],
+            isInRecast: false,
         }
     }
 
     render(): React.ReactNode {
+        if(!this.props.isInRecast && this.state.selectedCardList.length != 0) {
+            this.setState({selectedCardList:[]})
+        }
+
         let theta = 30;
         let mid = (this.state.cardList.length - 1) / 2;
         let cards = this.state.cardList.map((value, index) => {
@@ -86,7 +94,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                                         this.isShowingCard = true;
                                     }
                                     else {
-                                        CardShowcase.instance.backCard()
+                                        CardShowcase.instance.clearState();
                                         CardShowcase.instance.showCard(this.state.cardList[index]);
                                         this.removeCard(index);
                                         this.isShowingCard = true;
@@ -121,7 +129,12 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     text='确定'
                     fontColor='white'
                     fontSize={18}
-                    onClick={()=>{console.log('recast')}}
+                    onClick={()=>{
+                        let cardList = this.state.selectedCardList.map((val)=>this.state.cardList[val]);
+                        console.log('recast',this.state.selectedCardList,cardList);
+                        socket.emit('resolve-signal',{type: 'recast',  val: cardList})
+                        GamePage.instance.setInRecast(false)
+                    }}
                 >
 
                 </KButton>

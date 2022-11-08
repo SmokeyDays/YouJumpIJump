@@ -2,6 +2,7 @@ import { Context } from "cordis"
 import { Card, Position, CardPara } from "./regulates/interfaces";
 import { Deck } from "./regulates/type"
 import { GameState } from "./game";
+import { logger } from "../../lobby/tools/Logger";
 
 // const enum Level {
 
@@ -57,6 +58,7 @@ export class Player {
   }
 
   recast(cardset: Card[]) {
+
     this.hand.sort();
     cardset.sort();
     let j:number = 0;
@@ -66,6 +68,8 @@ export class Player {
         this.hand.splice(i, 1, this.library.pop() as string);
       }
     }
+    logger.verbose("&&&&")
+    logger.verbose(this.hand)
   }
 
   drop(gamest: GameState) {
