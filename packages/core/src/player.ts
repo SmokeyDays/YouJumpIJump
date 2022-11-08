@@ -98,6 +98,8 @@ export class Player {
     let legalpos: Position[] = [];
     let pos: Position = this.position;
     let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
+    
+    logger.verbose("&&&6")
     switch(cardid) {
       case cardConfig.cardNameList[0]: {
         for(let i = -1; i >= -size; i--) {
@@ -232,6 +234,8 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[5]: {
+        
+    logger.verbose("&&&9")
         let cur: Position = [pos[0], pos[1] + 4, pos[2]];
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
@@ -255,6 +259,8 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[9]: {
+        
+    logger.verbose("&&&8")
         if(spy == 1) {
           let newpos: Position = [pos[0], pos[1] + 1, pos[2]];
           if(gamest.board[newpos.toString()].isBursted == false) {

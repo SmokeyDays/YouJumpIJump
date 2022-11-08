@@ -89,14 +89,19 @@ export class User {
       socket.emit("leave-room-successful");
     });
     socket.on("get-available-pos", (card: string) => {
+      
+      logger.verbose("&&&1")
       if(this.userName == null) {
         logger.warn('User with socket id %s try get-available-pos but never login.', socket.id);
         return;
       }
+      
+      logger.verbose("&&&2")
       if(this.room == null) {
         logger.warn('User %s try to get-available-pos but never in any room.', this.userName);
         return;
       }
+      logger.verbose("&&&3")
       socket.emit("return-pos-set", this.room.getPosSet(this, card));
     });
   }

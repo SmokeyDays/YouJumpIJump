@@ -75,7 +75,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
                 yAlign="middle"
                 {...this.props}
                 onClick={()=>{}}
-                background={this.props.disabledBackground}
+                background={this.disabledBackground}
             >
                 <Text text={this.props.text} fontSize={this.props.fontSize} fill={this.props.fontColor}></Text>
             </LinearLayout>

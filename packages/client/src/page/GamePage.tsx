@@ -7,12 +7,14 @@ import GameCanvas from "./element/GameCanvas";
 import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
 import { socket } from "../communication/connection";
-import { Card, CardPara, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
+import { Card, CardPara, Position, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
 import { BlockLike } from "typescript";
+import { Player } from "../../../core/src/player";
 
 
 export let LocalPlayer = null
 export let CurrentBoard = 0
+export let viewLocked = false
 
 interface GamePageProps {
   gameState: GameState,
@@ -80,6 +82,11 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
           break;
       }
     })
+    
+  socket.on('return-pos-set', (val: Position[]) => {
+    console.log('!!!return-pos-set',val);
+    this.setAccessSlotList(val)
+  })
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -115,6 +122,16 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
         </Stage>
       </div>
     );
+  }
+
+  isPlayerEqual(id:number, player1: Player, player2: Player): boolean {
+    if(player1.alive!=player2.alive) {
+      PubSub.publish('alert-pubsub-message',{str:`${player1.name}被淘汰了!`,dur:3})
+    }
+    if(player2.magician && !player1.magician) {
+      PubSub.publish('alert-pubsub-message',{str:`${player1.name}获得了悬浮状态`,dur:3})
+    }
+    return true;
   }
 
   loadGameState(state: GameState) {
