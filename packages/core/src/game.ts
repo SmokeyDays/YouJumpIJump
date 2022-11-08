@@ -35,6 +35,7 @@ export class GameState {
     let PosS: Position[] = [];
     for (let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
+      //logger.verbose(size);
       for (let j = -size - 5; j <= size + 5; j++) {
         for (let k = -size - 5; k <= size + 5; k++) {
           this.board[[i, j, k].toString()] = {

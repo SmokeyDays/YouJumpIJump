@@ -93,7 +93,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   render() {
-    // console.log(this.props.gameState);
+    console.log("gamestate!",this.props.gameState);
     return (
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
@@ -146,7 +146,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
         let i = Number(pos[0]),j=Number(pos[1]),k=Number(pos[2]);
         this.state.boards[i].setSlotStatus(j,k,boards[index].isBursted);
       }
+      if(CardContainer.instance!=null){
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
+      }
 
   }
 
