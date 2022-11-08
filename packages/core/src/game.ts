@@ -178,6 +178,8 @@ export class GameState {
     logger.verbose("****3")
     //main turn
     await this.action(id, false);
+    
+    logger.verbose("****4")
     //burst and drop
     for (let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
