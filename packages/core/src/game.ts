@@ -8,6 +8,9 @@ import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara }
 function randomsort(a: string, b: string): number {
   return Math.random() > .5 ? -1 : 1;
 }
+function rand(start: any,end: any){
+	return parseInt(Math.random()*(end-start+1)+start);
+}
 
 export class GameState {
   board: Board = {};
@@ -34,20 +37,28 @@ export class GameState {
       for (let j = -size - 5; j <= size + 5; j++) {
         for (let k = -size - 5; k <= size + 5; k++) {
           this.board[[i, j, k].toString()] = {
+            isBursted: true
+          }
+        }
+      }
+    }
+    let PosS: Position[] = [];
+    for (let i = 0; i < 3; i++) {
+      let size: number = 2 * (this.player.length - 1) + (3 - i);
+      for (let j = -size + 1; j < size; j++) {
+        for (let k = -size + 1; k < size; k++) {
+          if(i == 0) {
+            PosS.push([i, j, k]);
+          }
+          this.board[[i, j, k].toString()] = {
             isBursted: false
           }
         }
       }
     }
-    for (let i = 0; i < 3; i++) {
-      let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for (let j = -size + 1; j < size; j++) {
-        for (let k = -size + 1; k < size; k++) {
-          this.board[[i, j, k].toString()] = {
-            isBursted: true
-          }
-        }
-      }
+    PosS.sort((a, b) => Math.random() - 0.5);
+    for(let i = 0; i < this.player.length; i++) {
+      this.player.length[i].position = PosS[i];
     }
     this.global = {
       round: 0,
