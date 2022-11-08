@@ -161,6 +161,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 isEnable={this.state.isEnable}
                                 onClick={()=>{
                                     console.log(this.state.cardId, "instant run")
+                                    socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
                                     socket.emit('get-available-pos', this.state.cardId)
                                     this.setState({isEnable: false})
                                 }}
@@ -192,6 +193,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         isEnable={this.state.isEnable}
                         onClick={()=>{
                             console.log(this.state.cardId, "main run")
+                            socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
                             socket.emit('get-available-pos', this.state.cardId)
                             this.setState({isEnable: false})
                         }}

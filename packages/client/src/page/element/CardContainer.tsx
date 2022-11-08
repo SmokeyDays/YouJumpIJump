@@ -131,7 +131,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     fontSize={18}
                     onClick={()=>{
                         let cardList = this.state.selectedCardList.map((val)=>this.state.cardList[val]);
-                        console.log('recast',this.state.selectedCardList,cardList);
                         socket.emit('resolve-signal',{type: 'recast',  val: cardList})
                         GamePage.instance.setInRecast(false)
                     }}
