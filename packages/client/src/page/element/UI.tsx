@@ -1,5 +1,5 @@
 import React from "react"
-import { Layer } from "react-konva"
+import { Layer, Text } from "react-konva"
 import { Player } from "../../regulates/Interfaces"
 import { LocalPlayer } from "../GamePage"
 import CardContainer from "./CardContainer"
@@ -52,6 +52,7 @@ class UI extends React.Component<UIProps> {
                     yAlign="middle"
                     width={window.innerWidth}
                     height={window.innerHeight}
+                    padding={20}
                 >
                     <CardShowcase
                         turn={this.props.turn}
@@ -59,6 +60,7 @@ class UI extends React.Component<UIProps> {
                         parentRef={'1'}
                         stage = {this.props.stage}
                     ></CardShowcase>
+                    <Text></Text>
                 </LinearLayout>
 
             </Layer>

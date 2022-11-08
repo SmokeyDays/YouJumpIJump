@@ -98,6 +98,10 @@ type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     onMouseLeave?: any,
     reff?: any,
     k?: string,
+    opacity?: number,
+    stroke?: string,
+    strokeWidth?: number,
+    shadow?: boolean
 }
 
 class LinearLayout extends React.Component<LinearLayoutProps, {}> {
@@ -268,6 +272,14 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
             }
 
             if (this.props.background != null) {
+                let shadowProps = this.props.shadow?
+                {
+                    shadowColor:'black',
+                    shadowBlur:10,
+                    shadowOffsetX:5,
+                    shadowOffsetY:5,
+                    shadowOpacity:0.5,
+                }:{}
                 if (this.props.background.includes("/")) {
                     let bgimg = new Image()
                     bgimg.src = this.props.background
@@ -275,6 +287,10 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                         width={this.width}
                         height={this.height}
                         image={bgimg}
+                        opacity={this.props.opacity}
+                        stroke={this.props.stroke}
+                        strokeWidth={this.props.strokeWidth}
+                        {...shadowProps}
                     ></KImage>
 
                 } else {
@@ -282,6 +298,10 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                         width={this.width}
                         height={this.height}
                         fill={this.props.background}
+                        opacity={this.props.opacity}
+                        stroke={this.props.stroke}
+                        strokeWidth={this.props.strokeWidth}
+                        {...shadowProps}
                     ></Rect>
                 }
             }
@@ -293,7 +313,11 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                 x={this.props.x}
                 y={this.props.y}
                 offsetX={this.props.offsetX}
-                offsetY={this.props.offsetY}>
+                offsetY={this.props.offsetY}
+                opacity={1}
+                stroke={null}
+                strokeWidth={0}
+                >
                 {bg != null && bg}
                 {newChildren}
             </Group>
@@ -313,6 +337,8 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         xAlign: 'left',
         yAlign: 'top',
         reff: null,
+        opacity: 1,
+        shadow: false
     }
 
     restChildren: number

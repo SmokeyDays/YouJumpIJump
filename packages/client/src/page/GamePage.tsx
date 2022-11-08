@@ -20,6 +20,7 @@ export let viewLocked = false
 interface GamePageProps {
   gameState: GameState,
   localPlayer: number,
+  changePage: (page: string, rank: number) => void,
 }
 
 interface GamePageState {
@@ -90,6 +91,12 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       console.log('!!!return-pos-set', val);
       this.setFreSlotList(val)
     })
+
+    socket.on('game-end-signal', () => {
+      console.log('!!!game-end-signal');
+      this.props.changePage("GameEndPage",1)
+    })
+
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -137,16 +144,16 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   publishPlayerChange(player1: Player, player2: Player) {
     if (this.state.gameState.global.round < this.state.gameState.player.length) return;
     if (player1.alive != player2.alive) {
-      PubSub.publish('alert-pubsub-message', { str: `${player1.name}被淘汰了!`, dur: 3 })
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}被淘汰了!`, dur: 1 })
     }
     if (player2.magician && !player1.magician) {
-      PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 3 })
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 1 })
     }
     if (player2.position[0] != player1.position[0]) {
-      PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 3 })
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 1 })
     }
-    else if (player2.position != player1.position) {
-      PubSub.publish('alert-pubsub-message', { str: `${player1.name}移动了`, dur: 3 })
+    else if (player2.position[1] != player1.position[1] || player2.position[2] != player1.position[2]) {
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}移动了`, dur: 1 })
     }
   }
 
@@ -156,6 +163,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     console.log("Boardnew", boards)
     for(let i in this.state.gameState.player) {
       this.publishPlayerChange(this.state.gameState.player[i],state.player[i])
+      console.log("publishPlayerChange", this.state.gameState.player[i],state.player[i])
     }
 
     for (let index in boards) {
@@ -165,6 +173,13 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     }
     if (CardContainer.instance != null) {
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
+    }
+    if(!state.player[LocalPlayer].alive) {
+      let rank = 1;
+      for(let pl of state.player) {
+        if(pl.alive) rank++;
+      }
+      this.props.changePage("GameEndPage",rank)
     }
     this.setState({})
   }

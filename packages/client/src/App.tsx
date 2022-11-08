@@ -24,7 +24,9 @@ interface AppState {
 // App: 是整个程序的主要类，这个类是整个 React 显示出的 html 的根。
 class App extends React.PureComponent<{},AppState> {
   messageID: number = 0;
-  setPage(val: string) {
+  info: number = 0;
+  setPage(val: string, info?: number) {
+    this.info = info
     this.setState({pageName: val});
   }
   // Todo: setRoomState
@@ -141,7 +143,7 @@ class App extends React.PureComponent<{},AppState> {
         break;
       }
       case "GamePage":{
-        content = <GamePage gameState={this.state.gameState} localPlayer={this.state.localPlayer}/>;
+        content = <GamePage changePage = {(page: string, rank: number)=>this.setPage(page,rank)} gameState={this.state.gameState} localPlayer={this.state.localPlayer}/>;
         break;
       }
       case "RoomPage":{
@@ -149,7 +151,7 @@ class App extends React.PureComponent<{},AppState> {
         break;
       }
       case "GameEndPage":{
-        content = <GameEndPage backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>; 
+        content = <GameEndPage backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState} rank={this.info}/>; 
         break;
       }
       default:{

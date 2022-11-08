@@ -14,7 +14,8 @@ type KButtonProps = typeof KButton.defaultProps & {
     disabledBackground?: string,
     fontSize?: number,
     fontColor?: string,
-    isEnable?: boolean
+    isEnable?: boolean,
+    opacity?: number,
 
 }
 
@@ -74,7 +75,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
                 xAlign="center"
                 yAlign="middle"
                 {...this.props}
-                onClick={()=>{}}
+                onClick={() => { }}
                 background={this.disabledBackground}
             >
                 <Text text={this.props.text} fontSize={this.props.fontSize} fill={this.props.fontColor}></Text>
@@ -106,7 +107,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         return null;
     }
 
-    static changeColorByNum(rgb: string, cr:number,cb:number, cg:number, minus: boolean = false): string {
+    static changeColorByNum(rgb: string, cr: number, cb: number, cg: number, minus: boolean = false): string {
         let rExb1: RegExp = /#([\da-f]{2})([\da-f]{2})([\da-f]{2})/g //?
         let x = rExb1.exec(rgb)
         if (x) {
