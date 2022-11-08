@@ -58,7 +58,7 @@ class PlayerList extends React.Component<PlayerListProps> {
                         <Text 
                         text={val.name}
                         width={fontSize*maxLength}
-                        
+                        fill={"#f7f7f7"}
                         fontSize={fontSize}
                         padding={padding}></Text>
                     </Label>
@@ -77,6 +77,7 @@ class PlayerList extends React.Component<PlayerListProps> {
                             val.alive ?
                             `  智识: ${val.mastery}` +
                             `  位置: 第${val.position[0] + 1}层 ${val.numberPos}`:'Dead!!!'}
+                            fill={"#f7f7f7"}
                             fontSize={fontSize}
                             padding={padding}
                             width={fontSize*15}
