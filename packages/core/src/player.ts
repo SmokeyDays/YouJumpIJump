@@ -281,6 +281,27 @@ export class Player {
             legalpos.push(newpos);
           }
         }
+        if(spy == -1) {
+          let newpos: Position = [pos[0], pos[1] , pos[2]];
+          for(let h = -1; h <= 1; ++h) {
+            newpos = [pos[0] + h, pos[1] , pos[2]];
+            if(gamest.board[newpos.toString()].isBursted == false) {
+              legalpos.push(newpos);
+              for(let p = -1; p <= 1; ++p) {
+                newpos = [pos[0], pos[1] + p + h, pos[2] + p];
+                if(gamest.board[newpos.toString()].isBursted == false) {
+                  legalpos.push(newpos);
+                  for(let na = -1; na <= 1; ++na) {
+                    newpos = [pos[0], pos[1] + p + h, pos[2] + p + na];
+                    if(gamest.board[newpos.toString()].isBursted == false) {
+                      legalpos.push(newpos);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
         legalpos.push(pos);
         break;
       }

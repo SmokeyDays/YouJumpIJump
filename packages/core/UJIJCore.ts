@@ -1,6 +1,6 @@
 import { Context } from "cordis";
 import { GameState } from "./src/game";
-import { CardPara, RequestSignal, SignalPara } from "./src/regulates/interfaces";
+import { CardPara, GameStage, RequestSignal, SignalPara, SlotList } from "./src/regulates/interfaces";
 
 declare module 'cordis' {
   export interface Context {
@@ -59,6 +59,14 @@ export class UJIJCore {
       this.onGameEnd();
     });
     this.app.gameState.gameMain();
+  }
+  getPosSet(player: string, card: string): SlotList {
+    for(const pl of this.app.gameState.player) {
+      if(pl.name === player) {
+        return pl.legalPos(this.app.gameState, card, this.app.gameState.global.stage === GameStage.INSTANT_ACTION, -1);
+      }
+    }
+    return [];
   }
   getGameState() {
     return this.app.gameState;

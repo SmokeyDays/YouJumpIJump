@@ -2,7 +2,7 @@ import { GameStage, GameState, IterateSignal, IterateSignalType, PlayerOperation
 import { logger } from "../tools/Logger";
 import { User } from "./User";
 import { UJIJCore } from "../../core/UJIJCore"
-import { Card, CardPara, RequestSignal } from "../../core/src/regulates/interfaces";
+import { Card, CardPara, Position, RequestSignal } from "../../core/src/regulates/interfaces";
 const defaultDeck1 = "swordAndFist";
 const defaultDeck2 = "cardNotEnough";
 
@@ -54,6 +54,18 @@ export class Room {
 
   gameEnd() {
 
+  }
+
+  getPosSet(user: User, card: string): Position[] {
+    if(this.game == null) {
+      logger.error("Failed to get pos set in room %s: GAME HAS NOT STARTED", this.roomName);
+      return [];
+    }
+    if(user.userName == null) {
+      logger.error("Failed to get pos set in room %s: PLAYER %s NOT FOUND", this.roomName, user.userName);
+      return [];
+    }
+    return this.game.getPosSet(user.userName, card);
   }
 
   async startGame() {
