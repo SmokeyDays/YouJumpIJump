@@ -106,19 +106,20 @@ export class Board extends React.Component<BoardProps, BoardState> {
   render(): React.ReactNode {
 
     let info = this.props.boardInfo;
-    console.log("!!!!!!!!!!!",this.props.freSlotList)
     let slots = info.slotInfos.map((value, index) => {
       return (
+        value.isBroken? null:
         <Slot
           {...info.slotTemplate.props}
           x={value.x}
           y={value.y}
           index={index}
           key={index}
-          color={value.isBroken ? info.brokeColor : info.slotTemplate.props.color}
+          color={info.slotTemplate.props.color}
           stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1? 'orange':this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
           onClick={
             ()=>{
+              console.log("slot",value.ix,value.iy,value.isBroken)
               if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
                 socket.emit('resolve-signal',{
                   type: "move", 
@@ -187,7 +188,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
               typeProps = {{
 
                 text: value.prayer > 0 ? value.prayer : null,
-                fontSize: radius / 2,
+                fontSize: radius *0.8,
                 fill: "#9b95c9"
               }}
               y={-radius / 2}
@@ -226,8 +227,6 @@ export class BoardInfo {
     let index = this.slotMap[`${ix},${iy}`]
     if(index) {
       this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
-      if(!isBroken)
-        console.log(ix,iy, this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken)
     }
   }
 
