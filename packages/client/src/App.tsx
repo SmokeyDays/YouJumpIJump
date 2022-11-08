@@ -14,6 +14,7 @@ import PubSub from 'pubsub-js'
 interface AppState {
   userName: string,
   pageName: string,
+  userLoggedIn: boolean,
   gameState: GameState,
   signal: PlayerOperation,
   roomState: RoomState,
@@ -40,8 +41,11 @@ class App extends React.PureComponent<{},AppState> {
     this.setState({signal: val});
   }
 
-  setUserName(val: string) {
-    this.setState({userName: val});
+  setUserName(val: string, loggedIn: boolean = false) {
+    this.setState(s => ({
+      userName: val,
+      userLoggedIn: s.userLoggedIn || loggedIn
+    }));
   }
 
   sendAlertMessage(msg: string, dur: number = 3) {
@@ -54,11 +58,11 @@ class App extends React.PureComponent<{},AppState> {
     }, dur * 1000);
   }
   constructor(props: any){
-    
     super(props);
     this.state = {
       pageName: "LoginPage",
       userName: "请登录",
+      userLoggedIn: false,
       gameState: {
         player: [],
         board: {},
@@ -82,16 +86,16 @@ class App extends React.PureComponent<{},AppState> {
     this.setGameState = this.setGameState.bind(this);
     this.setUserName = this.setUserName.bind(this);
     this.setRoomState = this.setRoomState.bind(this);
+  }
 
+  componentDidMount(): void {
     // Register listeners on the messages that changes the whole application.
-    
     socket.on("renew-game-state", (val) => {
-      
       this.setGameState(val.state, val.localPlayer);
       this.setPage("GamePage");
     });
     socket.on("user-login-successful", (args) => {
-      this.setUserName(args);
+      this.setUserName(args, true);
     });
     socket.on("renew-room-state", (args) => {
       this.setRoomState(args);
@@ -117,9 +121,7 @@ class App extends React.PureComponent<{},AppState> {
         dur: 1,
       });
     });
-  }
 
-  componentDidMount(): void {
     PubSub.subscribe("alert-pubsub-message", (msg, data) => {
       if(data.dur === undefined) {
         this.sendAlertMessage(data.str);
@@ -137,7 +139,7 @@ class App extends React.PureComponent<{},AppState> {
     let content = null;
     switch(this.state.pageName){
       case "LoginPage":{
-        content = <LoginPage userName={this.state.userName}/>;
+        content = <LoginPage userName={this.state.userName} userLoggedIn={this.state.userLoggedIn}/>;
         break;
       }
       case "GamePage":{

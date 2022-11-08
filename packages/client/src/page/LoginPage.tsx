@@ -63,7 +63,7 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
 
   render() {
     return (
-      <div>
+      <div className="basic-info-form-container">
         <form className="basic-info-form">
           <label>
             {this.props.formName}
@@ -78,6 +78,7 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
 
 interface LoginPageProps {
   userName: string,
+  userLoggedIn: boolean,
 }
 
 class LoginPage extends React.Component<LoginPageProps,{}> {
@@ -102,22 +103,22 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
       <div className="login-scene">
         <header className="login-header">
           <img src={logo} className="login-logo" alt="logo"></img>
-          <BasicInfoForm
+          {!this.props.userLoggedIn && <BasicInfoForm
             formName='用户登录'
             buttonName='登录'
             formVariables={{
               userName: this.props.userName,
             }}
             formClassName='basic-info-form'
-            formButtonOnClick={this.userLoginOnClick}/>
-          <BasicInfoForm
+            formButtonOnClick={this.userLoginOnClick}/>}
+          {this.props.userLoggedIn && <BasicInfoForm
             formName='房间号'
             buttonName='创建/进入'
             formVariables={{
               roomName: this.randomRoomName,
             }}
             formClassName='basic-info-form'
-            formButtonOnClick={this.enterRoomOnClick}/>
+            formButtonOnClick={this.enterRoomOnClick}/>}
         </header>
       </div>
     );

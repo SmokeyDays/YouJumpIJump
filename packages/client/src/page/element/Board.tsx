@@ -6,6 +6,7 @@ import PlayerList from './PlayerList';
 import { socket } from '../../communication/connection';
 import GamePage, { CurrentBoard } from '../GamePage';
 import CardShowcase from './CardShowcase';
+import KButton from './KButton';
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -115,7 +116,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
           y={value.y}
           index={index}
           key={index}
-          color={info.slotTemplate.props.color}
+          color={KButton.changeColorByNum(info.slotTemplate.props.color,value.dis*40,value.dis*40,value.dis*40)}
           stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1? 'orange':this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
           onClick={
             ()=>{
@@ -159,6 +160,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
         
         players.push(
           <Group
+            key={value.name[0]}
             x={offetX + info.slotInfos[info.slotMap[pos]].x}
             y={info.slotInfos[info.slotMap[pos]].y}>
 
@@ -226,14 +228,14 @@ export class BoardInfo {
   //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
     let index = this.slotMap[`${ix},${iy}`]
-    if(index) {
+    if(index != null) {
       this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
     }
   }
 
   initSlotInfos() {
     this.slotInfos = []
-    this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0, isBroken: false };
+    this.slotInfos[0] = { x: 0, y: 0, ix: 0, iy: 0, isBroken: false, dis: 0 };
     this.slotMap['0,0'] = 0
 
     let cnt = 1;
@@ -249,6 +251,7 @@ export class BoardInfo {
             ix: ix,
             iy: iy,
             isBroken: false,
+            dis: i
           }
           this.slotMap[`${ix},${iy}`] = cnt;
           cnt++;
@@ -272,6 +275,7 @@ export class BoardInfo {
     ix: number,
     iy: number,
     isBroken: boolean,
+    dis: number,
   }[] = [];
 
   slotMap: {

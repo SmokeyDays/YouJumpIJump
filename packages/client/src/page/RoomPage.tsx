@@ -28,7 +28,7 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
     const roomState = this.props.roomState;
     const userList = roomState.users.map((val) => {
       return (
-        <div className="room-user-box">
+        <div key={val} className="room-user-box">
           <div className="room-user-name">{val}</div>
         </div>
       );
