@@ -292,9 +292,9 @@ export class Player {
         }
         if(spy == -1) {
           let newpos: Position = [pos[0], pos[1] , pos[2]];
-          console.log(newpos);
           for(let h = -1; h <= 1; ++h) {
             newpos = [pos[0], pos[1] + h, pos[2]];
+            console.log(newpos);
             if(gamest.board[newpos.toString()].isBursted == false) {
               legalpos.push(newpos);
               for(let p = -1; p <= 1; ++p) {

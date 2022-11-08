@@ -55,6 +55,14 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         }
     }
 
+    useCard() {
+        if (this.state.cardId != null) {
+            CardContainer.instance.isShowingCard = false;
+            GamePage.instance.setAccessSlotList([])
+            this.setState({ cardId: null ,isEnable: true})
+        }
+    }
+
     componentDidMount(): void {
         if (this.refDom) this.height = this.refDom.height
     }
@@ -152,7 +160,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 fontSize={mFont}
                                 isEnable={this.state.isEnable}
                                 onClick={()=>{
-                                    console.log(this.state.cardId, "main run")
+                                    console.log(this.state.cardId, "instant run")
                                     socket.emit('get-available-pos', this.state.cardId)
                                     this.setState({isEnable: false})
                                 }}

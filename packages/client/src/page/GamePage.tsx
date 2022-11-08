@@ -56,7 +56,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
         
     LocalPlayer = this.props.localPlayer;
-    console.log("GamePageLocalplayer", LocalPlayer)
 
     socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
       console.log('!!!renew-game-state',val);
@@ -96,6 +95,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
           <GameCanvas
+            currentBoard={this.state.currentBoard}
             x={window.innerWidth / 2}
             y={window.innerHeight / 2}
             boardInfo={this.state.boards[this.state.currentBoard]}
@@ -135,7 +135,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   loadGameState(state: GameState) {
-    console.log('new state', state);
       let boards = state.board
       for( let i in boards) {
         for(let j in boards[i]) {
@@ -180,7 +179,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   handleKeyDown(e) {
     let lastBoard = this.state.currentBoard
-    console.log('key:' + e.keyCode)
     switch (e.keyCode) {
       case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
