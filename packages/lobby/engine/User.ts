@@ -79,6 +79,10 @@ export class User {
         logger.warn('User %s try to start game but never in any room.', this.userName);
         return;
       }
+      if(this.room.users.length < 2) {
+        socket.emit("alert-message", "房间人数至少为 2 才能开始游戏");
+        return;
+      }
       this.room.startGame();
     });
     // Leave the room.
