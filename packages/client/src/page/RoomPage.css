@@ -24,6 +24,7 @@
   justify-content: center;
   flex-wrap: wrap;
   overflow-y: auto;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .room-user-box {
@@ -34,18 +35,22 @@
   border-style: solid;
   border-color: black;
   border-width: 5px;
-  border-radius: 15px;
+  border-radius: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 /* User Box */
 
 
 .room-user-name {
-
+  width: 80%;
+  overflow: hidden;
+  white-space: nowarp;
+  text-overflow: ellipsis;
 }
 
 .room-bottom {
