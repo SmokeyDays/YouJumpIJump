@@ -224,7 +224,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
         if (this.restChildren > 0) {
             newChildren = array.map((value, index) => {
                 return (
-                    <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
+                    <LayoutElement key={index} Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
                     >
                         {value.props.children}
                     </LayoutElement>
@@ -242,7 +242,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                     let nowX = x
                     x += this.whInfos[index].w + this.props.padding
                     return (
-                        <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
+                        <LayoutElement key={index} Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
                             x={this.getSuitableX(nowX, 0)}
                             y={this.getSuitableY(0, this.whInfos[index].h)}
                         >
@@ -257,7 +257,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                     let nowY = y;
                     y += this.whInfos[index].h + this.props.padding
                     return (
-                        <LayoutElement Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
+                        <LayoutElement key={index} Type={value.type} transmitToParent={(w, h) => this.getChildInfo(index, w, h)} {...value.props}
                             y={this.getSuitableY(nowY, 0)}
                             x={this.getSuitableX(0, this.whInfos[index].w)}
                         >
