@@ -60,3 +60,24 @@
 .basic-info-button:hover {
   background-color: rgba(127, 144, 160, 0.4);
 }
+
+.help-btn, .info-btn {
+  position: absolute;
+  top: 10px;
+  width: 60px;
+  height: 60px;
+}
+
+.help-btn {
+  left: 10px;
+}
+
+.info-btn {
+  left: 70px;
+}
+
+.help-popup, .info-popup {
+  width: 600px;
+  color: white;
+  text-align: left;
+}

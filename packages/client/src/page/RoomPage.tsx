@@ -2,7 +2,6 @@ import React from "react";
 import { socket } from "../communication/connection";
 import { RoomState } from "../regulates/Interfaces";
 import { Deck } from "../regulates/type";
-import { PopupBtn } from "./Composition";
 import './RoomPage.css';
 
 interface RoomPageProps {
