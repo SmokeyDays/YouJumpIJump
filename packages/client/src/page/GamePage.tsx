@@ -62,41 +62,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
     LocalPlayer = this.props.localPlayer;
 
-    socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
-      console.log('!!!renew-game-state', val);
-      this.loadGameState(val.state)
-      this.setState({ gameState: val.state })
-    })
-    socket.on('request-signal', (val: SignalPara) => {
-      console.log('!!!request-signal', val);
-      switch (val.type) {
-        case 'recast':
-          this.setState({ isInRecast: true })
-          break;
-        case 'card':
-          if (val.stage == 'main') {
-            this.setState({ stage: 1 })
-          }
-          else {
-            this.setState({ stage: 0 })
-          }
-          break;
-        case 'action':
-          this.setAccessSlotList(val.pos)
-          break;
-      }
-    })
-
-    socket.on('return-pos-set', (val: Position[]) => {
-      console.log('!!!return-pos-set', val);
-      this.setFreSlotList(val)
-    })
-
-    socket.on('game-end-signal', () => {
-      console.log('!!!game-end-signal');
-      this.props.changePage("GameEndPage",1)
-    })
-
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -185,6 +150,36 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   componentDidMount() {
+    socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
+      console.log('!!!renew-game-state', val);
+      this.loadGameState(val.state)
+      this.setState({ gameState: val.state })
+    })
+    socket.on('request-signal', (val: SignalPara) => {
+      console.log('!!!request-signal', val);
+      switch (val.type) {
+        case 'recast':
+          this.setState({ isInRecast: true })
+          break;
+        case 'card':
+          if (val.stage == 'main') {
+            this.setState({ stage: 1 })
+          }
+          else {
+            this.setState({ stage: 0 })
+          }
+          break;
+        case 'action':
+          this.setAccessSlotList(val.pos)
+          break;
+      }
+    })
+
+    socket.on('return-pos-set', (val: Position[]) => {
+      console.log('!!!return-pos-set', val);
+      this.setFreSlotList(val)
+    })
+
     document.addEventListener("keydown", this.handleKeyDown)
     if (CardContainer.instance != null) {
       this.loadGameState(this.state.gameState)

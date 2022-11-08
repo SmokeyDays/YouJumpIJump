@@ -1,19 +1,5 @@
 .login-scene {
   text-align: center;
-
-  background-image: url("../assets/backgrounds/login-background.png");
-  background-repeat: repeat;
-  background-size: 160px 128px;
-  animation: login-scene-bg linear 2s infinite;
-}
-
-@keyframes login-scene-bg {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 160px 128px;
-  }
 }
 
 .login-header {
@@ -27,30 +13,77 @@
 }
 
 .login-logo { 
-  height: 400px;
-  width: 400px;
+  height: 320px;
+  width: 320px;
+}
+
+.basic-info-form-container {
+  margin-top: 2em;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .basic-info-form {
   margin: 20px;
 }
 
+.basic-info-form>label>span {
+  margin-right: 1em;
+}
+
 .basic-info-input {
   margin: 0 .3em;
+  padding: .2em .4em;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+  border-width: 0 0 3px 0;
+  border-color: #6699aa;
+  border-style: solid;
+  outline: none;
+  font-size: 16px;
+}
+
+.basic-info-input:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: #6699cc;
+}
+
+.basic-info-input:focus {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #6699ee;
 }
 
 .basic-info-button {
-  margin: 0 200px;
+  margin: 0 200px 1em 200px;
   padding: 0.25em 0.75em;
-  border-style: solid;
-  border-width: 2px;
-  border-color: black;
   border-radius: 0.5em;
   cursor: pointer;
   user-select: none;
-  background-color: rgba(127, 144, 160, 0.2);
+  background-color: #558899;
+  color: #e7e7e7;
 }
 
 .basic-info-button:hover {
-  background-color: rgba(127, 144, 160, 0.5);
+  background-color: rgba(127, 144, 160, 0.4);
+}
+
+.help-btn, .info-btn {
+  position: absolute;
+  top: 10px;
+  width: 60px;
+  height: 60px;
+}
+
+.help-btn {
+  left: 10px;
+}
+
+.info-btn {
+  left: 70px;
+}
+
+.help-popup, .info-popup {
+  width: 600px;
+  color: white;
+  text-align: left;
 }

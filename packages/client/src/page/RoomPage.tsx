@@ -2,7 +2,6 @@ import React from "react";
 import { socket } from "../communication/connection";
 import { RoomState } from "../regulates/Interfaces";
 import { Deck } from "../regulates/type";
-import { PopupBtn } from "./Composition";
 import './RoomPage.css';
 
 interface RoomPageProps {
@@ -28,7 +27,7 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
     const roomState = this.props.roomState;
     const userList = roomState.users.map((val) => {
       return (
-        <div className="room-user-box">
+        <div key={val} className="room-user-box">
           <div className="room-user-name">{val}</div>
         </div>
       );
@@ -42,10 +41,10 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
           {[userList]}
         </div>
         <div className="room-bottom">
-          <div className="room-button" onClick = {this.startGameOnClick}>
+          <div className="room-button enter" onClick = {this.startGameOnClick}>
             进入游戏
           </div>
-          <div className="room-button" onClick = {this.leaveRoomOnClick}>
+          <div className="room-button exit" onClick = {this.leaveRoomOnClick}>
             退出房间
           </div>
         </div>

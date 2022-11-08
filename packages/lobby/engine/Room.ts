@@ -49,13 +49,14 @@ export class Room {
         targetUser.socket.off("resolve-signal", resolveWithPara);
       },60*1000)
     });
-    // targetUser.socket.off("resolve-signal");
-    await this.renew();
     return res;
   }
 
   gameEnd() {
-
+    logger.verbose("game end.");
+    for(let i = 0; i < this.users.length; ++i) {
+      this.users[i]?.emit('game-end-signal', this.game?.getGameState());
+    }
   }
 
   getPosSet(user: User, card: string): Position[] {

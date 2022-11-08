@@ -160,6 +160,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
         
         players.push(
           <Group
+            key={value.name[0]}
             x={offetX + info.slotInfos[info.slotMap[pos]].x}
             y={info.slotInfos[info.slotMap[pos]].y}>
 

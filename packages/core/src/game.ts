@@ -117,6 +117,11 @@ export class GameState {
         pos: pos
       }
     });
+    if(res.type === "move") {
+      res.val[0] = parseInt(res.val[0].toString());
+      res.val[1] = parseInt(res.val[1].toString());
+      res.val[2] = parseInt(res.val[2].toString());
+    }
     return res;
   }
   async gameStart() {
@@ -148,8 +153,9 @@ export class GameState {
     let ist: Record<string, boolean> = {};
     ist['2'] = ist['5'] = ist['6'] = ist['7'] = ist['J'] = ist['BJ'] = ist['RJ'] = true;
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
-    mov['10'] = mov['J'] = mov['0'] = mov['4'] = mov['9'] = true;
+    mov['10'] = mov['J'] = mov['4'] = mov['9'] = true;
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
+    logger.verbose(res);
     if (res != null && res.type == 'card') {
       if (!inst || (inst && ist[res.val])) {
         if(res.val == '8') {
@@ -166,6 +172,11 @@ export class GameState {
           this.player[id].playCard(this, res.val, move);
         }
         else if (res.val == '5') {//recast
+          for(let i = 0; i < this.player[id].hand.length; i++) {
+            if(this.player[id].hand[i] == '5') {
+              this.player[id].hand.splice(i, 1);
+            }
+          }
           const reca: CardPara = await this.recastSignal(this.player[id].name);
           this.player[id].playCard(this, res.val, reca);
         }
@@ -180,19 +191,11 @@ export class GameState {
     }
   }
   async turn(id: number) {
-
-    logger.verbose("****1")
     this.player[id].turnBegin();
     //instant turn
-
-    logger.verbose("****2")
     await this.action(id, true);
-
-    logger.verbose("****3")
     //main turn
     await this.action(id, false);
-    
-    logger.verbose("****4")
     //burst and drop
     this.player[id].passby.push(this.player[id].position);
     for (let i = 0; i < this.player.length; i++) {

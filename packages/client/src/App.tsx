@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './page/BackgroundLayer.css';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
@@ -14,6 +15,7 @@ import PubSub from 'pubsub-js'
 interface AppState {
   userName: string,
   pageName: string,
+  userLoggedIn: boolean,
   gameState: GameState,
   signal: PlayerOperation,
   roomState: RoomState,
@@ -42,8 +44,11 @@ class App extends React.PureComponent<{},AppState> {
     this.setState({signal: val});
   }
 
-  setUserName(val: string) {
-    this.setState({userName: val});
+  setUserName(val: string, loggedIn: boolean = false) {
+    this.setState(s => ({
+      userName: val,
+      userLoggedIn: s.userLoggedIn || loggedIn
+    }));
   }
 
   sendAlertMessage(msg: string, dur: number = 3) {
@@ -56,11 +61,11 @@ class App extends React.PureComponent<{},AppState> {
     }, dur * 1000);
   }
   constructor(props: any){
-    
     super(props);
     this.state = {
       pageName: "LoginPage",
       userName: "请登录",
+      userLoggedIn: false,
       gameState: {
         player: [],
         board: {},
@@ -84,16 +89,16 @@ class App extends React.PureComponent<{},AppState> {
     this.setGameState = this.setGameState.bind(this);
     this.setUserName = this.setUserName.bind(this);
     this.setRoomState = this.setRoomState.bind(this);
+  }
 
+  componentDidMount(): void {
     // Register listeners on the messages that changes the whole application.
-    
     socket.on("renew-game-state", (val) => {
-      
       this.setGameState(val.state, val.localPlayer);
       this.setPage("GamePage");
     });
     socket.on("user-login-successful", (args) => {
-      this.setUserName(args);
+      this.setUserName(args, true);
     });
     socket.on("renew-room-state", (args) => {
       this.setRoomState(args);
@@ -119,9 +124,7 @@ class App extends React.PureComponent<{},AppState> {
         dur: 1,
       });
     });
-  }
 
-  componentDidMount(): void {
     PubSub.subscribe("alert-pubsub-message", (msg, data) => {
       if(data.dur === undefined) {
         this.sendAlertMessage(data.str);
@@ -139,7 +142,11 @@ class App extends React.PureComponent<{},AppState> {
     let content = null;
     switch(this.state.pageName){
       case "LoginPage":{
-        content = <LoginPage userName={this.state.userName}/>;
+        content = (
+          <div className="background-layer">
+            <LoginPage userName={this.state.userName} userLoggedIn={this.state.userLoggedIn}/>
+          </div>
+        );
         break;
       }
       case "GamePage":{
@@ -147,7 +154,11 @@ class App extends React.PureComponent<{},AppState> {
         break;
       }
       case "RoomPage":{
-        content = <RoomPage roomState = {this.state.roomState}/>;
+        content = (
+          <div className="background-layer">
+            <RoomPage roomState = {this.state.roomState}/>;
+          </div>
+        );
         break;
       }
       case "GameEndPage":{
