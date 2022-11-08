@@ -192,7 +192,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         fontSize={mFont}
                         isEnable={this.state.isEnable}
                         onClick={()=>{
-                            console.log(this.state.cardId, "main run")
+                            console.log("emit",this.state.cardId, "main run")
                             socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
                             CardShowcase.instance.useCard()
                         }}

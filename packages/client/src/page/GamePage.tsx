@@ -9,7 +9,7 @@ import { BoardInfo, Slot } from "./element/Board";
 import { socket } from "../communication/connection";
 import { Card, CardPara, Position, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
 import { BlockLike } from "typescript";
-import { Player } from "../../../core/src/player";
+import { Player } from "../regulates/Interfaces";
 //import Bgm from "../assets/musics/bgm.flac"
 
 
@@ -43,9 +43,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     GamePage.instance = this
     this.state = {
       boards: [
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 4, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 3, 'white', 'green', <Slot color='LightSeaGreen'></Slot>),
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 2, 'white', 'green', <Slot color='DarkCyan'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 4, 'white', 'green', <Slot color='#66cdaa'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 3, 'white', 'green', <Slot color='#20b2aa'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 2, 'white', 'green', <Slot color='#008b8b'></Slot>),
       ],
       showingCard: "",
       currentBoard: 2,
@@ -94,15 +94,14 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   render() {
-    console.log("gamestate!",this.props.gameState);
     return (
       <div>
-        {/* <audio
+        <audio
           autoPlay={true}
           loop={true}
           preload="auto"
-          src="../music/纯音乐-忧伤还是快乐.mp3">
-        </audio> */}
+          src={require("../assets/musics/bgm.flac")}>
+        </audio>
         <Stage width={window.innerWidth} height={window.innerHeight}>
           <GameCanvas
             freSlotList={this.state.freSlotList[this.state.currentBoard]}
@@ -135,28 +134,39 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     );
   }
 
-  isPlayerEqual(id: number, player1: Player, player2: Player): boolean {
+  publishPlayerChange(player1: Player, player2: Player) {
+    if (this.state.gameState.global.round < this.state.gameState.player.length) return;
     if (player1.alive != player2.alive) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}被淘汰了!`, dur: 3 })
     }
     if (player2.magician && !player1.magician) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 3 })
     }
-    return true;
+    if (player2.position[0] != player1.position[0]) {
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 3 })
+    }
+    else if (player2.position != player1.position) {
+      PubSub.publish('alert-pubsub-message', { str: `${player1.name}移动了`, dur: 3 })
+    }
   }
 
   loadGameState(state: GameState) {
-      let boards = state.board
-      console.log("Boardnew",boards)
-      for( let index in boards) {
-        let pos = index.split(',')
-        let i = Number(pos[0]),j=Number(pos[1]),k=Number(pos[2]);
-        this.state.boards[i].setSlotStatus(j,k,boards[index].isBursted);
-      }
-      if(CardContainer.instance!=null){
-      CardContainer.instance.setCard(state.player[LocalPlayer].hand);
-      }
 
+    let boards = state.board
+    console.log("Boardnew", boards)
+    for(let i in this.state.gameState.player) {
+      this.publishPlayerChange(this.state.gameState.player[i],state.player[i])
+    }
+
+    for (let index in boards) {
+      let pos = index.split(',')
+      let i = Number(pos[0]), j = Number(pos[1]), k = Number(pos[2]);
+      this.state.boards[i].setSlotStatus(j, k, boards[index].isBursted);
+    }
+    if (CardContainer.instance != null) {
+      CardContainer.instance.setCard(state.player[LocalPlayer].hand);
+    }
+    this.setState({})
   }
 
   componentDidMount() {

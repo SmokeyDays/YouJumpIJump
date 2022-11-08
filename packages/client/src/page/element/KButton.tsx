@@ -106,6 +106,28 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         return null;
     }
 
+    static changeColorByNum(rgb: string, cr:number,cb:number, cg:number, minus: boolean = false): string {
+        let rExb1: RegExp = /#([\da-f]{2})([\da-f]{2})([\da-f]{2})/g //?
+        let x = rExb1.exec(rgb)
+        if (x) {
+            let r, g, b: number;
+            if (minus) {
+                r = Math.max(0, parseInt(x[1], 16) - cr)
+                g = Math.max(0, parseInt(x[2], 16) - cb)
+                b = Math.max(0, parseInt(x[3], 16) - cg)
+            }
+            else {
+
+                r = Math.min(255, parseInt(x[1], 16) + cr)
+                g = Math.min(255, parseInt(x[2], 16) + cb)
+                b = Math.min(255, parseInt(x[3], 16) + cg)
+            }
+            let result = '#' + (r + 256).toString(16).slice(1, 3) + (g + 256).toString(16).slice(1, 3) + (b + 256).toString(16).slice(1, 3);
+            return result
+        }
+        return null;
+    }
+
     width: number
     height: number
     background: string
