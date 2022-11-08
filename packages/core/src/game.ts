@@ -51,7 +51,7 @@ export class GameState {
             PosS.push([i, j, k]);
           }
           this.board[[i, j, k].toString()] = {
-            isBursted: false
+            isBursted: !Player.inRange(this, [i, j, k])
           }
         }
       }
@@ -187,6 +187,7 @@ export class GameState {
     //main turn
     await this.action(id, false);
     //burst and drop
+    this.player[id].passby.push(this.player[id].position);
     for (let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
     }

@@ -59,12 +59,13 @@ class TopTitle extends React.Component<TopTitleProps> {
                     </Text>
                 }
 
-                {(LocalPlayer == this.props.turn || this.props.isInRecast) &&
+                {((LocalPlayer == this.props.turn && this.props.stage!=-1)  || this.props.isInRecast) &&
                     (<KButton
                         text='跳过'
                         width={100}
                         height={50}
                         background={"#bb1111"}
+                        fontColor={"#f7f7f7"}
                         onClick={() => {
                             console.log(this.props.currentPlayer, "jump out");
                             CardShowcase.instance.clearState();

@@ -88,11 +88,12 @@ export class Player {
   turnBegin() {
     this.laspos = this.position;
   }
-  inRange(gamest: GameState, pos: Position):boolean {
-    return pos[1] >= -2 * (gamest.player.length - 1) - (3 - pos[0])
-      && pos[1] <= 2 * (gamest.player.length - 1) + (3 - pos[0])
-      && pos[2] >= -2 * (gamest.player.length - 1) - (3 - pos[0])
-      && pos[2] <= 2 * (gamest.player.length - 1) + (3 - pos[0]);
+  static inRange(gamest: GameState, pos: Position):boolean {
+    let size:number = 2 * (gamest.player.length - 1) - (3 - pos[0]);
+    if(pos[1] <= -size || pos[1] >= size) return false;
+    if(pos[2] <= -size || pos[2] >= size) return false;
+    if(Math.abs(pos[1] - pos[2]) > size) return false;
+    return true;
   }
   legalPos(gamest: GameState, cardid: string, instant: boolean, spy: number = 0):Position[] {
     let legalpos: Position[] = [];
@@ -104,7 +105,7 @@ export class Player {
       case cardConfig.cardNameList[0]: {
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -118,7 +119,7 @@ export class Player {
         let nowlen: number = legalpos.length;
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -134,7 +135,7 @@ export class Player {
       case cardConfig.cardNameList[1]: {
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -148,7 +149,7 @@ export class Player {
         let nowlen: number = legalpos.length;
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -166,7 +167,7 @@ export class Player {
         let pos: Position = this.position;
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -180,7 +181,7 @@ export class Player {
         let nowlen: number = legalpos.length;
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -224,7 +225,7 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < tot; j++) {
-            if(!this.inRange(gamest, cur)) {
+            if(!Player.inRange(gamest, cur)) {
               continue;
             }
             if(gamest.board[cur.toString()].isBursted == false) {
@@ -241,7 +242,7 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < 4; j++) {
-            if(!this.inRange(gamest, cur)) {
+            if(!Player.inRange(gamest, cur)) {
               continue;
             }
             if(gamest.board[cur.toString()].isBursted == false) {
@@ -323,7 +324,7 @@ export class Player {
       case cardConfig.cardNameList[10]: {
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -333,7 +334,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -343,7 +344,7 @@ export class Player {
         }
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -353,7 +354,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -363,7 +364,7 @@ export class Player {
         }
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -373,7 +374,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -383,7 +384,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -416,7 +417,7 @@ export class Player {
         }
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -429,7 +430,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -442,7 +443,7 @@ export class Player {
         }
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -455,7 +456,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -468,7 +469,7 @@ export class Player {
         }
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -481,7 +482,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {
@@ -494,7 +495,7 @@ export class Player {
         }
         for(let i = 1; i <= size; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
+          if(!Player.inRange(gamest, newpos)) {
             break;
           }
           if(gamest.board[newpos.toString()].isBursted == true) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group, Rect, Tag, Text, Label, Image as KImage } from 'react-konva';
 import { socket } from '../../communication/connection';
-import { CardDescription, getDescription, ImgsManager } from '../../regulates/utils';
+import { CardDescription, getDescription, ImgsManager, isInstant } from '../../regulates/utils';
 import GamePage from '../GamePage';
 import CardShowcase from './CardShowcase';
 import KButton from './KButton';
@@ -12,6 +12,7 @@ type CardContainerProps = typeof CardContainer.defaultProps & {
     y?: number,
     cardWidth?: number,
     isInRecast?: boolean,
+    stage: number
 }
 
 interface CardContainerState {
@@ -28,6 +29,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         y: window.innerHeight * 7 / 8,
         cardWidth: 100,
         isInRecast: false,
+        stage: -1,
     }
 
     static instance: CardContainer = null;
@@ -46,8 +48,8 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
     }
 
     render(): React.ReactNode {
-        if(!this.props.isInRecast && this.state.selectedCardList.length != 0) {
-            this.setState({selectedCardList:[]})
+        if (!this.props.isInRecast && this.state.selectedCardList.length != 0) {
+            this.setState({ selectedCardList: [] })
         }
 
         let theta = 30;
@@ -89,12 +91,20 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                                 }
                                 else {
                                     if (!this.isShowingCard) {
+                                        if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                                            console.log('get-available-pos', this.state.cardList[index])
+                                            socket.emit('get-available-pos', this.state.cardList[index])
+                                        }
                                         CardShowcase.instance.showCard(this.state.cardList[index]);
                                         this.removeCard(index);
                                         this.isShowingCard = true;
                                     }
                                     else {
                                         CardShowcase.instance.clearState();
+                                        if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                                            console.log('get-available-pos', this.state.cardList[index])
+                                            socket.emit('get-available-pos', this.state.cardList[index])
+                                        }
                                         CardShowcase.instance.showCard(this.state.cardList[index]);
                                         this.removeCard(index);
                                         this.isShowingCard = true;
@@ -119,24 +129,24 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
                 {cards}
                 {this.state.tipCard != null && this.renderTip(this.state.tipCard)}
-                {this.props.isInRecast && 
-                <KButton
-                    x={-this.props.cardWidth*0.35}
-                    y={-this.props.cardWidth*1.8}
-                    height={this.props.cardWidth*0.3}
-                    width={this.props.cardWidth*0.7}
-                    background='#555555'
-                    text='确定'
-                    fontColor='white'
-                    fontSize={18}
-                    onClick={()=>{
-                        let cardList = this.state.selectedCardList.map((val)=>this.state.cardList[val]);
-                        socket.emit('resolve-signal',{type: 'recast',  val: cardList})
-                        GamePage.instance.setInRecast(false)
-                    }}
-                >
+                {this.props.isInRecast &&
+                    <KButton
+                        x={-this.props.cardWidth * 0.35}
+                        y={-this.props.cardWidth * 1.8}
+                        height={this.props.cardWidth * 0.3}
+                        width={this.props.cardWidth * 0.7}
+                        background='#555555'
+                        text='确定'
+                        fontColor='white'
+                        fontSize={18}
+                        onClick={() => {
+                            let cardList = this.state.selectedCardList.map((val) => this.state.cardList[val]);
+                            socket.emit('resolve-signal', { type: 'recast', val: cardList })
+                            GamePage.instance.setInRecast(false)
+                        }}
+                    >
 
-                </KButton>
+                    </KButton>
                 }
             </Group>
         )

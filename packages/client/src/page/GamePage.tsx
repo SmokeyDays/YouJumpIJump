@@ -27,6 +27,7 @@ interface GamePageState {
   currentBoard: number,
   currentRound: number,
   accessSlotList: string[][],
+  freSlotList: string[][],
   gameState: GameState,
   isInRecast: boolean,
   stage: number,
@@ -49,11 +50,13 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       currentBoard: 2,
       currentRound: 1,
       accessSlotList: [[], [], []],
+      freSlotList: [[], [], []],
       gameState: this.props.gameState,
       isInRecast: false,
-      stage: 0
+      stage: -1
     };
 
+    //this.state.gameState.global.turn=-1
         
     LocalPlayer = this.props.localPlayer;
 
@@ -84,7 +87,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     
   socket.on('return-pos-set', (val: Position[]) => {
     console.log('!!!return-pos-set',val);
-    this.setAccessSlotList(val)
+    this.setFreSlotList(val)
   })
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
@@ -95,6 +98,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       <div>
         <Stage width={window.innerWidth} height={window.innerHeight}>
           <GameCanvas
+            freSlotList={this.state.freSlotList[this.state.currentBoard]}
             currentBoard={this.state.currentBoard}
             x={window.innerWidth / 2}
             y={window.innerHeight / 2}
@@ -136,12 +140,11 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   loadGameState(state: GameState) {
       let boards = state.board
-      for( let i in boards) {
-        for(let j in boards[i]) {
-          for( let k in boards[i][j]) {
-            this.state.boards[i].setSlotStatus(Number(i),Number(j),boards[i][j][k].isBursted)
-          }
-        }
+      console.log("Boardnew",boards)
+      for( let index in boards) {
+        let pos = index.split(',')
+        let i = Number(pos[0]),j=Number(pos[1]),k=Number(pos[2]);
+        this.state.boards[i].setSlotStatus(j,k,boards[index].isBursted);
       }
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
 
@@ -171,6 +174,13 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     this.setState({ accessSlotList: tmp })
   }
 
+  setFreSlotList(slotList: [number, number, number][]) {
+    let tmp: string[][] = [[], [], []]
+    for (let i of slotList) {
+      tmp[i[0]].push(`${i[1]},${i[2]}`)
+    }
+    this.setState({ freSlotList: tmp })
+  }
 
   setSlotStatus(level: number, x: number, y: number, isBroken: boolean) {
     this.state.boards[level].setSlotStatus(x, y, isBroken)
