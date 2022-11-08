@@ -76,6 +76,7 @@ export class Slot extends React.Component<SlotProps> {
 interface BoardProps {
   boardInfo: BoardInfo,
   accessSlotList: string[],
+  freSlotList: string[],
   playerState: Player[],
 }
 
@@ -105,6 +106,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
   render(): React.ReactNode {
 
     let info = this.props.boardInfo;
+    console.log("!!!!!!!!!!!",this.props.freSlotList)
     let slots = info.slotInfos.map((value, index) => {
       return (
         <Slot
@@ -114,17 +116,15 @@ export class Board extends React.Component<BoardProps, BoardState> {
           index={index}
           key={index}
           color={value.isBroken ? info.brokeColor : info.slotTemplate.props.color}
-          stroke={this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
+          stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1? 'orange':this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
           onClick={
             ()=>{
-              console.log('!!!!!!!')
               if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
                 socket.emit('resolve-signal',{
                   type: "move", 
                   val: [CurrentBoard,value.x,value.y]
                 })
                 console.log("emit","move",[CurrentBoard,value.ix,value.iy])
-                CardShowcase.instance.useCard();
               }
             }
           }

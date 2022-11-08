@@ -45,6 +45,7 @@ class UI extends React.Component<UIProps> {
                     x={window.innerWidth / 2}
                     y={window.innerHeight * 7 / 8}
                     isInRecast = {this.props.isInRecast}
+                    stage = {this.props.stage}
                 ></CardContainer>
                 <LinearLayout
                     xAlign="right"

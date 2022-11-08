@@ -14,6 +14,7 @@ interface GameCanvasProps {
     playerState: Player[]
     boardInfo: BoardInfo
     accessSlotList: string[]
+    freSlotList: string[]
     currentBoard: number,
 }
 class GameCanvas extends React.Component<GameCanvasProps> {
@@ -43,6 +44,7 @@ class GameCanvas extends React.Component<GameCanvasProps> {
                 >
                 </KImage>
                 <Board
+                    freSlotList={this.props.freSlotList}
                     boardInfo={this.props.boardInfo}
                     accessSlotList={this.props.accessSlotList}
                     playerState={this.props.playerState}
