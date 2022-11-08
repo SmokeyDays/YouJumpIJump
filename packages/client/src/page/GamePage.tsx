@@ -182,7 +182,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     
     socket.on('game-end-signal', ()=>{
       console.log('game-end-signal');
-      this.props.changePage('GameEndPage',1)
+      this.props.changePage('GameEndPage',this.state.gameState.global.result[LocalPlayer])
     })
 
     document.addEventListener("keydown", this.handleKeyDown)
@@ -226,7 +226,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     switch (e.keyCode) {
       case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
-      //case 39: this.props.changePage('GameEndPage',1);break;
+      case 39: this.props.changePage('GameEndPage',1);break;
     }
   }
 
