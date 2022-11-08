@@ -1,10 +1,11 @@
+import { Socket } from "socket.io";
 import { PlayerSignal } from "../regulates/interfaces";
 import { logger } from "../tools/Logger";
 import { Room } from "./Room";
 import { RoomManager } from "./RoomManager";
 
 export class User {
-  socket: any; // The handle got by socket.io.
+  socket: Socket; // The handle got by socket.io.
   userName: string | null = null;
   room: Room | null = null;
   async emit(type: string, para: any) {
@@ -44,7 +45,7 @@ export class User {
         }
       }
   }
-  constructor(socket: any) {
+  constructor(socket: Socket) {
     this.socket = socket;
     // Function Binding.
     this.joinRoom = this.joinRoom.bind(this);
@@ -57,6 +58,7 @@ export class User {
     socket.on("user-login", (name: string) => {
       logger.info('User with socket id %s has logined with name %s', socket.id, name);
       this.userName = name;
+      socket.emit("user-login-successful", name);
     });
     // Register join room event:
     // If room not exist it will create a new one.
