@@ -158,6 +158,7 @@ export class GameState {
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
     mov['10'] = mov['J'] = mov['0'] = mov['4'] = mov['9'] = true;
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
+    logger.verbose(res);
     if (res != null && res.type == 'card') {
       if (!inst || (inst && ist[res.val])) {
         if (mov[res.val]) {
@@ -180,19 +181,11 @@ export class GameState {
     }
   }
   async turn(id: number) {
-
-    logger.verbose("****1")
     this.player[id].turnBegin();
     //instant turn
-
-    logger.verbose("****2")
     await this.action(id, true);
-
-    logger.verbose("****3")
     //main turn
     await this.action(id, false);
-    
-    logger.verbose("****4")
     //burst and drop
     for (let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
