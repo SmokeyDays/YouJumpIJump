@@ -36,8 +36,8 @@ export class GameState {
     for (let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
       //logger.verbose(size);
-      for (let j = -size - 5; j <= size + 5; j++) {
-        for (let k = -size - 5; k <= size + 5; k++) {
+      for (let j = -size - 8; j <= size + 8; j++) {
+        for (let k = -size - 8; k <= size + 8; k++) {
           this.board[[i, j, k].toString()] = {
             isBursted: !Player.inRange(this, [i, j, k])
           }
@@ -62,7 +62,7 @@ export class GameState {
 
   async gameMain() {
     await this.gameStart();
-    while (this.totPlayer >= 1) { //记得改回来!!!!!(re)
+    while (this.totPlayer > 1) { //记得改回来!!!!!(re)
       this.global.round++;
       for (let i = 0; i < this.player.length; i++) {
         this.global.turn = i;
@@ -153,7 +153,7 @@ export class GameState {
     let ist: Record<string, boolean> = {};
     ist['2'] = ist['5'] = ist['6'] = ist['7'] = ist['J'] = ist['BJ'] = ist['RJ'] = true;
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
-    mov['10'] = mov['J'] = mov['4'] = mov['9'] = true;
+    mov['10'] = mov['J'] = mov['4'] = mov['9'] = mov["Q"] = true;
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
     logger.verbose(res);
     if (res != null && res.type == 'card') {
@@ -163,11 +163,12 @@ export class GameState {
           for(let i = 0; i < this.player[id].hand.length; i++) {
             if(this.player[id].hand[i] == '8') {
               this.player[id].hand.splice(i, 1);
+              break;
             }
           }
         }
         else if (mov[res.val]) {
-          const legalMove = this.player[id].legalPos(this, res.val, true);
+          const legalMove = this.player[id].legalPos(this, res.val, inst);
           const move: CardPara = await this.actionSignal(this.player[id].name, legalMove);
           this.player[id].playCard(this, res.val, move);
         }
@@ -175,6 +176,7 @@ export class GameState {
           for(let i = 0; i < this.player[id].hand.length; i++) {
             if(this.player[id].hand[i] == '5') {
               this.player[id].hand.splice(i, 1);
+              break;
             }
           }
           const reca: CardPara = await this.recastSignal(this.player[id].name);
@@ -191,10 +193,13 @@ export class GameState {
     }
   }
   async turn(id: number) {
+
     this.player[id].turnBegin();
-    //instant turn
+
+    this.global.stage = GameStage.INSTANT_ACTION;
     await this.action(id, true);
-    //main turn
+
+    this.global.stage = GameStage.MAIN_ACTION;
     await this.action(id, false);
     //burst and drop
     this.player[id].passby.push(this.player[id].position);
