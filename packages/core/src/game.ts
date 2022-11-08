@@ -47,7 +47,7 @@ export class GameState {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
       for (let j = -size + 1; j < size; j++) {
         for (let k = -size + 1; k < size; k++) {
-          if(i == 0) {
+          if(i == 2) {
             PosS.push([i, j, k]);
           }
           this.board[[i, j, k].toString()] = {
