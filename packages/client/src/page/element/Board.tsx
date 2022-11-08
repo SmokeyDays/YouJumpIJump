@@ -4,7 +4,7 @@ import Center from './Center';
 import { Player } from '../../regulates/Interfaces';
 import PlayerList from './PlayerList';
 import { socket } from '../../communication/connection';
-import { CurrentBoard } from '../GamePage';
+import GamePage, { CurrentBoard } from '../GamePage';
 import CardShowcase from './CardShowcase';
 
 const dx = Math.cos(Math.PI / 3);
@@ -126,6 +126,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
                   val: [CurrentBoard,value.x,value.y]
                 })
                 console.log("emit","move",[CurrentBoard,value.ix,value.iy])
+                GamePage.instance.setAccessSlotList([])
               }
             }
           }
