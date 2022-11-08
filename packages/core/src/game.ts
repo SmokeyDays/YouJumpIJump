@@ -194,6 +194,7 @@ export class GameState {
     
     logger.verbose("****4")
     //burst and drop
+    this.player[id].passby.push(this.player[id].position);
     for (let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
     }
