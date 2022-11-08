@@ -100,3 +100,11 @@ export function isInstant(card: string) {
   }
   return false;
 }
+
+export function noMove(card: string ) {
+  const noMoveList: string[] = ["5", "6", "7", "K", "0", "RJ"];
+  if(noMoveList.indexOf(card) > -1) {
+    return true;
+  }
+  return false;
+}
