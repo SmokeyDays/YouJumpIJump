@@ -43,9 +43,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     GamePage.instance = this
     this.state = {
       boards: [
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 4, 'white', 'green', <Slot color='#66cdaa'></Slot>),
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 3, 'white', 'green', <Slot color='#20b2aa'></Slot>),
-        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 2, 'white', 'green', <Slot color='#008b8b'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 4, 'white', '#FF4500', <Slot color='#66cdaa'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 3, 'white', '#FF4500', <Slot color='#20b2aa'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) + 2, 'white', '#FF4500', <Slot color='#008b8b'></Slot>),
       ],
       showingCard: "",
       currentBoard: 2,
@@ -211,10 +211,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     switch (e.keyCode) {
       case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
-      case 37: LocalPlayer = 1;
-        this.setState({}); break;
-      case 39: this.state.gameState.player[1].alive = false
-        this.setState({}); break;
     }
   }
 
