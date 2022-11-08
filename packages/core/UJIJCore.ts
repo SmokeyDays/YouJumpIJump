@@ -62,10 +62,8 @@ export class UJIJCore {
     this.app.gameState.gameMain();
   }
   getPosSet(player: string, card: string): SlotList {
-    logger.verbose("&&&4")
     for(const pl of this.app.gameState.player) {
       if(pl.name === player) {
-        logger.verbose("&&&5")
         return pl.legalPos(this.app.gameState, card, this.app.gameState.global.stage === GameStage.INSTANT_ACTION, -1);
       }
     }

@@ -67,7 +67,7 @@ export class Room {
       logger.error("Failed to get pos set in room %s: PLAYER %s NOT FOUND", this.roomName, user.userName);
       return [];
     }
-    return this.game.getPosSet(user.userName, card);
+    return this.game.getPosSet(user.userName, card.toString());
   }
 
   async startGame() {
