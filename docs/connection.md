@@ -14,6 +14,9 @@
 用于查询合法集合。
 参数 ``card: string`` 表示查询如果当前打出某张牌，可抵达的合法位置集合。
 
+``return-pos-set`` S->C
+参数 ``cardSet: Position[]`` 表示合法位置集合。
+
 ``renew-game-state`` S->C
 更新游戏状态。
 参数：
