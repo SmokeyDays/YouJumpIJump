@@ -1,19 +1,5 @@
 .login-scene {
   text-align: center;
-
-  background-image: url("../assets/backgrounds/login-background.png");
-  background-repeat: repeat;
-  background-size: 160px 128px;
-  animation: login-scene-bg linear 3s infinite;
-}
-
-@keyframes login-scene-bg {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 160px 128px;
-  }
 }
 
 .login-header {

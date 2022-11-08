@@ -1,7 +1,6 @@
 .room-scene {
   min-width: 100vh;
   text-align: center;
-  background-color: rgb(105, 150, 200);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
