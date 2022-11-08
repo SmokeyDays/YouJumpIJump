@@ -42,6 +42,7 @@ class PlayerList extends React.Component<PlayerListProps> {
             return (
 
                 <LinearLayout
+                    key={val.name}
                     padding={10}
                 >
                     <Label>
