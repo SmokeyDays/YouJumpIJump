@@ -38,7 +38,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     }
 
     clearState() {
-        GamePage.instance.setAccessSlotList([])
+        GamePage.instance.setFreSlotList([])
         this.setState({isEnable: true})
         this.backCard()
     }
@@ -51,6 +51,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         if (this.state.cardId != null) {
             CardContainer.instance.addCard(this.state.cardId);
             CardContainer.instance.isShowingCard = false;
+            GamePage.instance.setFreSlotList([])
             this.setState({ cardId: null })
         }
     }
@@ -58,7 +59,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     useCard() {
         if (this.state.cardId != null) {
             CardContainer.instance.isShowingCard = false;
-            GamePage.instance.setAccessSlotList([])
+            GamePage.instance.setFreSlotList([])
             this.setState({ cardId: null ,isEnable: true})
         }
     }
@@ -162,8 +163,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 onClick={()=>{
                                     console.log(this.state.cardId, "instant run")
                                     socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
-                                    socket.emit('get-available-pos', this.state.cardId)
-                                    this.setState({isEnable: false})
+                                    CardShowcase.instance.useCard()
                                 }}
                                 >
                             </KButton>
@@ -194,8 +194,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         onClick={()=>{
                             console.log(this.state.cardId, "main run")
                             socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
-                            socket.emit('get-available-pos', this.state.cardId)
-                            this.setState({isEnable: false})
+                            CardShowcase.instance.useCard()
                         }}
                         >
                     </KButton>
