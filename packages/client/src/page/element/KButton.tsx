@@ -12,6 +12,7 @@ type KButtonProps = typeof KButton.defaultProps & {
     background?: string,
     clickBackground?: string,
     disabledBackground?: string,
+    overBackground?: string,
     fontSize?: number,
     fontColor?: string,
     isEnable?: boolean,
@@ -36,6 +37,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         background: "#0000ff",
         clickBackground: null,
         disabledBackground: null,
+        overBackground: null,
         fontSize: 20,
         fontColor: 'black',
         isEnable: true
@@ -47,10 +49,12 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         this.height = this.props.height
         this.background = this.props.background
         if (this.background.search('/') == -1) {
+            this.overBackground = KButton.changeColor(this.background, "#080808", true)
             this.clickBackground = KButton.changeColor(this.background, "#111111", true);
             this.disabledBackground = KButton.changeColor(this.background, "#222222", true);
         }
         else {
+            this.overBackground = this.props.overBackground
             this.clickBackground = this.props.clickBackground
             this.disabledBackground = this.props.disabledBackground
         }
@@ -63,6 +67,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         let button = this.props.isEnable ? <LinearLayout
             onMouseDown={() => { this.clickBackground && this.setState({ background: this.clickBackground }) }}
             onMouseUp={() => { this.setState({ background: this.background }) }}
+            onMouseEnter={()=>{ this.setState({ background: this.overBackground})}}
             onMouseLeave={() => { this.background != this.state.background && this.setState({ background: this.background }) }}
             xAlign="center"
             yAlign="middle"
@@ -134,6 +139,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
     background: string
     clickBackground: string
     disabledBackground: string
+    overBackground: string
 }
 
 export default KButton

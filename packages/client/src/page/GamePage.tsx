@@ -179,6 +179,11 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       console.log('!!!return-pos-set', val);
       this.setFreSlotList(val)
     })
+    
+    socket.on('game-end-signal', ()=>{
+      console.log('game-end-signal');
+      this.props.changePage('GameEndPage',1)
+    })
 
     document.addEventListener("keydown", this.handleKeyDown)
     if (CardContainer.instance != null) {
@@ -221,6 +226,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     switch (e.keyCode) {
       case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
+      //case 39: this.props.changePage('GameEndPage',1);break;
     }
   }
 
