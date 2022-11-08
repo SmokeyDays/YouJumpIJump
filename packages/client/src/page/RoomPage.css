@@ -61,10 +61,28 @@
   margin: 1em 5em;
   padding: .5em .8em;
   font-size: 20px;
-  border-style: solid;
-  border-color: black;
-  border-width: 2px;
   border-radius: 15px;
   cursor: pointer;
   user-select: none;
+  color: #e7e7e7;
+}
+
+.room-button:hover {
+  color: #f7f7f7;
+}
+
+.room-button.enter {
+  background-color: #21ba45;
+}
+
+.room-button.enter:hover {
+  background-color: #20a937;
+}
+
+.room-button.exit {
+  background-color: #d22425;
+}
+
+.room-button.exit:hover {
+  background-color: #c12021;
 }
