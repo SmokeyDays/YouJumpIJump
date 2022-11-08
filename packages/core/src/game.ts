@@ -1,11 +1,12 @@
 import { Context } from "cordis";
 import { globalAgent } from "http";
 import { off } from "process";
+import { logger } from "../../lobby/tools/Logger";
 import { Player, cardConfig } from "./player"
 import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
 
-function randomsort(a: string, b: string): number{
-  return Math.random()>.5 ? -1 : 1;
+function randomsort(a: string, b: string): number {
+  return Math.random() > .5 ? -1 : 1;
 }
 
 export class GameState {
@@ -14,7 +15,7 @@ export class GameState {
   global: {
     round: number,
     turn: number,
-    stage: GameStage, 
+    stage: GameStage,
     result: Record<string, number> // 每名玩家的名次
   }
   totPlayer: number;
@@ -24,24 +25,24 @@ export class GameState {
     this.gameEnd = gameEnd;
     this.req = req;
     this.totPlayer = player.length;
-    for(let i = 0; i < player.length; ++i) {
-      this.player.push(new Player({initialMastery: this.totPlayer, name: player[i]}));
+    for (let i = 0; i < player.length; ++i) {
+      this.player.push(new Player({ initialMastery: this.totPlayer, name: player[i] }));
     }
     player.sort(randomsort);
-    for(let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for(let j = -size - 5; j <= size + 5; j++) {
-        for(let k = -size - 5; k <= size + 5; k++) {
+      for (let j = -size - 5; j <= size + 5; j++) {
+        for (let k = -size - 5; k <= size + 5; k++) {
           this.board[[i, j, k].toString()] = {
             isBursted: false
           }
         }
       }
     }
-    for(let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for(let j = -size + 1; j < size; j++) {
-        for(let k = -size + 1; k < size; k++) {
+      for (let j = -size + 1; j < size; j++) {
+        for (let k = -size + 1; k < size; k++) {
           this.board[[i, j, k].toString()] = {
             isBursted: true
           }
@@ -57,24 +58,24 @@ export class GameState {
   }
 
   async gameMain() {
-    this.gameStart();
-    while(this.totPlayer > 1) {
-      for(let i = 0; i < this.player.length; i++) {
-        if(this.player[i].alive) {
+    await this.gameStart();
+    while (this.totPlayer >= 1) { //记得改回来!!!!!(re)
+      for (let i = 0; i < this.player.length; i++) {
+        if (this.player[i].alive) {
           await this.turn(i);
-          if(this.totPlayer < 2) {
+          if (this.totPlayer < 2) {
             break;
           }
         }
-        if(this.player[i].prayer > 0) {
+        if (this.player[i].prayer > 0) {
           this.player[i].prayer--;
           i--;
         }
       }
     }
-    if(this.totPlayer == 1) {
-      for(let i = 0; i < this.player.length; i++) {
-        if(this.player[i].alive) {
+    if (this.totPlayer == 1) {
+      for (let i = 0; i < this.player.length; i++) {
+        if (this.player[i].alive) {
           this.global.result[this.player[i].name] = 1;
           break;
         }
@@ -83,7 +84,8 @@ export class GameState {
     this.gameEnd();
   }
 
-  async recastSignal(name: string): Promise<CardPara>{
+  async recastSignal(name: string): Promise<CardPara> {
+
     const res = await this.req({
       player: name,
       para: {
@@ -92,17 +94,17 @@ export class GameState {
     });
     return res;
   }
-  async cardSignal(name: string, inst: boolean): Promise<CardPara>{
+  async cardSignal(name: string, inst: boolean): Promise<CardPara> {
     const res = await this.req({
       player: name,
       para: {
         type: 'card',
-        stage: inst? "instant": "main",
+        stage: inst ? "instant" : "main",
       }
     });
     return res;
   }
-  async actionSignal(name: string, pos: Position[]): Promise<CardPara>{
+  async actionSignal(name: string, pos: Position[]): Promise<CardPara> {
     const res = await this.req({
       player: name,
       para: {
@@ -113,17 +115,18 @@ export class GameState {
     return res;
   }
   async gameStart() {
-    for(let i = 0; i < this.player.length; i++) {
-      for(let j = 0; j < i; j++) {
-        const res: CardPara = await this.recastSignal(this.player[i].name);
-        if(res == null || res.type != 'recast') {
-          continue;
-        } else {
-          this.player[i].recast(res.val);
-        }
+
+
+    for (let i = 0; i < this.player.length; i++) {
+      const res: CardPara = await this.recastSignal(this.player[i].name);
+      if (res == null || res.type != 'recast') {
+        continue;
+      } else {
+
+        this.player[i].recast(res.val);
       }
     }
-  } 
+  }
   async spyAction(id: number) {
     const legalMove1: Position[] = this.player[0].legalPos(this, '8', false, 1);
     const move1: CardPara = await this.actionSignal(this.player[id].name, legalMove1);
@@ -132,24 +135,24 @@ export class GameState {
     const move2: CardPara = await this.actionSignal(this.player[id].name, legalMove2);
     this.player[0].playCard(this, '8', move2);
     const legalMove3: Position[] = this.player[0].legalPos(this, '8', false, 3);
-    const move3: CardPara = await this.actionSignal(this.player[id].name ,legalMove3);
+    const move3: CardPara = await this.actionSignal(this.player[id].name, legalMove3);
     this.player[0].playCard(this, '8', move3);
   }
-  async action(id: number, inst :boolean) {
+  async action(id: number, inst: boolean) {
     let mov: Record<string, boolean> = {};
     let ist: Record<string, boolean> = {};
     ist['2'] = ist['5'] = ist['6'] = ist['7'] = ist['J'] = ist['BJ'] = ist['RJ'] = true;
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
     mov['10'] = mov['J'] = mov['0'] = mov['4'] = mov['9'] = true;
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
-    if(res != null && res.type == 'card') {
-      if(!inst || (inst && ist[res.val])) {
-        if(mov[res.val]) {
+    if (res != null && res.type == 'card') {
+      if (!inst || (inst && ist[res.val])) {
+        if (mov[res.val]) {
           const legalMove = this.player[id].legalPos(this, res.val, true);
           const move: CardPara = await this.actionSignal(this.player[id].name, legalMove);
           this.player[id].playCard(this, res.val, move);
         }
-        else if(res.val == '5') {//recast
+        else if (res.val == '5') {//recast
           const reca: CardPara = await this.recastSignal(this.player[id].name);
           this.player[id].playCard(this, res.val, reca);
         }
@@ -164,20 +167,26 @@ export class GameState {
     }
   }
   async turn(id: number) {
+
+    logger.verbose("****1")
     this.player[id].turnBegin();
     //instant turn
+
+    logger.verbose("****2")
     await this.action(id, true);
+
+    logger.verbose("****3")
     //main turn
     await this.action(id, false);
     //burst and drop
-    for(let i = 0; i < this.player.length; i++) {
+    for (let i = 0; i < this.player.length; i++) {
       this.player[i].burst(this);
     }
-    for(let i = 0; i < this.player.length; i++) {
+    for (let i = 0; i < this.player.length; i++) {
       this.player[i].drop(this);
     }
-    for(let i = 0; i < this.player.length; i++) {
-      if(this.player[i].alive == false) {
+    for (let i = 0; i < this.player.length; i++) {
+      if (this.player[i].alive == false) {
         this.global.result[this.player[i].name] = this.totPlayer--;
       }
     }

@@ -25,6 +25,7 @@ export class Room {
   }
 
   async requester(val: RequestSignal) {
+
     const targetUser = this.getUser(val.player);
     const noneRes: CardPara = {
       type: "none",
@@ -37,6 +38,7 @@ export class Room {
     await this.renew();
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<CardPara>((resolve, reject) => {
+      logger.verbose(val)
       const resolveWithPara = (para: CardPara) => {
         resolve(para);
       };
@@ -141,6 +143,7 @@ export class Room {
     let idx = -1;
     for(let plid = 0; plid < gameState.player.length; ++plid) {
       const pl = gameState.player[plid];
+      logger.verbose(pl.hand)
       if(pl.name !== this.users[id].userName) {
         for(let i = 0; i < pl.hand.length; ++i) {
           // pl.hand[i] = "0";

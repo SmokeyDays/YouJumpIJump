@@ -14,11 +14,11 @@ type KButtonProps = typeof KButton.defaultProps & {
     disabledBackground?: string,
     fontSize?: number,
     fontColor?: string,
+    isEnable?: boolean
 
 }
 
 interface KButtonState {
-    isEnable: boolean
     background: string
 }
 
@@ -36,7 +36,8 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         clickBackground: null,
         disabledBackground: null,
         fontSize: 20,
-        fontColor: 'black'
+        fontColor: 'black',
+        isEnable: true
     }
 
     constructor(props) {
@@ -45,33 +46,40 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         this.height = this.props.height
         this.background = this.props.background
         if (this.background.search('/') == -1) {
-            this.clickBackground = KButton.changeColor(this.background, "#111111",true);
-            this.disabledBackground = KButton.changeColor(this.background, "#222222",true);
+            this.clickBackground = KButton.changeColor(this.background, "#111111", true);
+            this.disabledBackground = KButton.changeColor(this.background, "#222222", true);
         }
         else {
             this.clickBackground = this.props.clickBackground
             this.disabledBackground = this.props.disabledBackground
         }
         this.state = {
-            isEnable: true,
             background: this.background
         };
     }
 
     render(): React.ReactNode {
-        return (
+        let button = this.props.isEnable ? <LinearLayout
+            onMouseDown={() => { this.clickBackground && this.setState({ background: this.clickBackground }) }}
+            onMouseUp={() => { this.setState({ background: this.background }) }}
+            onMouseLeave={() => { this.background != this.state.background && this.setState({ background: this.background }) }}
+            xAlign="center"
+            yAlign="middle"
+            {...this.props}
+            background={this.state.background}
+        >
+            <Text text={this.props.text} fontSize={this.props.fontSize} fill={this.props.fontColor}></Text>
+        </LinearLayout> :
             <LinearLayout
-                onMouseDown={() => { this.clickBackground && this.setState({ background: this.clickBackground }) }}
-                onMouseUp={() => { this.setState({ background: this.background }) }}
-                onMouseLeave={() => { this.background != this.state.background && this.setState({ background: this.background }) }}
                 xAlign="center"
                 yAlign="middle"
                 {...this.props}
-                background={this.state.background}
+                onClick={()=>{}}
+                background={this.props.disabledBackground}
             >
                 <Text text={this.props.text} fontSize={this.props.fontSize} fill={this.props.fontColor}></Text>
             </LinearLayout>
-        )
+        return button;
     }
 
     static changeColor(rgb: string, addRgb: string, minus: boolean = false): string {
@@ -92,7 +100,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
                 g = Math.min(255, parseInt(x[2], 16) + parseInt(y[2], 16))
                 b = Math.min(255, parseInt(x[3], 16) + parseInt(y[3], 16))
             }
-            let result = '#' + (r+256).toString(16).slice(1,3) + (g+256).toString(16).slice(1,3) + (b+256).toString(16).slice(1,3);
+            let result = '#' + (r + 256).toString(16).slice(1, 3) + (g + 256).toString(16).slice(1, 3) + (b + 256).toString(16).slice(1, 3);
             return result
         }
         return null;

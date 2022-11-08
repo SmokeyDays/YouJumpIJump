@@ -8,6 +8,7 @@ import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
 import { socket } from "../communication/connection";
 import { Card, CardPara, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
+import { BlockLike } from "typescript";
 
 
 export let LocalPlayer = null
@@ -26,6 +27,7 @@ interface GamePageState {
   accessSlotList: string[][],
   gameState: GameState,
   isInRecast: boolean,
+  stage: number,
 }
 
 class GamePage extends React.Component<GamePageProps, GamePageState> {
@@ -47,6 +49,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       accessSlotList: [[], [], []],
       gameState: this.props.gameState,
       isInRecast: false,
+      stage: 0
     };
 
         
@@ -66,12 +69,14 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
           break;
         case 'card':
           if (val.stage=='main') {
+            this.setState({stage:1})
           }
           else {
-
+            this.setState({stage:0})
           }
           break;
         case 'action':
+          this.setAccessSlotList(val.pos)
           break;
       }
     })
@@ -92,7 +97,9 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
               (v, i) => v.alive && v.position[0] === this.state.currentBoard && v)}
           ></GameCanvas>
           <UI
-            stage={this.state.gameState.global.stage}
+          
+            isInRecast={this.state.isInRecast}
+            stage={this.state.stage}
             currentBoard={this.state.currentBoard}
             turn={this.state.gameState.global.turn}
             currentRound={this.state.gameState.global.round}
@@ -121,6 +128,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
         }
       }
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
+
   }
 
   componentDidMount() {
@@ -163,16 +171,18 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
         this.setState({}); break;
       case 39: this.state.gameState.player[1].alive = false
         this.setState({}); break;
-      case 13:
-        let global = this.state.gameState.global
-        global.round++;
-        this.state.gameState.global.turn = (this.state.gameState.global.turn + global.stage) % this.state.gameState.player.length;
-        global.stage = global.stage ^ 1;
-        this.setState({})
-        break;
     }
   }
 
+  isInRecast(): boolean {
+    return this.state.isInRecast;
+  }
+
+  setInRecast(val: boolean): void {
+    this.setState({isInRecast: val})
+  }
+
+  
 }
 
 export default GamePage;

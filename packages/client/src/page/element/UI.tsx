@@ -14,6 +14,7 @@ interface UIProps {
     turn: number,
     currentBoard: number,
     stage: number,
+    isInRecast: boolean
 }
 class UI extends React.Component<UIProps> {
     constructor(props) {
@@ -33,6 +34,7 @@ class UI extends React.Component<UIProps> {
                     turn={this.props.turn}
                     currentRound={this.props.currentRound}
                     stage = {this.props.stage}
+                    isInRecast = {this.props.isInRecast}
                     ></TopTitle>
                 <PlayerList
                     x={20}
@@ -42,6 +44,7 @@ class UI extends React.Component<UIProps> {
                 <CardContainer
                     x={window.innerWidth / 2}
                     y={window.innerHeight * 7 / 8}
+                    isInRecast = {this.props.isInRecast}
                 ></CardContainer>
                 <LinearLayout
                     xAlign="right"

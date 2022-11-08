@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Text, } from 'react-konva';
 import { socket } from '../../communication/connection';
-import { LocalPlayer } from '../GamePage';
+import GamePage, { LocalPlayer } from '../GamePage';
 import Center from './Center';
 import KButton from './KButton';
 import LinearLayout from './LinearLayout';
@@ -16,6 +16,7 @@ interface TopTitleProps {
     turn: number
     otherTip?: string
     canJump?: boolean
+    isInRecast: boolean
 }
 
 
@@ -57,7 +58,7 @@ class TopTitle extends React.Component<TopTitleProps> {
                     </Text>
                 }
 
-                {LocalPlayer == this.props.turn &&
+                {(LocalPlayer == this.props.turn || this.props.isInRecast) &&
                     (<KButton
                         text='跳过'
                         width={100}
@@ -66,6 +67,9 @@ class TopTitle extends React.Component<TopTitleProps> {
                         onClick={() => {
                             console.log(this.props.currentPlayer, "jump out");
                             socket.emit('resolve-signal',{type: 'none',  val: null})
+                            if(this.props.isInRecast) {
+                                GamePage.instance.setInRecast(false)
+                            }
                         }}
                     >
                     </KButton>)}
