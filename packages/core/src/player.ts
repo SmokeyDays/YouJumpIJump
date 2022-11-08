@@ -89,10 +89,14 @@ export class Player {
     this.laspos = this.position;
   }
   static inRange(gamest: GameState, pos: Position):boolean {
-    let size:number = 2 * (gamest.player.length - 1) - (3 - pos[0]);
+    let size:number = 2 * (gamest.player.length - 1) + (3 - pos[0]);
+    //logger.verbose("inrange: %s, %s", pos, size);
     if(pos[1] <= -size || pos[1] >= size) return false;
+    //logger.verbose("pass1");
     if(pos[2] <= -size || pos[2] >= size) return false;
-    if(Math.abs(pos[1] - pos[2]) > size) return false;
+    //logger.verbose("pass2");
+    if(pos[1] - pos[2] <= -size || pos[1] - pos[2] >= size) return false;
+    //logger.verbose("pass3");
     return true;
   }
   legalPos(gamest: GameState, cardid: string, instant: boolean, spy: number = 0):Position[] {

@@ -32,30 +32,22 @@ export class GameState {
       this.player.push(new Player({ initialMastery: this.totPlayer, name: player[i] }));
     }
     player.sort(randomsort);
-    for (let i = 0; i < 3; i++) {
-      let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for (let j = -size - 5; j <= size + 5; j++) {
-        for (let k = -size - 5; k <= size + 5; k++) {
-          this.board[[i, j, k].toString()] = {
-            isBursted: true
-          }
-        }
-      }
-    }
     let PosS: Position[] = [];
     for (let i = 0; i < 3; i++) {
       let size: number = 2 * (this.player.length - 1) + (3 - i);
-      for (let j = -size + 1; j < size; j++) {
-        for (let k = -size + 1; k < size; k++) {
-          if(i == 2) {
-            PosS.push([i, j, k]);
-          }
+      //logger.verbose(size);
+      for (let j = -size - 5; j <= size + 5; j++) {
+        for (let k = -size - 5; k <= size + 5; k++) {
           this.board[[i, j, k].toString()] = {
             isBursted: !Player.inRange(this, [i, j, k])
+          }
+          if(i == 2 && !this.board[[i,j,k].toString()].isBursted) {
+            PosS.push([i, j, k]);
           }
         }
       }
     }
+    
     PosS.sort((a, b) => Math.random() - 0.5);
     for(let i = 0; i < this.player.length; i++) {
       this.player[i].position = PosS[i];
