@@ -34,11 +34,14 @@ export class User {
         this.room = roomManager.getRoom(name);
 
         if(this.room.hasUser(this)) {
+          socket.emit("alert-message", "你已经在房间里了");
           logger.info('User %s HAS ALREADY IN room with name %s', this.userName, name);
         }else{
           if(this.room.addUser(this)) {
+            socket.emit("alert-message", "成功加入房间");
             logger.info('User %s joined room with name: %s successfully.', this.userName, name);
           }else{
+            socket.emit("alert-message", "房间已满，换一个试试吧");
             logger.warn('User %s join room with name %s failed: room is full.', this.userName, name);
             return;
           }
@@ -59,6 +62,7 @@ export class User {
       logger.info('User with socket id %s has logined with name %s', socket.id, name);
       this.userName = name;
       socket.emit("user-login-successful", name);
+      socket.emit("alert-message", "登录成功");
     });
     // Register join room event:
     // If room not exist it will create a new one.
@@ -80,26 +84,31 @@ export class User {
     // Leave the room.
     socket.on("leave-room", () => {
       if(this.userName == null) {
+        socket.emit("alert-message", "请先登录");
         logger.warn('User with socket id %s try leave a room but never login.', socket.id);
         return;
       }
       if(this.room == null) {
+        socket.emit("alert-message", "无效操作");
         logger.warn('User %s try to leave a room but never in any room.', this.userName);
         return;
       }
       this.room.removeUser(this);
+      socket.emit("alert-message", "已离开房间");
       socket.emit("leave-room-successful");
     });
     socket.on("get-available-pos", (card: string) => {
       
       logger.verbose("&&&1")
       if(this.userName == null) {
+        socket.emit("alert-message", "请先登录");
         logger.warn('User with socket id %s try get-available-pos but never login.', socket.id);
         return;
       }
       
       logger.verbose("&&&2")
       if(this.room == null) {
+        socket.emit("alert-message", "请先进入房间");
         logger.warn('User %s try to get-available-pos but never in any room.', this.userName);
         return;
       }

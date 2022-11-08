@@ -124,6 +124,7 @@ export class Room {
     for(let i = 0; i < this.users.length; ++i) {
       if(this.users[i]?.userName == user.userName) {
         logger.verbose('Remove user %s from room %s successfully.', user.userName, this.roomName);
+        user.emit("alert-message", "你被移出房间");
         this.users.splice(i, 1);
         this.renew();
         return;

@@ -3,12 +3,22 @@
 	display: flex;
 	position: fixed;
 	align-items: center;
-  	justify-content: center;
-	top: 10px;
+  justify-content: center;
 	left: 0;
 	right: 0;	
 	pointer-events: none;
 	z-index: 1000;
+	transition: top ease-in-out 0.4s, opacity ease-in-out 0.4s;
+}
+
+.alert-message-window.shown {
+	top: 10px;
+	opacity: 1;
+}
+
+.alert-message-window.hidden {
+	top: -20px;
+	opacity: 0;
 }
 
 .alert-message-content {
