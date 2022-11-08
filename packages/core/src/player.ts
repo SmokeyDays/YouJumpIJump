@@ -99,7 +99,7 @@ export class Player {
     let pos: Position = this.position;
     let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
     
-    logger.verbose("&&&6")
+    logger.verbose("cardid: %s", cardid);
     switch(cardid) {
       case cardConfig.cardNameList[0]: {
         for(let i = -1; i >= -size; i--) {
@@ -107,7 +107,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -121,7 +121,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -137,7 +137,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -151,7 +151,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -169,7 +169,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -183,7 +183,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -234,8 +234,6 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[5]: {
-        
-    logger.verbose("&&&9")
         let cur: Position = [pos[0], pos[1] + 4, pos[2]];
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
@@ -259,8 +257,6 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[9]: {
-        
-    logger.verbose("&&&8")
         if(spy == 1) {
           let newpos: Position = [pos[0], pos[1] + 1, pos[2]];
           if(gamest.board[newpos.toString()].isBursted == false) {
@@ -270,6 +266,7 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == 2) {
           let newpos: Position = [pos[0], pos[1], pos[2] + 1];
@@ -280,6 +277,7 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == 3) {
           let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
@@ -290,11 +288,13 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == -1) {
           let newpos: Position = [pos[0], pos[1] , pos[2]];
+          console.log(newpos);
           for(let h = -1; h <= 1; ++h) {
-            newpos = [pos[0] + h, pos[1] , pos[2]];
+            newpos = [pos[0], pos[1] + h, pos[2]];
             if(gamest.board[newpos.toString()].isBursted == false) {
               legalpos.push(newpos);
               for(let p = -1; p <= 1; ++p) {
@@ -312,7 +312,6 @@ export class Player {
             }
           }
         }
-        legalpos.push(pos);
         break;
       }
       case cardConfig.cardNameList[10]: {
@@ -321,7 +320,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -331,7 +330,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -341,7 +340,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -351,7 +350,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -361,7 +360,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -371,7 +370,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -381,7 +380,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -414,7 +413,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -427,33 +426,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = -1; i >= -size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!this.inRange(gamest, newpos)) {
-            break;
-          }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= size; i++) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!this.inRange(gamest, newpos)) {
-            break;
-          }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -466,7 +439,33 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
+            break;
+          }
+          if(ply[newpos.toString()] == true) {
+            break;
+          }
+          legalpos.push(newpos);
+        }
+        for(let i = 1; i <= size; i++) {
+          let newpos: Position = [pos[0], pos[1], pos[2] + i];
+          if(!this.inRange(gamest, newpos)) {
+            break;
+          }
+          if(gamest.board[newpos.toString()].isBursted == true) {
+            break;
+          }
+          if(ply[newpos.toString()] == true) {
+            break;
+          }
+          legalpos.push(newpos);
+        }
+        for(let i = -1; i >= -size; i--) {
+          let newpos: Position = [pos[0], pos[1], pos[2] + i];
+          if(!this.inRange(gamest, newpos)) {
+            break;
+          }
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -479,7 +478,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -492,7 +491,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -515,6 +514,7 @@ export class Player {
         break;
       }
     }
+    logger.verbose("%s:%s",cardid , legalpos)
     return legalpos;
   }
 
