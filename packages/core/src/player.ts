@@ -269,22 +269,22 @@ export class Player {
           legalpos.push(pos);
         }
         if(spy == 2) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + 1];
+          let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
-          newpos = [pos[0], pos[1], pos[2] - 1];
+          newpos = [pos[0], pos[1] - 1, pos[2] - 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
           legalpos.push(pos);
         }
         if(spy == 3) {
-          let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
+          let newpos: Position = [pos[0], pos[1], pos[2] + 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
-          newpos = [pos[0], pos[1] - 1, pos[2] - 1];
+          newpos = [pos[0], pos[1], pos[2] - 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
