@@ -140,12 +140,12 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   loadGameState(state: GameState) {
       let boards = state.board
-      for( let i in boards) {
-        for(let j in boards[i]) {
-          for( let k in boards[i][j]) {
-            this.state.boards[i].setSlotStatus(Number(i),Number(j),boards[i][j][k].isBursted)
-          }
-        }
+      console.log("Boardnew",boards)
+      for( let index in boards) {
+        let pos = index.split(',')
+        let i = Number(pos[0]),j=Number(pos[1]),k=Number(pos[2]);
+        //this.state.boards[i].setSlotStatus(Number(j),Number(k),boards[i][j][k].isBursted)
+        this.state.boards[i].setSlotStatus(j,k,!boards[index].isBursted);
       }
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
 

@@ -61,7 +61,7 @@ class App extends React.PureComponent<{},AppState> {
       userName: "请登录",
       gameState: {
         player: [],
-        board: [],
+        board: {},
         global: {
           round: 0,
           turn: 0,

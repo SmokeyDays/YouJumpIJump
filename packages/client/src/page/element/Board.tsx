@@ -224,8 +224,10 @@ export class BoardInfo {
   //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
     let index = this.slotMap[`${ix},${iy}`]
-    if(index != null) {
+    if(index) {
       this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
+      if(!isBroken)
+        console.log(ix,iy, this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken)
     }
   }
 
