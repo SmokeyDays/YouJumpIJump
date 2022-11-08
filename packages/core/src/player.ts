@@ -735,6 +735,11 @@ export class Player {
         break;
       }
     }
+    for(let i = 0; i < this.hand.length; i++) {
+      if(this.hand[i] == cardid) {
+        this.hand.splice(i, 1);
+      }
+    }
     this.drawCard();
   }
   burst(gamest: GameState) {

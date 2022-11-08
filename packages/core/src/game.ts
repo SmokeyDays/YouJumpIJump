@@ -71,7 +71,9 @@ export class GameState {
   async gameMain() {
     await this.gameStart();
     while (this.totPlayer >= 1) { //记得改回来!!!!!(re)
+      this.global.round++;
       for (let i = 0; i < this.player.length; i++) {
+        this.global.turn = i;
         if (this.player[i].alive) {
           await this.turn(i);
           if (this.totPlayer < 2) {
