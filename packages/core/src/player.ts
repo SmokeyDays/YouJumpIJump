@@ -264,6 +264,7 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == 2) {
           let newpos: Position = [pos[0], pos[1], pos[2] + 1];
@@ -274,6 +275,7 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == 3) {
           let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
@@ -284,6 +286,7 @@ export class Player {
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
+          legalpos.push(pos);
         }
         if(spy == -1) {
           let newpos: Position = [pos[0], pos[1] , pos[2]];
@@ -306,7 +309,6 @@ export class Player {
             }
           }
         }
-        legalpos.push(pos);
         break;
       }
       case cardConfig.cardNameList[10]: {
