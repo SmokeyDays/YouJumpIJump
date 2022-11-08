@@ -86,6 +86,7 @@ export class GameState {
         }
       }
     }
+    logger.verbose("res %s", this.global.result);
     this.gameEnd();
   }
 
@@ -210,8 +211,10 @@ export class GameState {
       this.player[i].drop(this);
     }
     for (let i = 0; i < this.player.length; i++) {
-      if (this.player[i].alive == false) {
+      if (this.player[i].alive == false && this.global.result[this.player[i].name] === undefined) {
         this.global.result[this.player[i].name] = this.totPlayer--;
+        
+        logger.verbose("res %s", this.global.result);
       }
     }
   }

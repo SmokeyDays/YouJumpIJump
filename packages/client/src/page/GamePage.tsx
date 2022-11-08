@@ -140,11 +140,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
     }
     if(!state.player[LocalPlayer].alive) {
-      let rank = 1;
-      for(let pl of state.player) {
-        if(pl.alive) rank++;
-      }
-      this.props.changePage("GameEndPage",rank)
+      this.props.changePage("GameEndPage",this.state.gameState.global.result[LocalPlayer])
     }
     this.setState({})
   }
@@ -178,6 +174,11 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     socket.on('return-pos-set', (val: Position[]) => {
       console.log('!!!return-pos-set', val);
       this.setFreSlotList(val)
+    })
+    
+    socket.on('game-end-signal', (state: GameState)=>{
+      console.log('game-end-signal', state.global.result[LocalPlayer]);
+      this.props.changePage('GameEndPage',state.global.result[LocalPlayer])
     })
 
     document.addEventListener("keydown", this.handleKeyDown)
@@ -221,6 +222,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     switch (e.keyCode) {
       case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
       case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
+      case 39: this.props.changePage('GameEndPage',1);break;
     }
   }
 

@@ -157,12 +157,27 @@ export class Board extends React.Component<BoardProps, BoardState> {
         let mid = playerCount[pos][0]/2
         playerCount[pos][1]++;
         let offetX = 2 * radius * (playerCount[pos][1]-mid) - radius
-        
+        let slot = info.slotInfos[info.slotMap[pos]]
+
         players.push(
           <Group
             key={value.name[0]}
-            x={offetX + info.slotInfos[info.slotMap[pos]].x}
-            y={info.slotInfos[info.slotMap[pos]].y}>
+            x={offetX + slot.x}
+            y={slot.y}
+            onClick={
+              ()=>{
+                console.log("slot",slot.ix,slot.iy,slot.isBroken)
+                if(!slot.isBroken && this.props.accessSlotList.indexOf(`${slot.ix},${slot.iy}`) != -1) {
+                  socket.emit('resolve-signal',{
+                    type: "move", 
+                    val: [CurrentBoard,slot.ix,slot.iy]
+                  })
+                  console.log("emit","move",[CurrentBoard,slot.ix,slot.iy])
+                  GamePage.instance.setAccessSlotList([])
+                }
+              }
+            }  
+          >
 
             {value.magician &&
               <Circle

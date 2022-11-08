@@ -101,7 +101,8 @@ type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     opacity?: number,
     stroke?: string,
     strokeWidth?: number,
-    shadow?: boolean
+    shadow?: boolean,
+    onMouseEnter?: any
 }
 
 class LinearLayout extends React.Component<LinearLayoutProps, {}> {

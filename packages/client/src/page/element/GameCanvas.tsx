@@ -21,22 +21,19 @@ class GameCanvas extends React.Component<GameCanvasProps> {
 
     constructor(props) {
         super(props)
-        
+        this.backgounds=[new Image(),new Image(),new Image()]
+        this.backgounds[0].src = Background0
+        this.backgounds[1].src = Background1
+        this.backgounds[2].src = Background2
     }
 
     render(): React.ReactNode {
-        let img = new Image(window.innerWidth*2,window.innerHeight*2)
-        switch(this.props.currentBoard) {
-            case 2: img.src = Background2; break;
-            case 1: img.src = Background1; break;
-            case 0: img.src = Background0; break;
-        }
         return (
             <Layer
                 {...this.props}
                 draggable={true}>
                 <KImage
-                    image={img}
+                    image={this.backgounds[this.props.currentBoard]}
                     width={window.innerWidth*2}
                     height={window.innerHeight*2}
                     offsetX={window.innerWidth}
@@ -53,6 +50,7 @@ class GameCanvas extends React.Component<GameCanvasProps> {
             </Layer>
         )
     }
+    backgounds: HTMLImageElement[];
 }
 
 export default GameCanvas
