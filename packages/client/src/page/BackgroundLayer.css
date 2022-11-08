@@ -1,0 +1,15 @@
+.background-layer {
+  background-image: url("../assets/backgrounds/login-background.png");
+  background-repeat: repeat;
+  background-size: 160px 128px;
+  animation: background-layer-move linear 3s infinite;
+}
+
+@keyframes background-layer-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 160px 128px;
+  }
+}

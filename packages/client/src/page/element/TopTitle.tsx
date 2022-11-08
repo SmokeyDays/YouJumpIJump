@@ -64,8 +64,9 @@ class TopTitle extends React.Component<TopTitleProps> {
                         text='跳过'
                         width={100}
                         height={50}
-                        background={"#bb1111"}
+                        background={"#9acd32"}
                         fontColor={"#f7f7f7"}
+                        opacity={0.8}
                         onClick={() => {
                             console.log(this.props.currentPlayer, "jump out");
                             CardShowcase.instance.clearState();

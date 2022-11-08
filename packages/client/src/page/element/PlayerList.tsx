@@ -35,7 +35,7 @@ class PlayerList extends React.Component<PlayerListProps> {
         let fontSize = Math.max(15, Math.min(20, window.innerWidth / 100))
         let padding = Math.max(6, Math.min(10, window.innerWidth / 200))
         let maxLength = 7
-        for( let val of this.props.playList) {
+        for (let val of this.props.playList) {
             maxLength = Math.max(val.name.length, maxLength)
         }
         let players = this.props.playList.map((val, index) => {
@@ -45,6 +45,7 @@ class PlayerList extends React.Component<PlayerListProps> {
                     key={val.name}
                     padding={10}
                 >
+                    <Text></Text>
                     <Label>
                         <Tag
                             fill={index < PlayerList.colorList.length ? PlayerList.colorList[index] : 'grey'}
@@ -56,16 +57,16 @@ class PlayerList extends React.Component<PlayerListProps> {
                             shadowOpacity={0.5}
                         >
                         </Tag>
-                        <Text 
-                        text={val.name}
-                        width={fontSize*maxLength}
-                        fill={"#f7f7f7"}
-                        fontSize={fontSize}
-                        padding={padding}></Text>
+                        <Text
+                            text={val.name}
+                            width={fontSize * maxLength}
+                            fill={"#f7f7f7"}
+                            fontSize={fontSize}
+                            padding={padding}></Text>
                     </Label>
                     <Label>
                         <Tag
-                            fill={val.alive? ( this.props.trun == index ? '#41b349' : '#d3d7d4'):'#46485f'}
+                            fill={val.alive ? (this.props.trun == index ? '#41b349' : '#d3d7d4') : '#46485f'}
                             lineJoin='round'
                             shadowColor='grey'
                             shadowBlur={10}
@@ -76,14 +77,16 @@ class PlayerList extends React.Component<PlayerListProps> {
                         </Tag>
                         <Text text={
                             val.alive ?
-                            `  智识: ${val.mastery}` +
-                            `  位置: 第${val.position[0] + 1}层 ${val.numberPos}`:'Dead!!!'}
+                                `  智识: ${val.mastery}` +
+                                `  位置: 第${val.position[0] + 1}层 ${val.numberPos}` : 'Dead!!!'}
                             fill={"#f7f7f7"}
                             fontSize={fontSize}
                             padding={padding}
-                            width={fontSize*15}
+                            width={fontSize * 15}
                         ></Text>
                     </Label>
+                    <Text></Text>
+
                 </LinearLayout>)
         })
         return (
@@ -93,8 +96,13 @@ class PlayerList extends React.Component<PlayerListProps> {
                 {...this.props}
                 orientation='vertical'
                 padding={padding}
+                shadow={true}
+                background='#000000'
+                opacity={0.3}
             >
+                <Text></Text>
                 {players}
+                <Text></Text>
             </LinearLayout>
         )
     }

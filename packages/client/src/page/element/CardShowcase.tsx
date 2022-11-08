@@ -33,7 +33,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
             isEnable: true,
         }
         this.width = this.props.width
-        this.height = 500
+        this.height = 100
         this.refDom = null
     }
 
@@ -96,18 +96,22 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 xAlign='center'
                 padding={this.width / 30}
                 background='#78cdd1'
+                stroke='#56acc0'
+                strokeWidth={this.width / 60}
+                opacity={0.7}
+                shadow={true}
             >
                 <Text></Text>
-                <Text text={card['name']} fontSize={bFont}></Text>
+                <Text text={card['name']} fontSize={bFont} fill='white'></Text>
                 <KImage
                     image={img}
                     width={this.width - sFont}
                     height={(this.width - sFont) * 4 / 3}></KImage>
 
-                <Text text='描述' fontSize={bFont}></Text>
-                <Text text={card['desc']} width={this.width - sFont} fontSize={sFont}></Text>
+                <Text text='描述' fontSize={bFont} fill='white'></Text>
+                <Text text={card['desc']} width={this.width - sFont} fontSize={sFont} fill='white'></Text>
                 <Text fontSize={sFont / 3}></Text>
-                <Text text={card['lore']} width={this.width - sFont} fontSize={sFont}></Text>
+                <Text text={card['lore']} width={this.width - sFont} fontSize={sFont} fill='white'></Text>
                 {this.renderButtons()}
                 <Text></Text>
             </LinearLayout>
@@ -124,9 +128,10 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
             <KButton
                 width={this.width / 2 - sFont}
                 height={bHeight}
-                background="#bb1111"
+                background="#ff3333"
                 text="取消"
                 fontSize={mFont}
+                fontColor='white'
                 onClick={() => {
                     this.clearState();
                 }}
@@ -160,6 +165,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 text="迅捷"
                                 fontSize={mFont}
                                 isEnable={this.state.isEnable}
+                                fontColor='white'
                                 onClick={()=>{
                                     console.log(this.state.cardId, "instant run")
                                     socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
@@ -190,6 +196,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         height={bHeight}
                         text="主要"
                         fontSize={mFont}
+                        fontColor='white'
                         isEnable={this.state.isEnable}
                         onClick={()=>{
                             console.log("emit",this.state.cardId, "main run")

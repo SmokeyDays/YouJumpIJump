@@ -1,7 +1,6 @@
 .game-end-scene {
   min-width: 100vh;
   text-align: center;
-  background-color: #282c34;
   min-height: 100vh;
 
   display: flex;
@@ -11,6 +10,33 @@
 
   font-size: calc(16px + vmin);
   color: white;
+  text-align: center;
+
+  
+
+  background-image: url("../assets/backgrounds/login-background.png");
+  background-repeat: repeat;
+  background-size: 160px 128px;
+  animation: login-scene-bg linear 2s infinite;
+}
+
+@keyframes login-scene-bg {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 160px 128px;
+  }
+}
+
+.rank-display {
+  font-size: calc(40px);
+  color: rgba(220, 213, 20, 0.805);
+}
+
+.rank-one {
+  font-size: calc(vmin);
+  color: rgba(226, 57, 51, 0.845);
 }
 
 .game-result {
@@ -26,3 +52,5 @@
   border-width: 2px;
   border-radius: 15px;
 }
+
+

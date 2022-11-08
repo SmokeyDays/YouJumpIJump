@@ -69,7 +69,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                 >
 
                     <LinearLayout
-                        background={isSelected ? 'red' : null}
+                        background={isSelected ? '#aaaaff' : null}
                         xAlign='center'
                         yAlign='middle'
                         width={this.props.cardWidth * 1.1}
@@ -128,14 +128,14 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
             >
 
                 {cards}
-                {this.state.tipCard != null && this.renderTip(this.state.tipCard)}
                 {this.props.isInRecast &&
                     <KButton
                         x={-this.props.cardWidth * 0.35}
                         y={-this.props.cardWidth * 1.8}
                         height={this.props.cardWidth * 0.3}
                         width={this.props.cardWidth * 0.7}
-                        background='#555555'
+                        background='#555577'
+                        opacity={0.8}
                         text='确定'
                         fontColor='white'
                         fontSize={18}
@@ -148,6 +148,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
                     </KButton>
                 }
+                {this.state.tipCard != null && this.renderTip(this.state.tipCard)}
             </Group>
         )
     }
@@ -174,6 +175,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     shadowOffsetY={10}
                     shadowOpacity={0.5}
                     cornerRadius={10}
+                    opacity={0.8}
                 >
                 </Tag>
                 <Text

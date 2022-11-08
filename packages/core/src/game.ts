@@ -155,6 +155,7 @@ export class GameState {
     mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
     mov['10'] = mov['J'] = mov['4'] = mov['9'] = mov["Q"] = true;
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
+    logger.verbose(res);
     if (res != null && res.type == 'card') {
       if (!inst || (inst && ist[res.val])) {
         if(res.val == '8') {
@@ -200,8 +201,6 @@ export class GameState {
 
     this.global.stage = GameStage.MAIN_ACTION;
     await this.action(id, false);
-    
-    logger.verbose("****4")
     //burst and drop
     this.player[id].passby.push(this.player[id].position);
     for (let i = 0; i < this.player.length; i++) {
