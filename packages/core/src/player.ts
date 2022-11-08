@@ -107,7 +107,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -121,7 +121,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -137,7 +137,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -151,7 +151,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -169,7 +169,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == 1) {
@@ -183,7 +183,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(legalpos.length == nowlen + 1) {
@@ -224,6 +224,9 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < tot; j++) {
+            if(!this.inRange(gamest, cur)) {
+              continue;
+            }
             if(gamest.board[cur.toString()].isBursted == false) {
               legalpos.push(cur);
             }
@@ -238,6 +241,9 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < 4; j++) {
+            if(!this.inRange(gamest, cur)) {
+              continue;
+            }
             if(gamest.board[cur.toString()].isBursted == false) {
               legalpos.push(cur);
             }
@@ -269,22 +275,22 @@ export class Player {
           legalpos.push(pos);
         }
         if(spy == 2) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + 1];
+          let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
-          newpos = [pos[0], pos[1], pos[2] - 1];
+          newpos = [pos[0], pos[1] - 1, pos[2] - 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
           legalpos.push(pos);
         }
         if(spy == 3) {
-          let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
+          let newpos: Position = [pos[0], pos[1], pos[2] + 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
-          newpos = [pos[0], pos[1] - 1, pos[2] - 1];
+          newpos = [pos[0], pos[1], pos[2] - 1];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
@@ -320,7 +326,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -330,7 +336,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -340,7 +346,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -350,7 +356,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -360,7 +366,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -370,7 +376,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -380,7 +386,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           legalpos.push(newpos);
@@ -413,7 +419,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(gamest.board[newpos.toString()].isBursted == false) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -426,7 +432,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(gamest.board[newpos.toString()].isBursted == false) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -439,7 +445,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(gamest.board[newpos.toString()].isBursted == false) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -452,7 +458,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -465,7 +471,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -478,7 +484,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -491,7 +497,7 @@ export class Player {
           if(!this.inRange(gamest, newpos)) {
             break;
           }
-          if(!gamest.board[newpos.toString()].isBursted == true) {
+          if(gamest.board[newpos.toString()].isBursted == true) {
             break;
           }
           if(ply[newpos.toString()] == true) {
@@ -727,6 +733,11 @@ export class Player {
           this.passby.push(fpos);
         }
         break;
+      }
+    }
+    for(let i = 0; i < this.hand.length; i++) {
+      if(this.hand[i] == cardid) {
+        this.hand.splice(i, 1);
       }
     }
     this.drawCard();
