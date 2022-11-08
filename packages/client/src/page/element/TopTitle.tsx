@@ -65,6 +65,7 @@ class TopTitle extends React.Component<TopTitleProps> {
                         width={100}
                         height={50}
                         background={"#bb1111"}
+                        fontColor={"#f7f7f7"}
                         onClick={() => {
                             console.log(this.props.currentPlayer, "jump out");
                             CardShowcase.instance.clearState();

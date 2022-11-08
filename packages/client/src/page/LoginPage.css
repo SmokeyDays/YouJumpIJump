@@ -1,16 +1,29 @@
 .login-scene {
   text-align: center;
+
+  background-image: url("../assets/backgrounds/login-background.png");
+  background-repeat: repeat;
+  background-size: 160px 128px;
+  animation: login-scene-bg linear 2s infinite;
+}
+
+@keyframes login-scene-bg {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 160px 128px;
+  }
 }
 
 .login-header {
-  background-color: rgb(105, 150, 200);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(16px + vmin);
-  color: black
+  color: black;
 }
 
 .login-logo { 
@@ -28,9 +41,16 @@
 
 .basic-info-button {
   margin: 0 200px;
-  padding: 0.1em 0.2em;
+  padding: 0.25em 0.75em;
   border-style: solid;
   border-width: 2px;
   border-color: black;
   border-radius: 0.5em;
+  cursor: pointer;
+  user-select: none;
+  background-color: rgba(127, 144, 160, 0.2);
+}
+
+.basic-info-button:hover {
+  background-color: rgba(127, 144, 160, 0.5);
 }

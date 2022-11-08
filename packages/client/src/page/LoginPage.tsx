@@ -51,6 +51,7 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
     const inputs = [];
     for(const i in val) {
       inputs.push(<input
+        key={i}
         className= 'basic-info-input'
         name = {i}
         type = "text"
@@ -102,8 +103,8 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
         <header className="login-header">
           <img src={logo} className="login-logo" alt="logo"></img>
           <BasicInfoForm
-            formName='用户登陆'
-            buttonName='登陆'
+            formName='用户登录'
+            buttonName='登录'
             formVariables={{
               userName: this.props.userName,
             }}
