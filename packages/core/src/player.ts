@@ -435,7 +435,7 @@ export class Player {
           legalpos.push(newpos);
         }
         for(let i = -1; i >= -size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
+          let newpos: Position = [pos[0], pos[1], pos[2] + i];
           if(!this.inRange(gamest, newpos)) {
             break;
           }
