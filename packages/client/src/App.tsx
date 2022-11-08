@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './page/BackgroundLayer.css';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
@@ -139,15 +140,23 @@ class App extends React.PureComponent<{},AppState> {
     let content = null;
     switch(this.state.pageName){
       case "LoginPage":{
-        content = <LoginPage userName={this.state.userName} userLoggedIn={this.state.userLoggedIn}/>;
+        content = (
+          <div className="background-layer">
+            <LoginPage userName={this.state.userName} userLoggedIn={this.state.userLoggedIn}/>
+          </div>
+        );
         break;
       }
       case "GamePage":{
-        content = <GamePage gameState={this.state.gameState} localPlayer={this.state.localPlayer}/>;
+        content = <GamePage gameState={this.state.gameState} localPlayer={this.state.localPlayer}/>
         break;
       }
       case "RoomPage":{
-        content = <RoomPage roomState = {this.state.roomState}/>;
+        content = (
+          <div className="background-layer">
+            <RoomPage roomState = {this.state.roomState}/>;
+          </div>
+        );
         break;
       }
       case "GameEndPage":{

@@ -41,10 +41,10 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
           {[userList]}
         </div>
         <div className="room-bottom">
-          <div className="room-button" onClick = {this.startGameOnClick}>
+          <div className="room-button enter" onClick = {this.startGameOnClick}>
             进入游戏
           </div>
-          <div className="room-button" onClick = {this.leaveRoomOnClick}>
+          <div className="room-button exit" onClick = {this.leaveRoomOnClick}>
             退出房间
           </div>
         </div>
