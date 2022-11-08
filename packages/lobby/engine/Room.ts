@@ -39,14 +39,19 @@ export class Room {
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<CardPara>((resolve, reject) => {
       logger.verbose(val)
+      let visited = true;
       const resolveWithPara = (para: CardPara) => {
-        resolve(para);
+        visited = false;
+        if(!visited) {
+          resolve(para);
+        }
       };
       targetUser.socket.once("resolve-signal", resolveWithPara)
       setTimeout(()=>{
-        logger.error("Request player action Failed: %s action time out.", val.player);
-        resolve(noneRes);
-        targetUser.socket.off("resolve-signal", resolveWithPara);
+        if(visited) {
+          logger.error("Request player action Failed: %s action time out.", val.player);
+          resolve(noneRes);
+        }
       },60*1000)
     });
     return res;
