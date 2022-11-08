@@ -66,7 +66,7 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
       <div className="basic-info-form-container">
         <form className="basic-info-form">
           <label>
-            {this.props.formName}
+            <span>{this.props.formName}</span>
             {this.inputGenerator(this.state.value)}
           </label>
         </form>

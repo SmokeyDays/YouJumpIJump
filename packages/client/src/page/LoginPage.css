@@ -20,11 +20,15 @@
 .basic-info-form-container {
   margin-top: 2em;
   border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .basic-info-form {
   margin: 20px;
+}
+
+.basic-info-form>label>span {
+  margin-right: 1em;
 }
 
 .basic-info-input {
@@ -52,16 +56,14 @@
 .basic-info-button {
   margin: 0 200px 1em 200px;
   padding: 0.25em 0.75em;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #6699aa;
   border-radius: 0.5em;
   cursor: pointer;
   user-select: none;
-  background-color: rgba(160, 200, 255, 0.2);
+  background-color: #558899;
+  color: #e7e7e7;
 }
 
 .basic-info-button:hover {
-  background-color: rgba(160, 200, 255, 0.5);
-  border-color: #6699cc;
+  background-color: #6699aa;
+  color: #f7f7f7;
 }
