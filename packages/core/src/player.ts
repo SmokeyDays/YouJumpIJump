@@ -45,7 +45,7 @@ export class Player {
       }
       this.hand.push(this.library.pop() as string);
       
-      // this.hand.push("BJ");
+      //  this.hand.push("K");
     }
   }
 
