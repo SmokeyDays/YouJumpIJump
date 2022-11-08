@@ -224,6 +224,9 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < tot; j++) {
+            if(!this.inRange(gamest, cur)) {
+              continue;
+            }
             if(gamest.board[cur.toString()].isBursted == false) {
               legalpos.push(cur);
             }
@@ -238,6 +241,9 @@ export class Player {
         const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < 4; j++) {
+            if(!this.inRange(gamest, cur)) {
+              continue;
+            }
             if(gamest.board[cur.toString()].isBursted == false) {
               legalpos.push(cur);
             }

@@ -58,7 +58,7 @@ export class GameState {
     }
     PosS.sort((a, b) => Math.random() - 0.5);
     for(let i = 0; i < this.player.length; i++) {
-      this.player.length[i].position = PosS[i];
+      this.player[i].position = PosS[i];
     }
     this.global = {
       round: 0,
