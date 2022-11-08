@@ -79,7 +79,7 @@ export class Player {
     while(gamest.board[this.position.toString()].isBursted == true && this.position[0]) {
       this.position[0]--;
     }
-    if(!this.position[0]) {
+    if(this.position[0] == -1) {
       this.alive = false;
       return;
     }
@@ -87,6 +87,7 @@ export class Player {
 
   turnBegin() {
     this.laspos = this.position;
+    this.magician = false;
   }
   static inRange(gamest: GameState, pos: Position):boolean {
     let size:number = 2 * (gamest.player.length - 1) + (3 - pos[0]);
@@ -136,7 +137,7 @@ export class Player {
         }
         break;
       }
-      case cardConfig.cardNameList[1]: {
+      case cardConfig.cardNameList[2]: {
         for(let i = -1; i >= -size; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
           if(!Player.inRange(gamest, newpos)) {
@@ -166,7 +167,7 @@ export class Player {
         }
         break;
       }
-      case cardConfig.cardNameList[2]: {
+      case cardConfig.cardNameList[1]: {
         let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
         let pos: Position = this.position;
         for(let i = -1; i >= -size; i--) {
@@ -199,9 +200,9 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[3]: {
-        const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 0, -1, 1, -1];
+        const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
         for(let i = 1; i <= 6; i++) {
-          let newpos:Position = [pos[0], pos[1] + dx[i], pos[2] + dx[i]];
+          let newpos:Position = [pos[0], pos[1] + dx[i], pos[2] + dy[i]];
           if(gamest.board[newpos.toString()].isBursted == false) {
             legalpos.push(newpos);
           }
@@ -209,7 +210,7 @@ export class Player {
         if(!instant) {
           for(let i = 0; i < legalpos.length; i++) {
             for(let j = 1; j <= 6; j++) {
-              let newpos:Position = [pos[0], legalpos[i][1] + dx[i], legalpos[i][2] + dx[i]];
+              let newpos:Position = [pos[0], legalpos[i][1] + dx[i], legalpos[i][2] + dy[i]];
               if(gamest.board[newpos.toString()].isBursted == false && !legalpos.includes(newpos)) {
                 legalpos.push(newpos);
               }
@@ -225,8 +226,22 @@ export class Player {
             tot++;
           }
         }
+        if(tot == 3) {
+          let exist: Position[] = [];
+          for(let i = 0; i < 3; i++) {
+            let size = 2 * (gamest.player.length - 1) + (3 - i);
+            for(let j = -size - 4; j <= size + 4; j++) {
+              for(let k = -size - 4; k <= size + 4; k++) {
+                if(gamest.board[[i, j, k].toString()].isBursted == false) {
+                  exist.push([i, j, k]);
+                }
+              }
+            }
+          }
+          break;
+        }
         let cur: Position = [pos[0], pos[1] + tot, pos[2]];
-        const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
+        const dx = [0, -1, -1, 0, 1, 1], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < tot; j++) {
             if(!Player.inRange(gamest, cur)) {
@@ -243,7 +258,7 @@ export class Player {
       }
       case cardConfig.cardNameList[5]: {
         let cur: Position = [pos[0], pos[1] + 4, pos[2]];
-        const dx = [-1, -1, 0, 1, 1, 0], dy = [-1, 0, -1, 1, 0, 1];
+        const dx = [0, -1, -1, 0, 1, 1], dy = [-1, 0, -1, 1, 0, 1];
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < 4; j++) {
             if(!Player.inRange(gamest, cur)) {
@@ -543,7 +558,7 @@ export class Player {
         }
         break;
       }
-      case cardConfig.cardNameList[1]: {
+      case cardConfig.cardNameList[2]: {
         if(para.type == 'move') {
           for(let i = Math.min(para.val[2], pos[2]); i <= Math.max(para.val[2], pos[2]); i++) {
             const cur:Position = [pos[0], pos[1], i];
@@ -553,10 +568,10 @@ export class Player {
         }
         break;
       }
-      case cardConfig.cardNameList[2]: {
+      case cardConfig.cardNameList[1]: {
         if(para.type == 'move') {
           const delta = Math.abs(para.val[1] - pos[1]);
-          const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+          const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
           for(let i = 0; i <= delta; i++) {
             const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
             this.passby.push(cur);
@@ -625,7 +640,7 @@ export class Player {
         if(para.type == 'move') {
           if(pos[1] != para.val[1] && pos[2] != para.val[2]) { //na
             const delta = Math.abs(para.val[1] - pos[1]);
-            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
             for(let i = 0; i <= delta; i++) {
               const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
               this.passby.push(cur);
@@ -671,7 +686,7 @@ export class Player {
         if(para.type == 'move') {
           if(pos[1] != para.val[1] && pos[2] != para.val[2]) { //na
             const delta = Math.abs(para.val[1] - pos[1]);
-            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[1], pos[1]);
+            const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
             for(let i = 0; i <= delta; i++) {
               const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
               this.passby.push(cur);
@@ -704,8 +719,8 @@ export class Player {
           let exist:Position[] = [];
           for(let i = 0; i < 3; i++) {
             let size = 2 * (gamest.player.length - 1) + (3 - i);
-            for(let j = -size + 1; j < size; j++) {
-              for(let k = -size + 1; k < size; k++) {
+            for(let j = -size - 4; j <= size + 4; j++) {
+              for(let k = -size - 4; k <= size + 4; k++) {
                 if(gamest.board[[i, j, k].toString()].isBursted == false) {
                   exist.push([i, j, k]);
                 }
@@ -740,9 +755,11 @@ export class Player {
         break;
       }
     }
-    for(let i = 0; i < this.hand.length; i++) {
-      if(this.hand[i] == cardid) {
-        this.hand.splice(i, 1);
+    if(cardid != '8') {
+        for(let i = 0; i < this.hand.length; i++) {
+        if(this.hand[i] == cardid) {
+          this.hand.splice(i, 1);
+        }
       }
     }
     this.drawCard();

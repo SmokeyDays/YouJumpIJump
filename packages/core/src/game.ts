@@ -152,7 +152,15 @@ export class GameState {
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
     if (res != null && res.type == 'card') {
       if (!inst || (inst && ist[res.val])) {
-        if (mov[res.val]) {
+        if(res.val == '8') {
+          await this.spyAction(id);
+          for(let i = 0; i < this.player[id].hand.length; i++) {
+            if(this.player[id].hand[i] == '8') {
+              this.player[id].hand.splice(i, 1);
+            }
+          }
+        }
+        else if (mov[res.val]) {
           const legalMove = this.player[id].legalPos(this, res.val, true);
           const move: CardPara = await this.actionSignal(this.player[id].name, legalMove);
           this.player[id].playCard(this, res.val, move);
