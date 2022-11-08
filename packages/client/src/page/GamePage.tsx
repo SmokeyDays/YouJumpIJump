@@ -13,7 +13,7 @@ import { Player } from "../../../core/src/player";
 
 
 export let LocalPlayer = null
-export let CurrentBoard = 0
+export let CurrentBoard = 2
 export let viewLocked = false
 
 interface GamePageProps {
@@ -41,12 +41,12 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     GamePage.instance = this
     this.state = {
       boards: [
-        new BoardInfo(9, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
-        new BoardInfo(10, 'white', 'green', <Slot color='LightSeaGreen'></Slot>),
-        new BoardInfo(11, 'white', 'green', <Slot color='DarkCyan'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) +4, 'white', 'green', <Slot color='MediumAquamarine'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) +3, 'white', 'green', <Slot color='LightSeaGreen'></Slot>),
+        new BoardInfo(2 * (this.props.gameState.player.length - 1) +2, 'white', 'green', <Slot color='DarkCyan'></Slot>),
       ],
       showingCard: "",
-      currentBoard: 0,
+      currentBoard: 2,
       currentRound: 1,
       accessSlotList: [[], [], []],
       gameState: this.props.gameState,

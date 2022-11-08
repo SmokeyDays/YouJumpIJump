@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { Text, } from 'react-konva';
 import { socket } from '../../communication/connection';
 import GamePage, { LocalPlayer } from '../GamePage';
+import CardContainer from './CardContainer';
+import CardShowcase from './CardShowcase';
 import Center from './Center';
 import KButton from './KButton';
 import LinearLayout from './LinearLayout';
@@ -66,6 +68,8 @@ class TopTitle extends React.Component<TopTitleProps> {
                         background={"#bb1111"}
                         onClick={() => {
                             console.log(this.props.currentPlayer, "jump out");
+                            CardShowcase.instance.clearState();
+                            CardContainer.instance.setState({selectedCardList:[]})
                             socket.emit('resolve-signal',{type: 'none',  val: null})
                             if(this.props.isInRecast) {
                                 GamePage.instance.setInRecast(false)

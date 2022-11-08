@@ -30,7 +30,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         isInRecast: false,
     }
 
-    static instance = null;
+    static instance: CardContainer = null;
     constructor(props) {
         super(props)
         if (CardContainer.instance) {
