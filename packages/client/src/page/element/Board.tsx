@@ -123,7 +123,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
               if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
                 socket.emit('resolve-signal',{
                   type: "move", 
-                  val: [CurrentBoard,value.x,value.y]
+                  val: [CurrentBoard,value.ix,value.iy]
                 })
                 console.log("emit","move",[CurrentBoard,value.ix,value.iy])
                 GamePage.instance.setAccessSlotList([])
