@@ -61,7 +61,7 @@ export class Slot extends React.Component<SlotProps> {
           typeProps = {{
             
           text: (this.props.index as number).toString(),
-          fontSize: this.props.radius,
+          fontSize: this.props.radius*0.6,
           fill: '#1b315e'
           }}
           x={this.props.x}
@@ -105,7 +105,6 @@ export class Board extends React.Component<BoardProps, BoardState> {
   render(): React.ReactNode {
 
     let info = this.props.boardInfo;
-    console.log(this.props.accessSlotList)
     let slots = info.slotInfos.map((value, index) => {
       return (
         <Slot
@@ -118,12 +117,13 @@ export class Board extends React.Component<BoardProps, BoardState> {
           stroke={this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
           onClick={
             ()=>{
+              console.log('!!!!!!!')
               if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
                 socket.emit('resolve-signal',{
                   type: "move", 
                   val: [CurrentBoard,value.x,value.y]
                 })
-                console.log("emit","move",[CurrentBoard,value.x,value.y])
+                console.log("emit","move",[CurrentBoard,value.ix,value.iy])
                 CardShowcase.instance.useCard();
               }
             }
@@ -135,7 +135,6 @@ export class Board extends React.Component<BoardProps, BoardState> {
     });
 
     let playerCount: {[key:string]:[number,number]} ={}
-    console.log("***",this.props.playerState)
     for( let value of this.props.playerState) {
       if(!value.alive||value.position[0]!=CurrentBoard) continue;
       if( playerCount[`${value.position[1]},${value.position[2]}`] != null) {
@@ -155,7 +154,6 @@ export class Board extends React.Component<BoardProps, BoardState> {
         let mid = playerCount[pos][0]/2
         playerCount[pos][1]++;
         let offetX = 2 * radius * (playerCount[pos][1]-mid) - radius
-        console.log("index",index, offetX,(playerCount[pos][1]-mid), radius)
         
         players.push(
           <Group

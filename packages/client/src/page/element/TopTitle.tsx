@@ -28,7 +28,6 @@ class TopTitle extends React.Component<TopTitleProps> {
     }
 
     render(): React.ReactNode {
-        console.log("turn", this.props.turn, LocalPlayer)
         return (
             <Center
                 Type={LinearLayout}
@@ -42,12 +41,12 @@ class TopTitle extends React.Component<TopTitleProps> {
             >
                 <Text
                     Type={Text}
-                    text={`第${this.props.currentRound}个回合` +
-                        `当前是${this.props.currentPlayer}的${this.props.stage == 0 ? '迅捷' : '主动'}回合`}
+                    text={`第${this.props.currentRound+1}个回合` +
+                        `当前是${this.props.currentPlayer}的${this.props.isInRecast? '重铸': this.props.stage == 0 ? '迅捷' : '主动'}回合`}
                     fontSize={20}
                     fill={'#1b315e'}></Text>
                 <Text
-                    text={`第${this.props.currentBoard + 1}层`}
+                    text={`第${3-this.props.currentBoard}层`}
                     fontSize={20}
                     fill={'#1b315e'}></Text>
 
