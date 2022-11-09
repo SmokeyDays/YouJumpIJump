@@ -3,7 +3,8 @@
   "scripts": {
     "client": "cd packages/client && npm start PUBLIC_URL=/wuding",
     "lobby": "cd packages/lobby && npm run build && npm start",
-    "deploy": "cd packages/lobby && npm install && cd ../.. && cd packages/client && npm install"
+    "deploy": "cd packages/lobby && npm install && cd ../.. && cd packages/client && npm install",
+    "cbuild": "cd packages/client && npm run build"
   },
   "workspaces": [
     "packages/core",
