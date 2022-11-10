@@ -17,6 +17,7 @@ type KButtonProps = typeof KButton.defaultProps & {
     fontColor?: string,
     isEnable?: boolean,
     opacity?: number,
+    padding?: number
 
 }
 
@@ -66,8 +67,14 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
     render(): React.ReactNode {
         let button = this.props.isEnable ? <LinearLayout
             onMouseDown={() => { this.clickBackground && this.setState({ background: this.clickBackground }) }}
+            onTouchStart={() => {
+                console.log('touchstart');
+                this.clickBackground && this.setState({ background: this.clickBackground });
+                this.props.onClick()
+            }}
             onMouseUp={() => { this.setState({ background: this.background }) }}
-            onMouseEnter={()=>{ this.setState({ background: this.overBackground})}}
+            onTouchEnd={() => { this.setState({ background: this.background }) }}
+            onMouseEnter={() => { this.setState({ background: this.overBackground }) }}
             onMouseLeave={() => { this.background != this.state.background && this.setState({ background: this.background }) }}
             xAlign="center"
             yAlign="middle"

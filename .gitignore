@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+./packages/client/src/regulates/settings.ts
+settings.ts
+
+./packages/client/build/
+build/

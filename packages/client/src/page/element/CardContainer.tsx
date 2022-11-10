@@ -39,11 +39,49 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
         }
         CardContainer.instance = this
+        this.onCardClick  = this.onCardClick.bind(this)
         this.state = {
             cardList: [],
             tipCard: null,
             selectedCardList: [],
             isInRecast: false,
+        }
+    }
+
+    onCardClick(value, index) {
+        {
+            if (this.props.isInRecast) {
+                let tmp: number = this.state.selectedCardList.findIndex((value) => value == index);
+                if (tmp != -1) {
+                    this.state.selectedCardList.splice(tmp, 1)
+                }
+                else {
+                    this.state.selectedCardList.push(index)
+                }
+                this.setState({})
+
+            }
+            else {
+                if (!this.isShowingCard) {
+                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                        console.log('get-available-pos', this.state.cardList[index])
+                        socket.emit('get-available-pos', this.state.cardList[index])
+                    }
+                    CardShowcase.instance.showCard(this.state.cardList[index]);
+                    this.removeCard(index);
+                    this.isShowingCard = true;
+                }
+                else {
+                    CardShowcase.instance.clearState();
+                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                        console.log('get-available-pos', this.state.cardList[index])
+                        socket.emit('get-available-pos', this.state.cardList[index])
+                    }
+                    CardShowcase.instance.showCard(this.state.cardList[index]);
+                    this.removeCard(index);
+                    this.isShowingCard = true;
+                }
+            }
         }
     }
 
@@ -72,45 +110,13 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                         background={isSelected ? '#aaaaff' : null}
                         xAlign='center'
                         yAlign='middle'
+                        onMouseDown={ () => this.onCardClick(value,index)}
+                        onTouchStart={() => this.onCardClick(value,index)}
                         width={this.props.cardWidth * 1.1}
                         height={this.props.cardWidth * 1.5}
                     >
                         <KImage
                             onMouseEnter={() => { this.setState({ tipCard: index }) }}
-                            onMouseDown={() => {
-                                if (this.props.isInRecast) {
-                                    let tmp: number = this.state.selectedCardList.findIndex((value) => value == index);
-                                    if (tmp != -1) {
-                                        this.state.selectedCardList.splice(tmp, 1)
-                                    }
-                                    else {
-                                        this.state.selectedCardList.push(index)
-                                    }
-                                    this.setState({})
-
-                                }
-                                else {
-                                    if (!this.isShowingCard) {
-                                        if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
-                                            console.log('get-available-pos', this.state.cardList[index])
-                                            socket.emit('get-available-pos', this.state.cardList[index])
-                                        }
-                                        CardShowcase.instance.showCard(this.state.cardList[index]);
-                                        this.removeCard(index);
-                                        this.isShowingCard = true;
-                                    }
-                                    else {
-                                        CardShowcase.instance.clearState();
-                                        if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
-                                            console.log('get-available-pos', this.state.cardList[index])
-                                            socket.emit('get-available-pos', this.state.cardList[index])
-                                        }
-                                        CardShowcase.instance.showCard(this.state.cardList[index]);
-                                        this.removeCard(index);
-                                        this.isShowingCard = true;
-                                    }
-                                }
-                            }}
                             width={this.props.cardWidth}
                             height={this.props.cardWidth * 1.4}
                             image={img}
