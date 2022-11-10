@@ -58,7 +58,8 @@ export class Room {
   }
 
   gameEnd() {
-    logger.verbose("game end.");
+    logger.verbose("game end with result:");
+    logger.verbose("%s", this.game?.getGameState().global.result);
     for(let i = 0; i < this.users.length; ++i) {
       this.users[i]?.emit('game-end-signal', this.game?.getGameState());
     }

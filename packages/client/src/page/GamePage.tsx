@@ -140,7 +140,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       CardContainer.instance.setCard(state.player[LocalPlayer].hand);
     }
     if(!state.player[LocalPlayer].alive) {
-      this.props.changePage("GameEndPage",this.state.gameState.global.result[LocalPlayer])
+      this.props.changePage("GameEndPage",this.state.gameState.global.result[state.player[LocalPlayer].name])
     }
     this.setState({})
   }
@@ -177,8 +177,8 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     })
     
     socket.on('game-end-signal', (state: GameState)=>{
-      console.log('game-end-signal', state.global.result[LocalPlayer]);
-      this.props.changePage('GameEndPage',state.global.result[LocalPlayer])
+      console.log('game-end-signal', state.global.result[state.player[LocalPlayer].name]);
+      this.props.changePage('GameEndPage',state.global.result[state.player[LocalPlayer].name])
     })
 
     document.addEventListener("keydown", this.handleKeyDown)
