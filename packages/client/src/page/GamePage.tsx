@@ -63,6 +63,8 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     LocalPlayer = this.props.localPlayer;
 
     this.handleKeyDown = this.handleKeyDown.bind(this)
+    this.addCurrentBoard = this.addCurrentBoard.bind(this)
+    this.minusCurrentBoard = this.minusCurrentBoard.bind(this)
   }
 
   render() {
@@ -217,11 +219,21 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     this.setState({})
   }
 
-  handleKeyDown(e) {
+  addCurrentBoard() {
     let lastBoard = this.state.currentBoard
+    this.setCurrentBoard((lastBoard + 1) % this.state.boards.length);
+  }
+
+  minusCurrentBoard() {
+    let lastBoard = this.state.currentBoard
+    this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length);
+  }
+
+  handleKeyDown(e) {
+    
     switch (e.keyCode) {
-      case 38: this.setCurrentBoard((lastBoard + 1) % this.state.boards.length); break;
-      case 40: this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length); break;
+      case 38: this.addCurrentBoard(); break;
+      case 40: this.minusCurrentBoard(); break;
       case 39: this.props.changePage('GameEndPage',1);break;
     }
   }
