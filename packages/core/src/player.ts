@@ -87,6 +87,10 @@ export class Player {
     while(gamest.board[this.position.toString()].isBursted == true && this.position[0] > 0) {
       this.position[0]--;
     }
+    if(gamest.board[this.position.toString()].isBursted == true && this.position[0] == 0) {
+      this.alive = false;
+      return;
+    }
   }
 
   turnBegin() {

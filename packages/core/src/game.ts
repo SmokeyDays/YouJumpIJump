@@ -164,6 +164,7 @@ export class GameState {
           for(let i = 0; i < this.player[id].hand.length; i++) {
             if(this.player[id].hand[i] == '8') {
               this.player[id].hand.splice(i, 1);
+              this.player[id].drawCard();
               break;
             }
           }
