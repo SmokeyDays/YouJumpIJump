@@ -69,8 +69,8 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
       <div className="basic-info-form-container">
         <form className="basic-info-form" onKeyDown = {
           (event) => {
-            event.preventDefault()
             if(event.key === "Enter") {
+              event.preventDefault()
               this.buttonClick();
             }
           }
