@@ -72,7 +72,6 @@ export class Player {
         this.hand.splice(i, 1, this.library.pop() as string);
       }
     }
-    logger.verbose("&&&&")
     logger.verbose(this.hand)
   }
 
@@ -749,7 +748,7 @@ export class Player {
         break;
       }
     }
-    if(cardid != '8') {
+    if(cardid != '8' && cardid != '5') {
         for(let i = 0; i < this.hand.length; i++) {
         if(this.hand[i] == cardid) {
           this.hand.splice(i, 1);

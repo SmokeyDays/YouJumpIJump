@@ -126,28 +126,27 @@ export class GameState {
     return res;
   }
   async gameStart() {
-
-
     for (let i = 0; i < this.player.length; i++) {
+      this.global.turn = i;
+      this.global.stage = GameStage.RECAST_ACTION;
       const res: CardPara = await this.recastSignal(this.player[i].name);
       if (res == null || res.type != 'recast') {
         continue;
       } else {
-
         this.player[i].recast(res.val);
       }
     }
   }
   async spyAction(id: number) {
-    const legalMove1: Position[] = this.player[0].legalPos(this, '8', false, 1);
+    const legalMove1: Position[] = this.player[id].legalPos(this, '8', false, 1);
     const move1: CardPara = await this.actionSignal(this.player[id].name, legalMove1);
-    this.player[0].playCard(this, '8', move1);
-    const legalMove2: Position[] = this.player[0].legalPos(this, '8', false, 2);
+    this.player[id].playCard(this, '8', move1);
+    const legalMove2: Position[] = this.player[id].legalPos(this, '8', false, 2);
     const move2: CardPara = await this.actionSignal(this.player[id].name, legalMove2);
-    this.player[0].playCard(this, '8', move2);
-    const legalMove3: Position[] = this.player[0].legalPos(this, '8', false, 3);
+    this.player[id].playCard(this, '8', move2);
+    const legalMove3: Position[] = this.player[id].legalPos(this, '8', false, 3);
     const move3: CardPara = await this.actionSignal(this.player[id].name, legalMove3);
-    this.player[0].playCard(this, '8', move3);
+    this.player[id].playCard(this, '8', move3);
   }
   async action(id: number, inst: boolean) {
     let mov: Record<string, boolean> = {};
