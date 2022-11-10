@@ -12,14 +12,15 @@ type CardContainerProps = typeof CardContainer.defaultProps & {
     y?: number,
     cardWidth?: number,
     isInRecast?: boolean,
-    stage: number
+    stage: number,
+    cardList: string[],
+    selectedCardList: number[],
+    recast: () => void,
+    onCardClick: (index: number) => void
 }
 
 interface CardContainerState {
-    cardList: string[]
-    selectedCardList: number[]
     tipCard: number
-    isInRecast: boolean
 }
 
 class CardContainer extends React.Component<CardContainerProps, CardContainerState> {
@@ -32,70 +33,28 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         stage: -1,
     }
 
-    static instance: CardContainer = null;
+    cardImg: Record<string, HTMLImageElement> = {}
+
     constructor(props) {
         super(props)
-        if (CardContainer.instance) {
-
-        }
-        CardContainer.instance = this
-        this.onCardClick  = this.onCardClick.bind(this)
         this.state = {
-            cardList: [],
             tipCard: null,
-            selectedCardList: [],
-            isInRecast: false,
+        }
+        for(let key in CardDescription){
+            let img = new Image()
+            img.src = ImgsManager.getInstance().getImg(`${key}_Small.png`);
+            this.cardImg[key] = img
         }
     }
 
-    onCardClick(value, index) {
-        {
-            if (this.props.isInRecast) {
-                let tmp: number = this.state.selectedCardList.findIndex((value) => value == index);
-                if (tmp != -1) {
-                    this.state.selectedCardList.splice(tmp, 1)
-                }
-                else {
-                    this.state.selectedCardList.push(index)
-                }
-                this.setState({})
-
-            }
-            else {
-                if (!this.isShowingCard) {
-                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
-                        console.log('get-available-pos', this.state.cardList[index])
-                        socket.emit('get-available-pos', this.state.cardList[index])
-                    }
-                    CardShowcase.instance.showCard(this.state.cardList[index]);
-                    this.removeCard(index);
-                    this.isShowingCard = true;
-                }
-                else {
-                    CardShowcase.instance.clearState();
-                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
-                        console.log('get-available-pos', this.state.cardList[index])
-                        socket.emit('get-available-pos', this.state.cardList[index])
-                    }
-                    CardShowcase.instance.showCard(this.state.cardList[index]);
-                    this.removeCard(index);
-                    this.isShowingCard = true;
-                }
-            }
-        }
-    }
 
     render(): React.ReactNode {
-        if (!this.props.isInRecast && this.state.selectedCardList.length != 0) {
-            this.setState({ selectedCardList: [] })
-        }
 
         let theta = 30;
-        let mid = (this.state.cardList.length - 1) / 2;
-        let cards = this.state.cardList.map((value, index) => {
-            let img = new Image(this.props.cardWidth, this.props.cardWidth * 1.4)
-            img.src = ImgsManager.getInstance().getImg(`${value}_Small.png`);
-            let isSelected: boolean = this.state.selectedCardList.findIndex((value) => value == index) != -1
+        let mid = (this.props.cardList.length - 1) / 2;
+        let cards = this.props.cardList.map((value, index) => {
+            let img = this.cardImg[value]
+            let isSelected: boolean = this.props.selectedCardList.findIndex((value) => value == index) != -1
 
             return (
 
@@ -110,13 +69,13 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                         background={isSelected ? '#aaaaff' : null}
                         xAlign='center'
                         yAlign='middle'
-                        onMouseDown={ () => this.onCardClick(value,index)}
-                        onTap={() => this.onCardClick(value,index)}
+                        onClick={ () => {if(!this.props.isInRecast){this.setState({tipCard: null})};this.props.onCardClick(index)}}
+                        onTap={() => {if(!this.props.isInRecast){this.setState({tipCard: null})};this.props.onCardClick(index)}}
+                        onMouseEnter={() => { this.setState({ tipCard: index }) }}
                         width={this.props.cardWidth * 1.1}
                         height={this.props.cardWidth * 1.5}
                     >
                         <KImage
-                            onMouseEnter={() => { this.setState({ tipCard: index }) }}
                             width={this.props.cardWidth}
                             height={this.props.cardWidth * 1.4}
                             image={img}
@@ -145,11 +104,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                         text='确定'
                         fontColor='white'
                         fontSize={18}
-                        onClick={() => {
-                            let cardList = this.state.selectedCardList.map((val) => this.state.cardList[val]);
-                            socket.emit('resolve-signal', { type: 'recast', val: cardList })
-                            GamePage.instance.setInRecast(false)
-                        }}
+                        onClick={this.props.recast}
                     >
 
                     </KButton>
@@ -160,9 +115,11 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
     }
 
     renderTip(index: number): React.ReactNode {
-        let mid = (this.state.cardList.length - 1) / 2;
+        let mid = (this.props.cardList.length - 1) / 2;
         let theta = (90 - 30 * (index - mid)) / 180 * Math.PI
-        let card = CardDescription[this.state.cardList[index]];
+        let card = CardDescription[this.props.cardList[index]];
+        if(card == undefined) return null;
+        console.log("!!!!",card)
         return (
 
             <Label
@@ -194,22 +151,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
             </Label>
         )
     }
-
-    setCard(newCardList: string[]) {
-        this.setState({ cardList: newCardList })
-    }
-
-    addCard(cardId: string) {
-        this.state.cardList.push(cardId)
-        this.setState({})
-    }
-
-    removeCard(index: number) {
-        this.state.cardList.splice(index, 1)
-        this.setState({ tipCard: null })
-    }
-
-    isShowingCard: boolean = false
 }
 
 export default CardContainer

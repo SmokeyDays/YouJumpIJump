@@ -18,7 +18,8 @@ interface TopTitleProps {
     turn: number
     otherTip?: string
     canJump?: boolean
-    isInRecast: boolean
+    isInRecast: boolean,
+    clearState: () => void
 }
 
 
@@ -68,9 +69,8 @@ class TopTitle extends React.Component<TopTitleProps> {
                         fontColor={"#f7f7f7"}
                         opacity={0.8}
                         onClick={() => {
+                            this.props.clearState()
                             console.log(this.props.currentPlayer, "jump out");
-                            CardShowcase.instance.clearState();
-                            CardContainer.instance.setState({selectedCardList:[]})
                             socket.emit('resolve-signal',{type: 'none',  val: null})
                             if(this.props.isInRecast) {
                                 GamePage.instance.setInRecast(false)

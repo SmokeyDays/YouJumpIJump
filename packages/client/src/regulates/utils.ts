@@ -47,7 +47,7 @@ export interface CardDesc {
   lore: string,
 }
 
-export const CardDescription: Record<string, CardDesc> = cardDescription;
+export const CardDescription: Record<string,CardDesc> = cardDescription;
 
 export function getDescription(id: string): string {
   return CardDescription[id].desc!=""?CardDescription[id].desc:"卡牌无描述";

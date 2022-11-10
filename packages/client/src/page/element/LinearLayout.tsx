@@ -131,11 +131,11 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
 
             if (this.whInfos[index].w == width && this.whInfos[index].h == height) return
             if (this.props.orientation == 'horizontal') {
-                this.cwidth += width + this.props.padding - this.whInfos[index].w
+                this.cwidth += width - this.whInfos[index].w
                 this.cheight = Math.max(this.cheight, height)
             }
             else {
-                this.cheight += height + this.props.padding - this.whInfos[index].h
+                this.cheight += height - this.whInfos[index].h
                 this.cwidth = Math.max(this.cwidth, width)
             }
 
@@ -227,6 +227,9 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
 
         if(this.childrenCount!=array.length) {
             this.childrenCount = this.restChildren = array.length;
+            this.cwidth = this.cheight = 0
+            this.width = this.height = 0
+            this.whInfos = new Array(this.restChildren)
         }
 
         if (this.restChildren > 0) {
