@@ -68,9 +68,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
         let button = this.props.isEnable ? <LinearLayout
             onMouseDown={() => { this.clickBackground && this.setState({ background: this.clickBackground }) }}
             onTouchStart={() => {
-                console.log('touchstart');
                 this.clickBackground && this.setState({ background: this.clickBackground });
-                this.props.onClick()
             }}
             onMouseUp={() => { this.setState({ background: this.background }) }}
             onTouchEnd={() => { this.setState({ background: this.background }) }}
@@ -79,6 +77,7 @@ class KButton extends React.Component<KButtonProps, KButtonState> {
             xAlign="center"
             yAlign="middle"
             {...this.props}
+            onTap={() => this.props.onClick()}
             background={this.state.background}
         >
             <Text text={this.props.text} fontSize={this.props.fontSize} fill={this.props.fontColor}></Text>

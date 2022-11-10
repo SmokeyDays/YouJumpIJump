@@ -105,6 +105,7 @@ type LinearLayoutProps = typeof LinearLayout.defaultProps & {
     onMouseEnter?: any
     onTouchStart?: () => void
     onTouchEnd?: () => void
+    onTap?: ()=>void
 }
 
 class LinearLayout extends React.Component<LinearLayoutProps, {}> {

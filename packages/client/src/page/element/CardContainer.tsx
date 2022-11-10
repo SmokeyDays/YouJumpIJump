@@ -111,7 +111,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                         xAlign='center'
                         yAlign='middle'
                         onMouseDown={ () => this.onCardClick(value,index)}
-                        onTouchStart={() => this.onCardClick(value,index)}
+                        onTap={() => this.onCardClick(value,index)}
                         width={this.props.cardWidth * 1.1}
                         height={this.props.cardWidth * 1.5}
                     >

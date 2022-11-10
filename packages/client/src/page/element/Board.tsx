@@ -31,7 +31,7 @@ export class Slot extends React.Component<SlotProps> {
     x: 0,
     y: 0,
     index: 0,
-    onClick: ()=>{}
+    onClick: () => { }
   }
 
   points: Array<number> = new Array<number>;
@@ -46,7 +46,8 @@ export class Slot extends React.Component<SlotProps> {
   render(): React.ReactNode {
     return (
       <Group
-        onClick={()=>this.props.onClick()}
+        onClick={() => this.props.onClick()}
+        onTap={() => this.props.onClick()}
       >
         <Line
           points={this.points}
@@ -59,11 +60,11 @@ export class Slot extends React.Component<SlotProps> {
         />
         <Center
           Type={Text}
-          typeProps = {{
-            
-          text: (this.props.index as number).toString(),
-          fontSize: this.props.radius*0.6,
-          fill: '#1b315e'
+          typeProps={{
+
+            text: (this.props.index as number).toString(),
+            fontSize: this.props.radius * 0.6,
+            fill: '#1b315e'
           }}
           x={this.props.x}
           y={this.props.y}>
@@ -97,66 +98,66 @@ export class Board extends React.Component<BoardProps, BoardState> {
     this.state = {
       scale: 1,
     }
+    this.onSlotClick = this.onSlotClick.bind(this)
   }
 
   componentDidMount() {
   }
 
-
+  onSlotClick(value) {
+    console.log("slot", value.ix, value.iy, value.isBroken)
+    if (this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
+      socket.emit('resolve-signal', {
+        type: "move",
+        val: [CurrentBoard, value.ix, value.iy]
+      })
+      console.log("emit", "move", [CurrentBoard, value.ix, value.iy])
+      GamePage.instance.setAccessSlotList([])
+    }
+  }
 
   render(): React.ReactNode {
 
     let info = this.props.boardInfo;
     let slots = info.slotInfos.map((value, index) => {
       return (
-        value.isBroken? null:
-        <Slot
-          {...info.slotTemplate.props}
-          x={value.x}
-          y={value.y}
-          index={index}
-          key={index}
-          color={KButton.changeColorByNum(info.slotTemplate.props.color,value.dis*40,value.dis*40,value.dis*40)}
-          stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1? 'orange':this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
-          onClick={
-            ()=>{
-              console.log("slot",value.ix,value.iy,value.isBroken)
-              if(this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
-                socket.emit('resolve-signal',{
-                  type: "move", 
-                  val: [CurrentBoard,value.ix,value.iy]
-                })
-                console.log("emit","move",[CurrentBoard,value.ix,value.iy])
-                GamePage.instance.setAccessSlotList([])
-              }
+        value.isBroken ? null :
+          <Slot
+            {...info.slotTemplate.props}
+            x={value.x}
+            y={value.y}
+            index={index}
+            key={index}
+            color={KButton.changeColorByNum(info.slotTemplate.props.color, value.dis * 40, value.dis * 40, value.dis * 40)}
+            stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1 ? 'orange' : this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
+            onClick={
+              ()=>this.onSlotClick(value)
             }
-          }
-        >
-        </Slot>
+          >
+          </Slot>
 
       )
     });
 
-    let playerCount: {[key:string]:[number,number]} ={}
-    for( let value of this.props.playerState) {
-      if(!value.alive||value.position[0]!=CurrentBoard) continue;
-      if( playerCount[`${value.position[1]},${value.position[2]}`] != null) {
-        playerCount[`${value.position[1]},${value.position[2]}`][0] ++;
+    let playerCount: { [key: string]: [number, number] } = {}
+    for (let value of this.props.playerState) {
+      if (!value.alive || value.position[0] != CurrentBoard) continue;
+      if (playerCount[`${value.position[1]},${value.position[2]}`] != null) {
+        playerCount[`${value.position[1]},${value.position[2]}`][0]++;
       }
       else {
-        playerCount[`${value.position[1]},${value.position[2]}`] =[1,0];
+        playerCount[`${value.position[1]},${value.position[2]}`] = [1, 0];
       }
     }
     let players = []
 
     this.props.playerState.forEach((value, index) => {
-      if (value.position&&value.alive&&value.position[0]==CurrentBoard)
-      {
+      if (value.position && value.alive && value.position[0] == CurrentBoard) {
         let pos = `${value.position[1]},${value.position[2]}`
         let radius = info.slotTemplate.props.radius * 0.9 / playerCount[pos][0]
-        let mid = playerCount[pos][0]/2
+        let mid = playerCount[pos][0] / 2
         playerCount[pos][1]++;
-        let offetX = 2 * radius * (playerCount[pos][1]-mid) - radius
+        let offetX = 2 * radius * (playerCount[pos][1] - mid) - radius
         let slot = info.slotInfos[info.slotMap[pos]]
 
         players.push(
@@ -165,24 +166,16 @@ export class Board extends React.Component<BoardProps, BoardState> {
             x={offetX + slot.x}
             y={slot.y}
             onClick={
-              ()=>{
-                console.log("slot",slot.ix,slot.iy,slot.isBroken)
-                if(!slot.isBroken && this.props.accessSlotList.indexOf(`${slot.ix},${slot.iy}`) != -1) {
-                  socket.emit('resolve-signal',{
-                    type: "move", 
-                    val: [CurrentBoard,slot.ix,slot.iy]
-                  })
-                  console.log("emit","move",[CurrentBoard,slot.ix,slot.iy])
-                  GamePage.instance.setAccessSlotList([])
-                }
+              () => {
+                this.onSlotClick(slot)
               }
-            }  
+            }
           >
 
             {value.magician &&
               <Circle
                 fill='#dec674'
-                radius={radius }
+                radius={radius}
               >
               </Circle>
             }
@@ -193,27 +186,27 @@ export class Board extends React.Component<BoardProps, BoardState> {
             </Circle>
             <Center
               Type={Text}
-              typeProps = {
+              typeProps={
                 {
-                  
-              text: value.name[0],
-              fontSize: radius 
+
+                  text: value.name[0],
+                  fontSize: radius
                 }
               }
             ></Center>
             <Center
               Type={Text}
-              typeProps = {{
+              typeProps={{
 
                 text: value.prayer > 0 ? value.prayer : null,
-                fontSize: radius *0.8,
+                fontSize: radius * 0.8,
                 fill: "#9b95c9"
               }}
               y={-radius / 2}
             ></Center>
           </Group>
         )
-            }
+      }
     })
 
     return (
@@ -243,7 +236,7 @@ export class BoardInfo {
   //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
     let index = this.slotMap[`${ix},${iy}`]
-    if(index != null) {
+    if (index != null) {
       this.slotInfos[this.slotMap[`${ix},${iy}`]].isBroken = isBroken;
     }
   }
