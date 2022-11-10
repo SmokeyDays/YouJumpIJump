@@ -20,7 +20,8 @@ interface AppState {
   signal: PlayerOperation,
   roomState: RoomState,
   gameResult: Record<string, number>,
-  alertMessage: string | null,
+  alertMessage: string,
+  alertMessageShown: boolean,
   localPlayer: number,
 }
 // App: 是整个程序的主要类，这个类是整个 React 显示出的 html 的根。
@@ -52,11 +53,11 @@ class App extends React.PureComponent<{},AppState> {
   }
 
   sendAlertMessage(msg: string, dur: number = 3) {
-    this.setState({alertMessage: msg});
+    this.setState({ alertMessage: msg , alertMessageShown: true });
     const thisMsgID = (++this.messageID);
     setTimeout(() => {
       if(this.messageID === thisMsgID) {
-        this.setState({alertMessage: null});
+        this.setState({ alertMessageShown: false });
       }
     }, dur * 1000);
   }
@@ -82,7 +83,8 @@ class App extends React.PureComponent<{},AppState> {
         users: [],
       },
       gameResult: {},
-      alertMessage: null,
+      alertMessage: "",
+      alertMessageShown: false,
       localPlayer: 0
     };
     this.setPage = this.setPage.bind(this);
@@ -170,7 +172,7 @@ class App extends React.PureComponent<{},AppState> {
       }
     }
     return <div>
-      {this.state.alertMessage != null? <AlertWindow message = {this.state.alertMessage}/>: null}
+      <AlertWindow message={this.state.alertMessage} shown={this.state.alertMessageShown} />
       {content}
     </div>;
   }

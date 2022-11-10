@@ -67,7 +67,14 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
   render() {
     return (
       <div className="basic-info-form-container">
-        <form className="basic-info-form">
+        <form className="basic-info-form" onKeyDown = {
+          (event) => {
+            if(event.key === "Enter") {
+              event.preventDefault()
+              this.buttonClick();
+            }
+          }
+        }>
           <label>
             <span>{this.props.formName}</span>
             {this.inputGenerator(this.state.value)}
