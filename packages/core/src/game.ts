@@ -5,6 +5,15 @@ import { logger } from "../../lobby/tools/Logger";
 import { Player, cardConfig } from "./player"
 import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
 
+class GameUIDManager {
+  count = 0;
+  get() {
+    return ++this.count;
+  }
+}
+
+export const GameUID = new GameUIDManager();
+
 function randomsort(a: string, b: string): number {
   return Math.random() > .5 ? -1 : 1;
 }
@@ -13,6 +22,7 @@ function rand(start: any,end: any){
 }
 
 export class GameState {
+  UID: number;
   board: Board = {};
   player: Player[] = [];
   global: {
@@ -27,6 +37,7 @@ export class GameState {
   constructor(player: string[], req: (signal: RequestSignal) => Promise<CardPara>, gameEnd: () => void) {
     this.gameEnd = gameEnd;
     this.req = req;
+    this.UID =  GameUID.get();
     this.totPlayer = player.length;
     for (let i = 0; i < player.length; ++i) {
       this.player.push(new Player({ initialMastery: this.totPlayer, name: player[i] }));
@@ -62,7 +73,7 @@ export class GameState {
 
   async gameMain() {
     await this.gameStart();
-    while (this.totPlayer > 1) { //记得改回来!!!!!(re)
+    while (this.totPlayer > 1) {
       this.global.round++;
       for (let i = 0; i < this.player.length; i++) {
         this.global.turn = i;
@@ -86,7 +97,7 @@ export class GameState {
         }
       }
     }
-    logger.verbose("res %s", this.global.result);
+    logger.verbose("[Game %s] end with result %s", this.UID, this.global.result);
     this.gameEnd();
   }
 
@@ -192,6 +203,10 @@ export class GameState {
         }
       }
     }
+    if(this.player[id].hand.length < this.player[id].mastery) {
+      logger.error("[Game %s] Error: Player %s not draw card correctly!!!", this.UID, this.player[id].name);
+      logger.error("[Game %s] More Info about the error, recent para: %s", this.UID, res);
+    }
   }
   async turn(id: number) {
 
@@ -213,8 +228,7 @@ export class GameState {
     for (let i = 0; i < this.player.length; i++) {
       if (this.player[i].alive == false && this.global.result[this.player[i].name] === undefined) {
         this.global.result[this.player[i].name] = this.totPlayer--;
-        
-        logger.verbose("res %s", this.global.result);
+        logger.verbose("[Game %s] Player %s dead. Res: %s", this.UID, this.player[i].name, this.global.result);
       }
     }
   }

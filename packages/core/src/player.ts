@@ -44,8 +44,7 @@ export class Player {
         this.initLibrary();
       }
       this.hand.push(this.library.pop() as string);
-      
-      //  this.hand.push("K");
+      logger.verbose("Player %s draw card %s", this.name, this.hand[this.hand.length - 1]);
     }
   }
 
@@ -112,8 +111,6 @@ export class Player {
     let legalpos: Position[] = [];
     let pos: Position = this.position;
     let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
-    
-    logger.verbose("cardid: %s", cardid);
     switch(cardid) {
       case cardConfig.cardNameList[0]: {
         for(let i = -1; i >= -size; i--) {
@@ -238,7 +235,6 @@ export class Player {
             tot++;
           }
         }
-        logger.verbose("tot: %s", tot);
         if(tot == 3) {
           for(let i = 0; i < 3; i++) {
             let size = 2 * (gamest.player.length - 1) + (3 - i);
@@ -257,7 +253,6 @@ export class Player {
         for(let i = 0; i < 6; i++) {
           for(let j = 0; j < tot; j++) {
             if(Player.inRange(gamest, cur) && gamest.board[cur.toString()].isBursted == false) {
-              logger.verbose("cur: %s %s %s", cur, Player.inRange(gamest, cur),gamest.board[cur.toString()].isBursted);
               legalpos.push([cur[0], cur[1], cur[2]]);
             }
             cur[1] += dx[i];
@@ -526,7 +521,6 @@ export class Player {
         break;
       }
     }
-    logger.verbose("%s:%s",cardid , legalpos)
     return legalpos;
   }
 
@@ -744,7 +738,6 @@ export class Player {
         }
         this.position = fpos;
         this.passby.push(fpos);
-        logger.verbose("fpos: %s", fpos);
         break;
       }
     }
@@ -759,7 +752,6 @@ export class Player {
     this.drawCard();
   }
   burst(gamest: GameState) {
-    logger.verbose("pos laspos:%s %s",this.position, this.laspos);
     const oldState = gamest.board[this.position.toString()].isBursted;
     for(let i = 0; i < this.passby.length; i++) {
       gamest.board[this.passby[i].toString()].isBursted = true;
