@@ -78,10 +78,6 @@ export class Player {
     if(this.magician) return;
     /*while(gamest.board[this.position[0].toString() + ' ' + this.position[1].toString() + 
     ' ' + this.position[2].toString()].isBursted == true && this.position[0]) */
-    if(gamest.board[this.position.toString()].isBursted == true && this.position[0] == 0) {
-      this.alive = false;
-      return;
-    }
     while(gamest.board[this.position.toString()].isBursted == true && this.position[0] > 0) {
       this.position[0]--;
     }
@@ -94,7 +90,6 @@ export class Player {
   turnBegin() {
     this.laspos = this.position;
     this.magician = false;
-    this.is9 = false;
   }
   static inRange(gamest: GameState, pos: Position):boolean {
     let size:number = 2 * (gamest.player.length - 1) + (3 - pos[0]);
@@ -654,6 +649,7 @@ export class Player {
     if(this.is9) {
       gamest.board[this.position.toString()].isBursted = true;
     }
+    this.is9 = false;
     this.passby = [];
   }
 }
