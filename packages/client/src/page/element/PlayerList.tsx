@@ -8,7 +8,8 @@ interface PlayerListProps {
     playList?: (Player & { numberPos: number })[]
     x?: number,
     y?: number,
-    trun: number
+    trun: number,
+    currentRound: number,
 }
 
 class PlayerList extends React.Component<PlayerListProps> {
@@ -66,7 +67,7 @@ class PlayerList extends React.Component<PlayerListProps> {
                     </Label>
                     <Label>
                         <Tag
-                            fill={val.alive ? (this.props.trun == index ? '#41b349' : '#d3d7d4') : '#46485f'}
+                            fill={val.alive ? (this.props.trun == index ? '#41b349' : '#a1a5a2') : '#46485f'}
                             lineJoin='round'
                             shadowColor='grey'
                             shadowBlur={10}
@@ -95,12 +96,17 @@ class PlayerList extends React.Component<PlayerListProps> {
                 reff={(e) => { this.refDom = e }}
                 {...this.props}
                 orientation='vertical'
+                xAlign='center'
                 padding={padding}
                 shadow={true}
                 background='#000000'
                 opacity={0.3}
             >
                 <Text></Text>
+                <Text
+                        text={`第${this.props.currentRound + 1}个回合 ${this.props.playList[this.props.trun].name}的回合`}
+                        fontSize={fontSize}
+                        fill='white'></Text>
                 {players}
                 <Text></Text>
             </LinearLayout>

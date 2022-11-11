@@ -7,60 +7,31 @@ import { CardDescription, ImgsManager, isInstant } from '../../regulates/utils';
 import GamePage, { LocalPlayer } from '../GamePage';
 import { socket } from '../../communication/connection';
 
-interface CardShowcaseState {
-    cardId: string,
-    isEnable: boolean,
-}
-
 interface CardShowcaseProps {
+    cardId: string,
     x?: number
     y?: number
     width: number
     parentRef?: any
     stage: number
     turn: number
+    clearState: () => void
+    useCard: () => void
 }
-class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState> {
+class CardShowcase extends React.Component<CardShowcaseProps> {
+
+    cardImg: Record<string, HTMLImageElement> = {}
 
     constructor(props) {
         super(props)
-        if (CardShowcase.instance) {
-
-        }
-        CardShowcase.instance = this
-        this.state = {
-            cardId: null,
-            isEnable: true,
-        }
         this.width = this.props.width
         this.height = 100
         this.refDom = null
-    }
-
-    clearState() {
-        GamePage.instance.setFreSlotList([])
-        this.setState({isEnable: true})
-        this.backCard()
-    }
-
-    showCard(id: string) {
-        this.setState({ cardId: id })
-    }
-
-    backCard() {
-        if (this.state.cardId != null) {
-            CardContainer.instance.addCard(this.state.cardId);
-            CardContainer.instance.isShowingCard = false;
-            GamePage.instance.setFreSlotList([])
-            this.setState({ cardId: null })
-        }
-    }
-
-    useCard() {
-        if (this.state.cardId != null) {
-            CardContainer.instance.isShowingCard = false;
-            GamePage.instance.setFreSlotList([])
-            this.setState({ cardId: null ,isEnable: true})
+        
+        for(let key in CardDescription){
+            let img = new Image()
+            img.src = ImgsManager.getInstance().getImg(`${key}_Big.png`);
+            this.cardImg[key] = img
         }
     }
 
@@ -78,10 +49,9 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
     }
 
     render(): React.ReactNode {
-        if (this.state.cardId == null) return null
-        let img = new Image()
-        img.src = ImgsManager.getInstance().getImg(`${this.state.cardId}_Big.png`);
-        let card = CardDescription[this.state.cardId]
+        if (this.props.cardId == null) return null
+        let img = this.cardImg[this.props.cardId]
+        let card = CardDescription[this.props.cardId]
         let bFont = Math.max(20, this.width / 10)
         let mFont = Math.max(18, this.width / 12)
         let sFont = Math.max(16, this.width / 18)
@@ -132,9 +102,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                 text="取消"
                 fontSize={mFont}
                 fontColor='white'
-                onClick={() => {
-                    this.clearState();
-                }}
+                onClick={this.props.clearState}
             ></KButton>
         )
     }
@@ -148,7 +116,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         }
 
         if (this.props.stage == 0) {
-            if (isInstant(this.state.cardId)) {
+            if (isInstant(this.props.cardId)) {
                 return (
                     [
                         <LinearLayout
@@ -164,13 +132,8 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                                 height={bHeight}
                                 text="迅捷"
                                 fontSize={mFont}
-                                isEnable={this.state.isEnable}
                                 fontColor='white'
-                                onClick={()=>{
-                                    console.log(this.state.cardId, "instant run")
-                                    socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
-                                    CardShowcase.instance.useCard()
-                                }}
+                                onClick={this.props.useCard}
                                 >
                             </KButton>
                             {this.renderCancalButton()}
@@ -197,12 +160,7 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
                         text="主要"
                         fontSize={mFont}
                         fontColor='white'
-                        isEnable={this.state.isEnable}
-                        onClick={()=>{
-                            console.log("emit",this.state.cardId, "main run")
-                            socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
-                            CardShowcase.instance.useCard()
-                        }}
+                        onClick={this.props.useCard}
                         >
                     </KButton>
                     {this.renderCancalButton()}
@@ -211,7 +169,6 @@ class CardShowcase extends React.Component<CardShowcaseProps, CardShowcaseState>
         }
     }
 
-    static instance: CardShowcase = null
     refDom: any
     width: number
     height: number

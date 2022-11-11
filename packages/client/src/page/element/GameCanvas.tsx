@@ -28,16 +28,19 @@ class GameCanvas extends React.Component<GameCanvasProps> {
     }
 
     render(): React.ReactNode {
+        let width = 1925*1.5
+        let height = 1133*1.5
+
         return (
             <Layer
                 {...this.props}
                 draggable={true}>
                 <KImage
                     image={this.backgounds[this.props.currentBoard]}
-                    width={window.innerWidth*2}
-                    height={window.innerHeight*2}
-                    offsetX={window.innerWidth}
-                    offsetY={window.innerHeight}
+                    width={width}
+                    height={height}
+                    offsetX={width/2}
+                    offsetY={height/2}
                 >
                 </KImage>
                 <Board
