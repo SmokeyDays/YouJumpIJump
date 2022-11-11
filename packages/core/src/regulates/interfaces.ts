@@ -3,6 +3,7 @@ import { Player } from "../player";
 export enum GameStage {
   INSTANT_ACTION,
   MAIN_ACTION,
+  RECAST_ACTION,
 }
 
 /* ======== GameState ======== */

@@ -25,7 +25,6 @@ export class Room {
   }
 
   async requester(val: RequestSignal) {
-
     const targetUser = this.getUser(val.player);
     const noneRes: CardPara = {
       type: "none",
@@ -38,7 +37,6 @@ export class Room {
     await this.renew();
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<CardPara>((resolve, reject) => {
-      logger.verbose(val)
       let visited = true;
       const resolveWithPara = (para: CardPara) => {
         visited = false;
@@ -48,7 +46,7 @@ export class Room {
       };
       targetUser.socket.once("resolve-signal", resolveWithPara)
       setTimeout(()=>{
-        if(visited) {
+        if(!visited) {
           logger.error("Request player action Failed: %s action time out.", val.player);
           resolve(noneRes);
         }
@@ -63,6 +61,7 @@ export class Room {
     for(let i = 0; i < this.users.length; ++i) {
       this.users[i]?.emit('game-end-signal', this.game?.getGameState());
     }
+    this.game = null;
   }
 
   getPosSet(user: User, card: string): Position[] {
@@ -125,7 +124,7 @@ export class Room {
     for(let i = 0; i < this.users.length; ++i) {
       if(this.users[i]?.userName == user.userName) {
         logger.verbose('Remove user %s from room %s successfully.', user.userName, this.roomName);
-        user.emit("alert-message", "你被移出房间");
+        user.emit("alert-message", "你离开了房间" + this.roomName);
         this.users.splice(i, 1);
         this.renew();
         return;
@@ -178,6 +177,12 @@ export class Room {
       }
     } else {
       for(let i = 0; i < this.users.length; ++i) {
+        if(this.users[i].userName === null) {
+          continue;
+        }
+        if(this.game.getGameState().global.result[this.users[i].userName as string] !== undefined) {
+          continue;
+        }
         logger.verbose('Gamestate %s renew to user %s with id %s', 1, this.users[i]?.userName, i);
         await this.users[i]?.emit('renew-game-state', this.gameStateGenerator(i));
       }

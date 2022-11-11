@@ -7,35 +7,6 @@ declare module 'cordis' {
   export interface Context {
     gameState: GameState
   }
-  export interface Events {
-    // duel event
-    'duel-start': () => void
-    'duel-end': () => void
-
-    // turn event
-    'stage-prepare': (id: number) => void
-    'stage-battle': () => void
-    'stage-action': () => void
-    'stage-end': () => void
-
-    // player event
-    'player-cast': () => void
-    'player-draw': (id: number) => void
-    'player-grow': (id: number) => void
-    'player-discard': (id: number) => void
-    'player-attack': (id: number) => void
-    'player-damage': (id: number) => void
-    'player-shuffle': (id: number) => void
-
-    // card event
-    'card-place': () => void
-    'card-effect': () => void
-    'card-resolve': () => void
-    'card-untap': () => void
-
-    // socket event
-    'output-message': (signal: RequestSignal) => Promise<CardPara>
-  }
 }
 
 export class UJIJCore {
@@ -64,7 +35,6 @@ export class UJIJCore {
   getPosSet(player: string, card: string): SlotList {
     for(const pl of this.app.gameState.player) {
       if(pl.name === player) {
-        logger.verbose("set: %s", pl.legalPos(this.app.gameState, card, this.app.gameState.global.stage === GameStage.INSTANT_ACTION, -1));
         return pl.legalPos(this.app.gameState, card, this.app.gameState.global.stage === GameStage.INSTANT_ACTION, -1);
       }
     }
