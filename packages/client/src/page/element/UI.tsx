@@ -7,6 +7,7 @@ import GamePage, { LocalPlayer } from "../GamePage"
 import { CardList } from "../GlobalState"
 import CardContainer from "./CardContainer"
 import CardShowcase from "./CardShowcase"
+import Center from "./Center"
 import KButton from "./KButton"
 import LinearLayout from "./LinearLayout"
 import PlayerList from "./PlayerList"
@@ -27,9 +28,9 @@ interface UIProps {
 }
 class UI extends React.Component<UIProps, UIState> {
     static current: UI = null
-    
+
     static instance(): UI {
-        if(UI.current == null) {
+        if (UI.current == null) {
             console.error("Call null UI")
         }
         return UI.current
@@ -68,11 +69,11 @@ class UI extends React.Component<UIProps, UIState> {
     }
 
     useCard() {
-        console.log(this.state.cardId, `run in ${this.props.stage? 'main':'instate'}`)
-        socket.emit('resolve-signal', {type: 'card', val: this.state.cardId})
+        console.log(this.state.cardId, `run in ${this.props.stage ? 'main' : 'instate'}`)
+        socket.emit('resolve-signal', { type: 'card', val: this.state.cardId })
         if (this.state.cardId != null) {
             GamePage.instance.setFreSlotList([])
-            this.setState({ cardId: null})
+            this.setState({ cardId: null })
         }
     }
 
@@ -135,26 +136,36 @@ class UI extends React.Component<UIProps, UIState> {
     render(): React.ReactNode {
         // 如果上一次没有清空重铸卡序列, 现在清空
 
-        let showcaseWidth = Math.min(300, window.innerWidth / 3, (window.innerHeight - 100) / 1.7)
+        let showcaseWidth = Math.min(300,  window.innerWidth / 3, (window.innerHeight - 100) / 1.7)
+        if(showcaseWidth<200) showcaseWidth = window.innerWidth/2.2
         return (
             <Layer>
-                <TopTitle
-                    x={window.innerWidth / 2}
-                    y={window.innerHeight / 9}
-                    currentBoard={this.props.currentBoard}
-                    currentPlayer={LocalPlayer == this.props.turn ? '你' : this.props.playerList[this.props.turn].name}
 
-                    turn={this.props.turn}
+                {window.innerWidth > 800 ? <PlayerList
                     currentRound={this.props.currentRound}
-                    stage={this.props.stage}
-                    isInRecast={this.props.isInRecast}
-                    clearState = {this.clearState}
-                ></TopTitle>
-                <PlayerList
-                    x={20}
-                    y={20}
+                    x={window.innerWidth / 100}
+                    y={window.innerHeight / 100}
                     trun={this.props.turn}
-                    playList={this.props.playerList}></PlayerList>
+                    playList={this.props.playerList}></PlayerList> :
+                    <LinearLayout
+                        xAlign="center"
+                        yAlign="top"
+                        orientation="vertical"
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        padding={window.innerHeight / 100}
+                    >
+                        <Text></Text>
+                        <PlayerList
+                            currentRound={this.props.currentRound}
+                            x={window.innerWidth / 100}
+                            y={window.innerHeight / 100}
+                            trun={this.props.turn}
+                            playList={this.props.playerList}>
+
+                        </PlayerList>
+                    </LinearLayout>
+                }
                 <CardContainer
                     cardList={this.state.cardList}
                     selectedCardList={this.state.selectedCardList}
@@ -166,24 +177,24 @@ class UI extends React.Component<UIProps, UIState> {
                     stage={this.props.stage}
                 ></CardContainer>
 
-                    <LinearLayout
-                        xAlign="right"
-                        yAlign="middle"
-                        width={window.innerWidth}
-                        height={window.innerHeight}
-                        padding={window.innerWidth / 15}
-                    >
-                        <CardShowcase
-                            clearState={this.clearState}
-                            useCard={this.useCard}
-                            cardId={this.state.cardId}
-                            turn={this.props.turn}
-                            width={showcaseWidth}
-                            parentRef={'1'}
-                            stage={this.props.stage}
-                        ></CardShowcase>
-                        <Text></Text>
-                    </LinearLayout>
+                <LinearLayout
+                    xAlign="right"
+                    yAlign="middle"
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                    padding={window.innerWidth / 15}
+                >
+                    <CardShowcase
+                        clearState={this.clearState}
+                        useCard={this.useCard}
+                        cardId={this.state.cardId}
+                        turn={this.props.turn}
+                        width={showcaseWidth}
+                        parentRef={'1'}
+                        stage={this.props.stage}
+                    ></CardShowcase>
+                    <Text></Text>
+                </LinearLayout>
 
                 <LinearLayout
                     width={window.innerWidth}
@@ -228,6 +239,18 @@ class UI extends React.Component<UIProps, UIState> {
                     </LinearLayout>
 
                 </LinearLayout>
+
+
+                {
+                    this.props.turn == LocalPlayer &&
+                    <TopTitle
+                        x={window.innerWidth / 2}
+                        y={window.innerHeight / 9}
+                        stage={this.props.stage}
+                        isInRecast={this.props.isInRecast}
+                        clearState={this.clearState}
+                    ></TopTitle>
+                }
             </Layer>
         )
     }

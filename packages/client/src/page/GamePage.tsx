@@ -126,7 +126,6 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   }
 
   publishLocalPlayerChange(player1: Player, player2: Player) {
-    if (this.state.gameState.global.round < this.state.gameState.player.length) return;
     if (player1.alive != player2.alive) {
       PubSub.publish('alert-pubsub-message', { str: `你被淘汰了!`, dur: 1 })
     }
@@ -135,6 +134,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     }
     if (player2.position[0] != player1.position[0]) {
       PubSub.publish('alert-pubsub-message', { str: `你的层数发生了改变`, dur: 1 })
+      console.log("!!!!!")
       this.setCurrentBoard(player2.position[0])
     }
     else if (player2.position[1] != player1.position[1] || player2.position[2] != player1.position[2]) {
@@ -147,10 +147,8 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     let boards = state.board
     console.log("Boardnew", boards)
     for(let i in this.state.gameState.player) {
-      console.log(i,LocalPlayer,"^^")
       if(i==LocalPlayer.toString()) {
         
-      console.log(i,LocalPlayer,"&&&")
         this.publishLocalPlayerChange(this.state.gameState.player[i],state.player[i])
       }
       else this.publishPlayerChange(this.state.gameState.player[i],state.player[i])
@@ -241,12 +239,12 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   addCurrentBoard() {
     let lastBoard = this.state.currentBoard
-    this.setCurrentBoard((lastBoard + 1) % this.state.boards.length);
+    this.setCurrentBoard(Math.min(2,lastBoard + 1));
   }
 
   minusCurrentBoard() {
     let lastBoard = this.state.currentBoard
-    this.setCurrentBoard((lastBoard + this.state.boards.length - 1) % this.state.boards.length);
+    this.setCurrentBoard(Math.max(0,lastBoard  - 1));
   }
 
   handleKeyDown(e) {
