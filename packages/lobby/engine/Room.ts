@@ -180,7 +180,7 @@ export class Room {
         if(this.users[i].userName === null) {
           continue;
         }
-        if(this.game.getGameState().global.result[this.users[i].userName as string] !== undefined) {
+        if(this?.game?.getGameState()?.global?.result[this.users[i].userName as string] !== undefined) {
           continue;
         }
         logger.verbose('Gamestate %s renew to user %s with id %s', 1, this.users[i]?.userName, i);
