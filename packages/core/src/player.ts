@@ -111,9 +111,10 @@ export class Player {
     let legalpos: Position[] = [];
     let pos: Position = this.position;
     let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
+    const len = size * 2 + 1;
     switch(cardid) {
       case cardConfig.cardNameList[0]: {
-        for(let i = -1; i >= -size; i--) {
+        for(let i = -1; i >= -len; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -127,7 +128,7 @@ export class Player {
           legalpos.push(newpos);
         }
         let nowlen: number = legalpos.length;
-        for(let i = 1; i <= size; i++) {
+        for(let i = 1; i <= len; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2]];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -143,7 +144,7 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[2]: {
-        for(let i = -1; i >= -size; i--) {
+        for(let i = -1; i >= -len; i--) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -157,7 +158,7 @@ export class Player {
           legalpos.push(newpos);
         }
         let nowlen: number = legalpos.length;
-        for(let i = 1; i <= size; i++) {
+        for(let i = 1; i <= len; i++) {
           let newpos: Position = [pos[0], pos[1], pos[2] + i];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -175,7 +176,7 @@ export class Player {
       case cardConfig.cardNameList[1]: {
         let size: number = 2 * (gamest.player.length - 1) + (3 - this.position[0]);
         let pos: Position = this.position;
-        for(let i = -1; i >= -size; i--) {
+        for(let i = -1; i >= -len; i--) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -189,7 +190,7 @@ export class Player {
           legalpos.push(newpos);
         }
         let nowlen: number = legalpos.length;
-        for(let i = 1; i <= size; i++) {
+        for(let i = 1; i <= len; i++) {
           let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
           if(!Player.inRange(gamest, newpos)) {
             break;
@@ -345,65 +346,18 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[10]: {
-        for(let i = -1; i >= -size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
+        const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
+        for(let dir = 1; dir <= 6; ++dir) {
+          for(let i = 1; i <= len; ++i) {
+            let newpos: Position = [pos[0], pos[1] + dx[dir] * i, pos[2] + dy[dir] * i];
+            if(!Player.inRange(gamest, newpos)) {
+              break;
+            }
+            if(gamest.board[newpos.toString()].isBursted == true) {
+              break;
+            }
+            legalpos.push(newpos);
           }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= size; i++) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= size; i++) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = -1; i >= -size; i--) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= size; i++) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = -1; i >= -size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          legalpos.push(newpos);
         }
         break;
       }
@@ -428,83 +382,21 @@ export class Player {
         for(let i = 0; i < gamest.player.length; i++) {
           ply[gamest.player[i].position.toString()] = true;
         }
-        for(let i = -1; i >= -3 * size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
+        const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
+        for(let dir = 1; dir <= 6; ++dir) {
+          for(let i = 1; i <= len; ++i) {
+            let newpos: Position = [pos[0], pos[1] + dx[dir] * i, pos[2] + dy[dir] * i];
+            if(!Player.inRange(gamest, newpos)) {
+              break;
+            }
+            if(gamest.board[newpos.toString()].isBursted == true) {
+              break;
+            }
+            if(ply[newpos.toString()] == true) {
+              break;
+            }
+            legalpos.push(newpos);
           }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= 3 * size; i++) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2]];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= 3 * size; i++) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = -1; i >= -3 * size; i--) {
-          let newpos: Position = [pos[0], pos[1], pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = 1; i <= 3 * size; i++) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
-        }
-        for(let i = -1; i >= -3 * size; i--) {
-          let newpos: Position = [pos[0], pos[1] + i, pos[2] + i];
-          if(!Player.inRange(gamest, newpos)) {
-            break;
-          }
-          if(gamest.board[newpos.toString()].isBursted == true) {
-            break;
-          }
-          if(ply[newpos.toString()] == true) {
-            break;
-          }
-          legalpos.push(newpos);
         }
         break;
       }
@@ -553,7 +445,7 @@ export class Player {
           const delta = Math.abs(para.val[1] - pos[1]);
           const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
           for(let i = 0; i <= delta; i++) {
-            const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
+            const cur:Position = [pos[0], mn1 + i, mn2 + i];
             this.passby.push(cur);
           }
           this.position = para.val;
@@ -623,7 +515,7 @@ export class Player {
             const delta = Math.abs(para.val[1] - pos[1]);
             const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
             for(let i = 0; i <= delta; i++) {
-              const cur:Position = [pos[0], mn1 + delta, mn2 + delta];
+              const cur:Position = [pos[0], mn1 + i, mn2 + i];
               this.passby.push(cur);
             }
           }
