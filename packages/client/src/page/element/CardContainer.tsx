@@ -62,7 +62,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     key={index}
                     offsetX={this.props.cardWidth / 2}
                     offsetY={this.props.cardWidth * 1.2}
-                    rotation={theta * (index - mid)}
+                    rotation={- theta * (index - mid)}
                 >
 
                     <LinearLayout
@@ -118,7 +118,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let mid = (this.props.cardList.length - 1) / 2;
         let theta = (90 - 30 * (index - mid)) / 180 * Math.PI
         let card = CardDescription[this.props.cardList[index]];
-        if(card == undefined) return null;
+        if(card === undefined) return null;
         console.log("!!!!",card)
         return (
 

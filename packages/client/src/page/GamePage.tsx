@@ -117,7 +117,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     if (player2.magician && !player1.magician) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 1 })
     }
-    if (player2.position[0] != player1.position[0]) {
+    if (player2.position[0] !== player1.position[0]) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 1 })
     }
     else if (player2.position[1] != player1.position[1] || player2.position[2] != player1.position[2]) {
