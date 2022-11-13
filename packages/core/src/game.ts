@@ -1,6 +1,6 @@
 import { logger } from "../../lobby/tools/Logger";
 import { Player, cardConfig } from "./player"
-import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara } from "./regulates/interfaces"
+import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara, Slot } from "./regulates/interfaces"
 
 class GameUIDManager {
   count = 0;
@@ -74,6 +74,16 @@ export class GameState {
       stage: 0,
       result: {},
     }
+  }
+
+  // 返回指定位置的格子
+  slotAt(position: Position): Slot {
+    return this.board[position.toString()];
+  }
+
+  // 返回某一层的大小
+  layerSize(layer: number): number {
+    return 2 * (this.player.length - 1) + (3 - layer);
   }
 
   async gameMain() {
@@ -190,7 +200,7 @@ export class GameState {
           for (let i = 0; i < this.player[id].hand.length; i++) {
             if (this.player[id].hand[i] == '8') {
               this.player[id].hand.splice(i, 1);
-              this.player[id].drawCard();
+              this.player[id].refillHand();
               break;
             }
           }
