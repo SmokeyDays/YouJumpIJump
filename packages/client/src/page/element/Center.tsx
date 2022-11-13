@@ -45,7 +45,6 @@ class Center extends React.Component<CenterProps ,{ width: number, height: numbe
     }
 
     render(): React.ReactNode {
-       // console.log(this.props.text, this.state.width)
         return (
             <this.props.Type
                 ref={this.refDom}

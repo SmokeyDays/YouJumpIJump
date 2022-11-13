@@ -52,22 +52,23 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
         if (this.props.cardId == null) return null
         let img = this.cardImg[this.props.cardId]
         let card = CardDescription[this.props.cardId]
-        let bFont = Math.max(20, this.width / 10)
-        let mFont = Math.max(18, this.width / 12)
-        let sFont = Math.max(16, this.width / 18)
-        let bHeight = Math.max(20, this.width / 6)
+        let bFont = Math.max(20, this.props.width / 10)
+        let mFont = Math.max(18, this.props.width / 12)
+        let sFont = Math.max(16, this.props.width / 18)
+        let bHeight = Math.max(20, this.props.width / 6)
+        this.width = this.props.width
         return (
             <LinearLayout
                 reff={(e) => { this.refDom = e }}
                 orientation='vertical'
                 x={this.props.x}
                 y={this.props.y}
-                width={this.width}
+                width={this.props.width}
                 xAlign='center'
-                padding={this.width / 30}
+                padding={this.props.width / 30}
                 background='#78cdd1'
                 stroke='#56acc0'
-                strokeWidth={this.width / 60}
+                strokeWidth={this.props.width / 60}
                 opacity={0.7}
                 shadow={true}
             >
@@ -75,13 +76,13 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
                 <Text text={card['name']} fontSize={bFont} fill='white'></Text>
                 <KImage
                     image={img}
-                    width={this.width - sFont}
-                    height={(this.width - sFont) * 4 / 3}></KImage>
+                    width={this.props.width - sFont}
+                    height={(this.props.width - sFont) * 4 / 3}></KImage>
 
                 <Text text='描述' fontSize={bFont} fill='white'></Text>
-                <Text text={card['desc']} width={this.width - sFont} fontSize={sFont} fill='white'></Text>
+                <Text text={card['desc']} width={this.props.width - sFont} fontSize={sFont} fill='white'></Text>
                 <Text fontSize={sFont / 3}></Text>
-                <Text text={card['lore']} width={this.width - sFont} fontSize={sFont} fill='white'></Text>
+                <Text text={card['lore']} width={this.props.width - sFont} fontSize={sFont} fill='white'></Text>
                 {this.renderButtons()}
                 <Text></Text>
             </LinearLayout>
@@ -90,13 +91,13 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
 
     renderCancalButton() {
 
-        let mFont = Math.max(18, this.width / 12)
-        let sFont = Math.max(16, this.width / 18)
-        let bHeight = Math.max(20, this.width / 6)
+        let mFont = Math.max(18, this.props.width / 12)
+        let sFont = Math.max(16, this.props.width / 18)
+        let bHeight = Math.max(20, this.props.width / 6)
         return (
 
             <KButton
-                width={this.width / 2 - sFont}
+                width={this.props.width / 2 - sFont}
                 height={bHeight}
                 background="#ff3333"
                 text="取消"
@@ -108,11 +109,11 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
     }
 
     renderButtons(): Array<any> {
-        let mFont = Math.max(18, this.width / 12)
-        let sFont = Math.max(16, this.width / 18)
-        let bHeight = Math.max(20, this.width / 6)
+        let mFont = Math.max(18, this.props.width / 12)
+        let sFont = Math.max(16, this.props.width / 18)
+        let bHeight = Math.max(20, this.props.width / 6)
         if(LocalPlayer != this.props.turn) {
-            return [<Text text={"当前不是你的回合"} width={this.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
+            return [<Text text={"当前不是你的回合"} width={this.props.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
         }
 
         if (this.props.stage == 0) {
@@ -120,7 +121,7 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
                 return (
                     [
                         <LinearLayout
-                            width={this.width}
+                            width={this.props.width}
                             xAlign='center'
                             padding={sFont / 3}
                         >
@@ -128,7 +129,7 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
 
                             <KButton
                                 background='#ffc20e'
-                                width={this.width / 2 - sFont}
+                                width={this.props.width / 2 - sFont}
                                 height={bHeight}
                                 text="迅捷"
                                 fontSize={mFont}
@@ -141,13 +142,13 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
                 )
             }
             else {
-                return [<Text text={"你不能将该牌在迅捷回合中打出"} width={this.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
+                return [<Text text={"你不能将该牌在迅捷回合中打出"} width={this.props.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
             }
         }
         else {
             return (
                 [<LinearLayout
-                    width={this.width}
+                    width={this.props.width}
                     xAlign='center'
                     padding={sFont / 3}
                 >
@@ -155,7 +156,7 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
 
                     <KButton
                         background='#1d953f'
-                        width={this.width / 2 - sFont}
+                        width={this.props.width / 2 - sFont}
                         height={bHeight}
                         text="主要"
                         fontSize={mFont}

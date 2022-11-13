@@ -119,7 +119,6 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
         let theta = (90 - 30 * (index - mid)) / 180 * Math.PI
         let card = CardDescription[this.props.cardList[index]];
         if(card == undefined) return null;
-        console.log("!!!!",card)
         return (
 
             <Label
