@@ -9,7 +9,9 @@ import { logger } from "../../lobby/tools/Logger";
 // }
 export const cardConfig = {
   cardNameList: ["AH","AP","AN","2","3",'4','5','6','7','8','9','10','J','Q','K','BJ','RJ','0'],
-  cardTimesList: [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 0]
+  // Alpha 1.0.0: cardTimesList: [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 0]
+  cardTimesList: [2, 2, 2, 4, 6, 3, 4, 3, 4, 4, 4, 2, 4, 4, 4, 1, 1, 0]
+
 }
 
 function rand(start: any,end: any){
@@ -55,8 +57,8 @@ export class Player {
         this.library.push(cardConfig.cardNameList[i]);
       }
     }
-    const p = Math.random() * 3;
-    this.library.push(p > 2? "AH": p > 1? "AP": "AN");
+    // const p = Math.random() * 3;
+    // this.library.push(p > 2? "AH": p > 1? "AP": "AN");
     this.library.sort((a, b) => Math.random() - 0.5);
   }
 
@@ -268,6 +270,10 @@ export class Player {
             cur[1] += dx[i];
             cur[2] += dy[i];
           }
+        }
+        legalpos.push(pos);
+        if(pos[0] <= 2) {
+          legalpos.push([pos[0] + 1, pos[1], pos[2]]);
         }
         break;
       }

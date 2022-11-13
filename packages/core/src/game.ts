@@ -14,6 +14,16 @@ class GameUIDManager {
 
 export const GameUID = new GameUIDManager();
 
+export function getInitMastery(n: number): number {
+  if(n <= 4) {
+    return 3;
+  } else if (n <= 6) {
+    return 4;
+  } else {
+    return 5;
+  }
+}
+
 function randomsort(a: string, b: string): number {
   return Math.random() > .5 ? -1 : 1;
 }
@@ -40,7 +50,7 @@ export class GameState {
     this.UID =  GameUID.get();
     this.totPlayer = player.length;
     for (let i = 0; i < player.length; ++i) {
-      this.player.push(new Player({ initialMastery: this.totPlayer, name: player[i] }));
+      this.player.push(new Player({ initialMastery: getInitMastery(this.totPlayer), name: player[i] }));
     }
     player.sort(randomsort);
     let PosS: Position[] = [];
@@ -160,11 +170,13 @@ export class GameState {
     this.player[id].playCard(this, '8', move3);
   }
   async action(id: number, inst: boolean) {
-    let mov: Record<string, boolean> = {};
-    let ist: Record<string, boolean> = {};
-    ist['2'] = ist['5'] = ist['6'] = ist['7'] = ist['J'] = ist['BJ'] = ist['RJ'] = true;
-    mov['AH'] = mov['AP'] = mov['AN'] = mov['2'] = mov['3'] = true;
-    mov['10'] = mov['J'] = mov['4'] = mov['9'] = mov["Q"] = true;
+    let mov: Record<string, boolean> = {
+      'AH': true, 'AP': true, 'AN': true, '2': true, '3': true,
+      '10': true, 'J': true, '4': true, '9': true, 'Q': true,
+    };
+    let ist: Record<string, boolean> = {
+      '2': true, '5': true, '6': true, '7': true, 'J': true, 'BJ': true, 'RJ': true,
+    };
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
     logger.verbose(res);
     if (res != null && res.type == 'card') {
