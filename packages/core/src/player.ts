@@ -129,7 +129,7 @@ export class Player {
    * @param gamest 游戏状态
    * @param cardid 卡牌 id
    * @param instant 是否为迅捷行动
-   * @param spy ?
+   * @param spy 若卡牌为斥候，需传入此参数标明阶段。其中 -1 表示依次进行三个阶段后可抵达的格子。
    * @returns 所有合法 Position
    */
   legalPos(gamest: GameState, cardid: string, instant: boolean, spy: number = 0): Position[] {
@@ -675,12 +675,12 @@ export class Player {
   }
   
   burst(gamest: GameState) {
-    const oldState = gamest.board[this.position.toString()].isBursted;
+    const oldState = gamest.slotAt(this.position).isBursted;
     for(const pos of this.passby) {
       gamest.slotAt(pos).isBursted = true;
     }
     if (this.laspos.toString() !== this.position.toString()) {
-      gamest.board[this.position.toString()].isBursted = oldState;
+      gamest.slotAt(this.position).isBursted = oldState;
     }
     for(const pos of this.toDestroy) {
       gamest.slotAt(pos).isBursted = true;
