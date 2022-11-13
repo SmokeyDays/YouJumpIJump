@@ -175,7 +175,7 @@ export class GameState {
       '10': true, 'J': true, '4': true, '9': true, 'Q': true,
     };
     let ist: Record<string, boolean> = {
-      '2': true, '5': true, '6': true, '7': true, 'J': true, 'BJ': true, 'RJ': true,
+      '2': true, '5': true, '6': true, '7': true,'9': true, 'J': true, 'BJ': true, 'RJ': true,
     };
     let res: CardPara = await this.cardSignal(this.player[id].name, inst);
     logger.verbose(res);
