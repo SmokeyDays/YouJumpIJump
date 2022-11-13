@@ -90,15 +90,29 @@ export class Room {
   }
 
   addUser(user: User): boolean {
-    if(this.hasUser(user)) {
-      return true;
-    } else if(this.users.length < this.roomSizeLimit) {
-      this.users.push(user);
-      this.renew();
-      return true;
-    } else {
+    if(this.users.length >= this.roomSizeLimit) {
+      user.emit("alert-message", "房间已满，换一个试试吧");
+      logger.warn('User %s join room with name %s failed: room is full.', user.userName, this.roomName);
       return false;
     }
+    if(this.hasUser(user)) {
+      logger.error('User %s REJOINED THE ROOM %s.', user.userName, this.roomName);
+      return false;
+    }
+    if(this.game !== null) {
+      let inGame = false;
+      for(let i = 0; i < this.game.getGameState().player.length; ++i) {
+        inGame = inGame || (this.game.getGameState().player[i].name === user.userName);
+      }
+      if(!inGame) {
+        user.emit("alert-message", "加入房间失败！游戏已经开始！");
+        logger.warn('User %s join room with name %s failed: game has started.', user.userName, this.roomName);
+        return false;
+      }
+    }
+    this.users.push(user);
+    this.renew();
+    return true;
   }
 
   hasUser(user: User) {

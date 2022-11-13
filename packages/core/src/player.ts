@@ -27,8 +27,8 @@ export class Player {
   magician: boolean = false;
   mastery: number = 0;
   passby: Position[] = [];
+  toDestroy: Position[] = [];
   prayer: number = 0;
-  is9: boolean = false;
   laspos: Position = [0, 0, 0];
   constructor (config: Player.Config) {
     this.mastery = config.initialMastery;
@@ -477,11 +477,11 @@ export class Player {
       }
       case cardConfig.cardNameList[5]: {
         if(para.type == 'move') {
-          this.passby.push(pos);
+          this.toDestroy.push(pos);
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
-            this.passby.push([cur[0], cur[1], cur[2]]);
+            this.toDestroy.push([cur[0], cur[1], cur[2]]);
           }
         }
         break;
@@ -511,7 +511,6 @@ export class Player {
       }
       case cardConfig.cardNameList[10]: {
         if(para.type == 'move') {
-          this.is9 = true;
           if(pos[1] != para.val[1] && pos[2] != para.val[2]) { //na
             const delta = Math.abs(para.val[1] - pos[1]);
             const mn1 = Math.min(para.val[1], pos[1]), mn2 = Math.min(para.val[2], pos[2]);
@@ -535,9 +534,10 @@ export class Player {
           }
           this.position = para.val;
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
+          this.toDestroy.push(pos);
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
-            this.passby.push([cur[0], cur[1], cur[2]]);
+            this.toDestroy.push([cur[0], cur[1], cur[2]]);
           }
           this.position = para.val;
         }
@@ -646,17 +646,16 @@ export class Player {
   }
   burst(gamest: GameState) {
     const oldState = gamest.board[this.position.toString()].isBursted;
-    for(let i = 0; i < this.passby.length; i++) {
-      gamest.board[this.passby[i].toString()].isBursted = true;
+    for(const pos of this.passby) {
+      gamest.board[pos.toString()].isBursted = true;
     }
     if(this.laspos.toString() !== this.position.toString()) {
       gamest.board[this.position.toString()].isBursted = oldState;
     }
-    if(this.is9) {
-      gamest.board[this.position.toString()].isBursted = true;
+    for(const pos of this.toDestroy) {
+      gamest.board[pos.toString()].isBursted = true;
     }
-    this.is9 = false;
-    this.passby = [];
+    this.passby = this.toDestroy = [];
   }
 }
 
