@@ -2,7 +2,7 @@ import { GameStage, GameState, IterateSignal, IterateSignalType, PlayerOperation
 import { logger } from "../tools/Logger";
 import { User } from "./User";
 import { UJIJCore } from "../../core/UJIJCore"
-import { Card, CardPara, Position, RequestSignal } from "../../core/src/regulates/interfaces";
+import { Card, ResponseParam, Position, RequestSignal } from "../../core/src/regulates/interfaces";
 const defaultDeck1 = "swordAndFist";
 const defaultDeck2 = "cardNotEnough";
 
@@ -26,7 +26,7 @@ export class Room {
 
   async requester(val: RequestSignal) {
     const targetUser = this.getUser(val.player);
-    const noneRes: CardPara = {
+    const noneRes: ResponseParam = {
       type: "none",
       val: null
     };
@@ -36,9 +36,9 @@ export class Room {
     }
     await this.renew();
     await targetUser.emit("request-signal", val.para);
-    const res = await new Promise<CardPara>((resolve, reject) => {
+    const res = await new Promise<ResponseParam>((resolve, reject) => {
       let visited = true;
-      const resolveWithPara = (para: CardPara) => {
+      const resolveWithPara = (para: ResponseParam) => {
         visited = false;
         if(!visited) {
           resolve(para);

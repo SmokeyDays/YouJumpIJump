@@ -21,7 +21,8 @@ export type Position = [number, number, number];
 // 服务端发送给客户端的格子集合
 export type SlotList = Array<[number, number, number]>; // t, x, y
 
-export type CardPara = {
+// 客户端给服务器响应的参数
+export type ResponseParam = {
   type: "move",
   val: Position
 } | {
@@ -35,7 +36,8 @@ export type CardPara = {
   val: Card
 }
 
-export type SignalPara = {
+// 服务器向客户端请求的参数
+export type RequestParam = {
   type: 'recast',
 } | {
   type: 'card',
@@ -47,5 +49,5 @@ export type SignalPara = {
 
 export type RequestSignal = {
   player: string,
-  para: SignalPara,
+  para: RequestParam,
 }

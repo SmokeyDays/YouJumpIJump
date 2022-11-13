@@ -1,6 +1,6 @@
 import { logger } from "../../lobby/tools/Logger";
 import { Player, cardConfig } from "./player"
-import { Board, GameStage, Position, CardPara, Card, RequestSignal, SignalPara, Slot } from "./regulates/interfaces"
+import { Board, GameStage, Position, ResponseParam, Card, RequestSignal, RequestParam, Slot } from "./regulates/interfaces"
 
 class GameUIDManager {
   count = 0;
@@ -36,10 +36,10 @@ export class GameState {
     result: Record<string, number> // 每名玩家的名次
   }
   totPlayer: number;
-  req: (signal: RequestSignal) => Promise<CardPara>;
+  req: (signal: RequestSignal) => Promise<ResponseParam>;
   gameEnd: () => void;
 
-  constructor(player: string[], req: (signal: RequestSignal) => Promise<CardPara>, gameEnd: () => void) {
+  constructor(player: string[], req: (signal: RequestSignal) => Promise<ResponseParam>, gameEnd: () => void) {
     this.gameEnd = gameEnd;
     this.req = req;
     this.UID = GameUID.get();
@@ -116,7 +116,7 @@ export class GameState {
     this.gameEnd();
   }
 
-  async recastSignal(name: string): Promise<CardPara> {
+  async recastSignal(name: string): Promise<ResponseParam> {
     const res = await this.req({
       player: name,
       para: {
@@ -126,7 +126,7 @@ export class GameState {
     return res;
   }
 
-  async cardSignal(name: string, inst: boolean): Promise<CardPara> {
+  async cardSignal(name: string, inst: boolean): Promise<ResponseParam> {
     const res = await this.req({
       player: name,
       para: {
@@ -137,7 +137,7 @@ export class GameState {
     return res;
   }
 
-  async actionSignal(name: string, pos: Position[]): Promise<CardPara> {
+  async actionSignal(name: string, pos: Position[]): Promise<ResponseParam> {
     const res = await this.req({
       player: name,
       para: {
@@ -159,7 +159,7 @@ export class GameState {
     for (let i = 0; i < this.player.length; i++) {
       this.global.turn = i;
       this.global.stage = GameStage.RECAST_ACTION;
-      const res: CardPara = await this.recastSignal(this.player[i].name);
+      const res: ResponseParam = await this.recastSignal(this.player[i].name);
       if (res == null || res.type != 'recast') {
         continue;
       } else {
@@ -170,15 +170,15 @@ export class GameState {
 
   async spyAction(id: number) {
     const legalMove1: Position[] = this.player[id].legalPos(this, '8', false, 1);
-    const move1: CardPara = await this.actionSignal(this.player[id].name, legalMove1);
+    const move1: ResponseParam = await this.actionSignal(this.player[id].name, legalMove1);
     this.player[id].playCard(this, '8', move1);
 
     const legalMove2: Position[] = this.player[id].legalPos(this, '8', false, 2);
-    const move2: CardPara = await this.actionSignal(this.player[id].name, legalMove2);
+    const move2: ResponseParam = await this.actionSignal(this.player[id].name, legalMove2);
     this.player[id].playCard(this, '8', move2);
 
     const legalMove3: Position[] = this.player[id].legalPos(this, '8', false, 3);
-    const move3: CardPara = await this.actionSignal(this.player[id].name, legalMove3);
+    const move3: ResponseParam = await this.actionSignal(this.player[id].name, legalMove3);
     this.player[id].playCard(this, '8', move3);
   }
 
@@ -190,7 +190,7 @@ export class GameState {
     let ist: Record<string, boolean> = {
       '2': true, '5': true, '6': true, '7': true, '9': true, 'J': true, 'BJ': true, 'RJ': true,
     };
-    let res: CardPara = await this.cardSignal(this.player[id].name, inst);
+    let res: ResponseParam = await this.cardSignal(this.player[id].name, inst);
     logger.verbose(res);
 
     if (res != null && res.type == 'card') {
@@ -207,7 +207,7 @@ export class GameState {
         }
         else if (mov[res.val]) {
           const legalMove = this.player[id].legalPos(this, res.val, inst);
-          const move: CardPara = await this.actionSignal(this.player[id].name, legalMove);
+          const move: ResponseParam = await this.actionSignal(this.player[id].name, legalMove);
           this.player[id].playCard(this, res.val, move);
         }
         else if (res.val == '5') {//recast
@@ -217,11 +217,11 @@ export class GameState {
               break;
             }
           }
-          const reca: CardPara = await this.recastSignal(this.player[id].name);
+          const reca: ResponseParam = await this.recastSignal(this.player[id].name);
           this.player[id].playCard(this, res.val, reca);
         }
         else {
-          const none: CardPara = {
+          const none: ResponseParam = {
             type: "none",
             val: null
           };

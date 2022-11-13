@@ -1,5 +1,5 @@
 import { Context } from "cordis"
-import { Card, Position, CardPara } from "./regulates/interfaces";
+import { Card, Position, ResponseParam } from "./regulates/interfaces";
 import { Deck } from "./regulates/type"
 import { GameState } from "./game";
 import { logger } from "../../lobby/tools/Logger";
@@ -446,7 +446,7 @@ export class Player {
     return legalpos;
   }
 
-  playCard(gamest: GameState, cardid: string, para: CardPara) {
+  playCard(gamest: GameState, cardid: string, para: ResponseParam) {
     const pos = this.position;
     this.passby.push(pos);
     switch (cardid) {
