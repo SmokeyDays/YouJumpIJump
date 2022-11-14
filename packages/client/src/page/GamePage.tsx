@@ -33,7 +33,7 @@ interface GamePageState {
   gameState: GameState,
   isInRecast: boolean,
   stage: number,
-  hand: string[],
+  canSkip: boolean,
 }
 
 class GamePage extends React.Component<GamePageProps, GamePageState> {
@@ -59,7 +59,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       gameState: this.props.gameState,
       isInRecast: false,
       stage: -1,
-      hand: this.props.gameState.player[LocalPlayer].hand
+      canSkip: false,
     };
 
     //this.state.gameState.global.turn=-1
@@ -90,6 +90,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
               (v, i) => v.alive && v.position[0] === this.state.currentBoard && v)}
           ></GameCanvas>
           <UI
+            canSkip={this.state.canSkip}
             isInRecast={this.state.isInRecast}
             stage={this.state.stage}
             currentBoard={this.state.currentBoard}
@@ -113,46 +114,52 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     if (this.state.gameState.global.round < this.state.gameState.player.length) return;
     if (player1.alive != player2.alive) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}被淘汰了!`, dur: 1 })
+      console.log(`${player1.name}被淘汰了!`)
     }
     if (player2.magician && !player1.magician) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 1 })
+      console.log(`${player1.name}获得了悬浮状态`)
     }
     if (player2.position[0] !== player1.position[0]) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 1 })
+      console.log(`${player1.name}的层数发生了改变`)
     }
     else if (player2.position[1] != player1.position[1] || player2.position[2] != player1.position[2]) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}移动了`, dur: 1 })
-    }
+      console.log(`${player1.name}移动了`)
+  }
   }
 
   publishLocalPlayerChange(player1: Player, player2: Player) {
     if (player1.alive != player2.alive) {
       PubSub.publish('alert-pubsub-message', { str: `你被淘汰了!`, dur: 1 })
+      console.log(`你被淘汰了!`)
     }
     if (player2.magician && !player1.magician) {
       PubSub.publish('alert-pubsub-message', { str: `你获得了悬浮状态`, dur: 1 })
+      console.log(`你获得了悬浮状态`)
     }
     if (player2.position[0] != player1.position[0]) {
       PubSub.publish('alert-pubsub-message', { str: `你的层数发生了改变`, dur: 1 })
-      console.log("!!!!!")
       this.setCurrentBoard(player2.position[0])
+      console.log(`你的层数发生了改变`)
     }
     else if (player2.position[1] != player1.position[1] || player2.position[2] != player1.position[2]) {
       PubSub.publish('alert-pubsub-message', { str: `你移动了`, dur: 1 })
+      console.log(`你移动了`)
     }
   }
 
   loadGameState(state: GameState) {
 
     let boards = state.board
-    console.log("Boardnew", boards)
-    for(let i in this.state.gameState.player) {
-      if(i==LocalPlayer.toString()) {
-        
-        this.publishLocalPlayerChange(this.state.gameState.player[i],state.player[i])
+    for (let i in this.state.gameState.player) {
+      if (i == LocalPlayer.toString()) {
+
+        this.publishLocalPlayerChange(this.state.gameState.player[i], state.player[i])
       }
-      else this.publishPlayerChange(this.state.gameState.player[i],state.player[i])
-      console.log("publishPlayerChange", this.state.gameState.player[i],state.player[i])
+      else this.publishPlayerChange(this.state.gameState.player[i], state.player[i])
+      console.log("publishPlayerChange", this.state.gameState.player[i], state.player[i])
     }
 
     for (let index in boards) {
@@ -160,26 +167,27 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       let i = Number(pos[0]), j = Number(pos[1]), k = Number(pos[2]);
       this.state.boards[i].setSlotStatus(j, k, boards[index].isBursted);
     }
-    if(!state.player[LocalPlayer].alive) {
-      this.props.changePage("GameEndPage",this.state.gameState.global.result[state.player[LocalPlayer].name])
+    if (!state.player[LocalPlayer].alive) {
+      this.props.changePage("GameEndPage", this.state.gameState.global.result[state.player[LocalPlayer].name])
     }
-    this.setState({})
-    UI.instance().setState({cardList:state.player[LocalPlayer].hand})
+    this.setState({gameState: state})
+    UI.instance().setState({ cardList: state.player[LocalPlayer].hand })
   }
 
   componentDidMount() {
     socket.on('renew-game-state', (val: { state: GameState, localPlayer: number }) => {
-      console.log('!!!renew-game-state', val);
+      console.log('renew-game-state', val);
       this.loadGameState(val.state)
-      this.setState({ gameState: val.state })
     })
     socket.on('request-signal', (val: RequestParam) => {
-      console.log('!!!request-signal', val);
+      console.log('request-signal', val);
       switch (val.type) {
         case 'recast':
+          this.setState({ canSkip: true })
           this.setState({ isInRecast: true })
           break;
         case 'card':
+          this.setState({ canSkip: true })
           if (val.stage == 'main') {
             this.setState({ stage: 1 })
           }
@@ -194,13 +202,13 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
     })
 
     socket.on('return-pos-set', (val: Position[]) => {
-      console.log('!!!return-pos-set', val);
+      console.log('return-pos-set', val);
       this.setFreSlotList(val)
     })
-    
-    socket.on('game-end-signal', (state: GameState)=>{
+
+    socket.on('game-end-signal', (state: GameState) => {
       console.log('game-end-signal', state.global.result[state.player[LocalPlayer].name]);
-      this.props.changePage('GameEndPage',state.global.result[state.player[LocalPlayer].name])
+      this.props.changePage('GameEndPage', state.global.result[state.player[LocalPlayer].name])
     })
 
     document.addEventListener("keydown", this.handleKeyDown)
@@ -239,16 +247,16 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
   addCurrentBoard() {
     let lastBoard = this.state.currentBoard
-    this.setCurrentBoard(Math.min(2,lastBoard + 1));
+    this.setCurrentBoard(Math.min(2, lastBoard + 1));
   }
 
   minusCurrentBoard() {
     let lastBoard = this.state.currentBoard
-    this.setCurrentBoard(Math.max(0,lastBoard  - 1));
+    this.setCurrentBoard(Math.max(0, lastBoard - 1));
   }
 
   handleKeyDown(e) {
-    
+
     switch (e.keyCode) {
       case 38: this.addCurrentBoard(); break;
       case 40: this.minusCurrentBoard(); break;

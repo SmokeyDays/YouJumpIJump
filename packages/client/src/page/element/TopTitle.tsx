@@ -84,7 +84,8 @@ class TopTitle extends React.Component<TopTitleProps> {
                     opacity={0.8}
                     onClick={() => {
                         this.props.clearState()
-                        console.log("jump out");
+                        GamePage.instance.setState({canSkip:false})
+                        console.log("Skip");
                         socket.emit('resolve-signal', { type: 'none', val: null })
                         if (this.props.isInRecast) {
                             GamePage.instance.setInRecast(false)

@@ -25,6 +25,7 @@ interface UIProps {
     currentBoard: number,
     stage: number,
     isInRecast: boolean,
+    canSkip: boolean,
 }
 class UI extends React.Component<UIProps, UIState> {
     static current: UI = null
@@ -66,6 +67,7 @@ class UI extends React.Component<UIProps, UIState> {
         console.log('resolve-signal', { type: 'recast', val: cardList })
         this.clearState()
         GamePage.instance.setInRecast(false)
+        GamePage.instance.setState({canSkip:false})
     }
 
     useCard() {
@@ -73,6 +75,7 @@ class UI extends React.Component<UIProps, UIState> {
         socket.emit('resolve-signal', { type: 'card', val: this.state.cardId })
         if (this.state.cardId != null) {
             GamePage.instance.setFreSlotList([])
+            GamePage.instance.setState({canSkip:false})
             this.setState({ cardId: null })
         }
     }
@@ -242,7 +245,7 @@ class UI extends React.Component<UIProps, UIState> {
 
 
                 {
-                    this.props.turn == LocalPlayer &&
+                    this.props.canSkip &&
                     <TopTitle
                         x={window.innerWidth / 2}
                         y={window.innerHeight / 9}

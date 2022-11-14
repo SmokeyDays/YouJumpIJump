@@ -105,7 +105,7 @@ export class Board extends React.Component<BoardProps, BoardState> {
   }
 
   onSlotClick(value) {
-    console.log("slot", value.ix, value.iy, value.isBroken)
+    console.log("slot is clicked", value.ix, value.iy, value.isBroken)
     if (this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) != -1) {
       socket.emit('resolve-signal', {
         type: "move",
