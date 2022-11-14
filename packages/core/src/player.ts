@@ -110,7 +110,7 @@ export class Player {
 
   // 回合开始初始化
   turnBegin() {
-    this.laspos = this.position;
+    this.laspos = [...this.position];
     this.magician = false;
   }
 
