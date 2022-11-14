@@ -62,7 +62,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     key={index}
                     offsetX={this.props.cardWidth / 2}
                     offsetY={this.props.cardWidth * 1.2}
-                    rotation={theta * (index - mid)}
+                    rotation={- theta * (index - mid)}
                 >
 
                     <LinearLayout

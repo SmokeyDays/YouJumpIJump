@@ -1,7 +1,7 @@
 import { Context } from "cordis";
 import { logger } from "../lobby/tools/Logger";
 import { GameState } from "./src/game";
-import { CardPara, GameStage, RequestSignal, SignalPara, SlotList } from "./src/regulates/interfaces";
+import { ResponseParam, GameStage, RequestSignal, RequestParam, SlotList } from "./src/regulates/interfaces";
 
 declare module 'cordis' {
   export interface Context {
@@ -12,10 +12,10 @@ declare module 'cordis' {
 export class UJIJCore {
   
   app: Context;
-  req: (signal: RequestSignal) => Promise<CardPara>;
+  req: (signal: RequestSignal) => Promise<ResponseParam>;
   onGameEnd: () => void;
   // callback: (signal: UJIJ.OutputSignal) => void
-  constructor(reqSignal: (signal: RequestSignal) => Promise<CardPara>, onGameEnd: () => void) {
+  constructor(reqSignal: (signal: RequestSignal) => Promise<ResponseParam>, onGameEnd: () => void) {
     this.req = reqSignal;
     this.onGameEnd = onGameEnd;
     this.app = new Context();

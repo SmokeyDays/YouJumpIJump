@@ -7,7 +7,7 @@ import GameCanvas from "./element/GameCanvas";
 import UI from "./element/UI";
 import { BoardInfo, Slot } from "./element/Board";
 import { socket } from "../communication/connection";
-import { Card, CardPara, Position, RequestSignal, SignalPara } from "../../../core/src/regulates/interfaces";
+import { Card, ResponseParam, Position, RequestSignal, RequestParam } from "../../../core/src/regulates/interfaces";
 import { BlockLike } from "typescript";
 import { Player } from "../regulates/Interfaces";
 //import Bgm from "../assets/musics/bgm.flac"
@@ -120,7 +120,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}获得了悬浮状态`, dur: 1 })
       console.log(`${player1.name}获得了悬浮状态`)
     }
-    if (player2.position[0] != player1.position[0]) {
+    if (player2.position[0] !== player1.position[0]) {
       PubSub.publish('alert-pubsub-message', { str: `${player1.name}的层数发生了改变`, dur: 1 })
       console.log(`${player1.name}的层数发生了改变`)
     }
@@ -179,7 +179,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       console.log('renew-game-state', val);
       this.loadGameState(val.state)
     })
-    socket.on('request-signal', (val: SignalPara) => {
+    socket.on('request-signal', (val: RequestParam) => {
       console.log('request-signal', val);
       switch (val.type) {
         case 'recast':

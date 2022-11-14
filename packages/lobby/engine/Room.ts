@@ -2,7 +2,7 @@ import { GameStage, GameState, IterateSignal, IterateSignalType, PlayerOperation
 import { logger } from "../tools/Logger";
 import { User } from "./User";
 import { UJIJCore } from "../../core/UJIJCore"
-import { Card, CardPara, Position, RequestSignal } from "../../core/src/regulates/interfaces";
+import { Card, ResponseParam, Position, RequestSignal } from "../../core/src/regulates/interfaces";
 const defaultDeck1 = "swordAndFist";
 const defaultDeck2 = "cardNotEnough";
 
@@ -26,7 +26,7 @@ export class Room {
 
   async requester(val: RequestSignal) {
     const targetUser = this.getUser(val.player);
-    const noneRes: CardPara = {
+    const noneRes: ResponseParam = {
       type: "none",
       val: null
     };
@@ -36,9 +36,9 @@ export class Room {
     }
     await this.renew();
     await targetUser.emit("request-signal", val.para);
-    const res = await new Promise<CardPara>((resolve, reject) => {
+    const res = await new Promise<ResponseParam>((resolve, reject) => {
       let visited = true;
-      const resolveWithPara = (para: CardPara) => {
+      const resolveWithPara = (para: ResponseParam) => {
         visited = false;
         if(!visited) {
           resolve(para);
@@ -90,15 +90,29 @@ export class Room {
   }
 
   addUser(user: User): boolean {
-    if(this.hasUser(user)) {
-      return true;
-    } else if(this.users.length < this.roomSizeLimit) {
-      this.users.push(user);
-      this.renew();
-      return true;
-    } else {
+    if(this.users.length >= this.roomSizeLimit) {
+      user.emit("alert-message", "房间已满，换一个试试吧");
+      logger.warn('User %s join room with name %s failed: room is full.', user.userName, this.roomName);
       return false;
     }
+    if(this.hasUser(user)) {
+      logger.error('User %s REJOINED THE ROOM %s.', user.userName, this.roomName);
+      return false;
+    }
+    if(this.game !== null) {
+      let inGame = false;
+      for(let i = 0; i < this.game.getGameState().player.length; ++i) {
+        inGame = inGame || (this.game.getGameState().player[i].name === user.userName);
+      }
+      if(!inGame) {
+        user.emit("alert-message", "加入房间失败！游戏已经开始！");
+        logger.warn('User %s join room with name %s failed: game has started.', user.userName, this.roomName);
+        return false;
+      }
+    }
+    this.users.push(user);
+    this.renew();
+    return true;
   }
 
   hasUser(user: User) {
@@ -180,7 +194,7 @@ export class Room {
         if(this.users[i].userName === null) {
           continue;
         }
-        if(this.game.getGameState().global.result[this.users[i].userName as string] !== undefined) {
+        if(this?.game?.getGameState()?.global?.result[this.users[i].userName as string] !== undefined) {
           continue;
         }
         logger.verbose('Gamestate %s renew to user %s with id %s', 1, this.users[i]?.userName, i);

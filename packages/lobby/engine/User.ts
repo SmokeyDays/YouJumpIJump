@@ -23,6 +23,7 @@ export class User {
         if(roomManager.getRoom(name) !== this.room) {
           if(this.room != null) {
             this.room.removeUser(this);
+            this.room = null;
           }
         }
         // Create new room if no room with specified room exists.
@@ -34,25 +35,35 @@ export class User {
         this.room = roomManager.getRoom(name);
 
         if(this.room.hasUser(this)) {
-          socket.emit("alert-message", "你已经在房间里了");
-          logger.info('User %s HAS ALREADY IN room with name %s', this.userName, name);
-        }else{
-          if(this.room.addUser(this)) {
-            socket.emit("alert-message", "成功加入房间");
-            logger.info('User %s joined room with name: %s successfully.', this.userName, name);
-          }else{
-            socket.emit("alert-message", "房间已满，换一个试试吧");
-            logger.warn('User %s join room with name %s failed: room is full.', this.userName, name);
-            return;
-          }
+          this.room.removeUser(this);
+          socket.emit("alert-message", "已经在房间中，已强制重进");
+          logger.info('User %s JOINED AGAIN room %s', this.userName, name);
+        }
+        if(this.room.addUser(this)) {
+          socket.emit("alert-message", "成功加入房间");
+          logger.info('User %s joined room with name: %s successfully.', this.userName, name);
         }
       }
   }
+  leaveRoom() {
+    const socket = this.socket;
+    if(this.userName == null) {
+      socket.emit("alert-message", "请先登录");
+      logger.warn('User with socket id %s try leave a room but never login.', socket.id);
+      return;
+    }
+    if(this.room == null) {
+      socket.emit("alert-message", "无效操作");
+      logger.warn('User %s try to leave a room but never in any room.', this.userName);
+      return;
+    }
+    this.room.removeUser(this);
+    socket.emit("alert-message", "已离开房间" + this.room.roomName);
+    this.room = null;
+    socket.emit("leave-room-successful");
+  }
   constructor(socket: Socket) {
     this.socket = socket;
-    // Function Binding.
-    this.joinRoom = this.joinRoom.bind(this);
-
     // Confirm Connect.
     socket.emit("confirm-connect");
     logger.info('User with socket id %s connected!', socket.id);
@@ -66,7 +77,7 @@ export class User {
     });
     // Register join room event:
     // If room not exist it will create a new one.
-    socket.on("join-room", this.joinRoom);
+    socket.on("join-room", this.joinRoom.bind(this));
     // Start the game.
     socket.on("room-start-game", () => {
       if(this.userName == null) {
@@ -86,37 +97,19 @@ export class User {
       this.room.startGame();
     });
     // Leave the room.
-    socket.on("leave-room", () => {
-      if(this.userName == null) {
-        socket.emit("alert-message", "请先登录");
-        logger.warn('User with socket id %s try leave a room but never login.', socket.id);
-        return;
-      }
-      if(this.room == null) {
-        socket.emit("alert-message", "无效操作");
-        logger.warn('User %s try to leave a room but never in any room.', this.userName);
-        return;
-      }
-      this.room.removeUser(this);
-      socket.emit("alert-message", "已离开房间");
-      socket.emit("leave-room-successful");
-    });
+    socket.on("leave-room", this.leaveRoom.bind(this));
     socket.on("get-available-pos", (card: string) => {
-      
-      logger.verbose("&&&1")
       if(this.userName == null) {
         socket.emit("alert-message", "请先登录");
         logger.warn('User with socket id %s try get-available-pos but never login.', socket.id);
         return;
       }
       
-      logger.verbose("&&&2")
       if(this.room == null) {
         socket.emit("alert-message", "请先进入房间");
         logger.warn('User %s try to get-available-pos but never in any room.', this.userName);
         return;
       }
-      logger.verbose("&&&3")
       socket.emit("return-pos-set", this.room.getPosSet(this, card));
     });
   }
