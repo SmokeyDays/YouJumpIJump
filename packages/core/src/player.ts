@@ -685,7 +685,8 @@ export class Player {
     for(const pos of this.toDestroy) {
       gamest.slotAt(pos).isBursted = true;
     }
-    this.passby = this.toDestroy = [];
+    this.passby = [];
+    this.toDestroy = [];
   }
 }
 
