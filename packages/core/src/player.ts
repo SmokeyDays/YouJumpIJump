@@ -99,11 +99,12 @@ export class Player {
   drop(gamest: GameState) {
     if (this.magician) return;
     while (gamest.slotAt(this.position).isBursted) {
+      logger.verbose("[Game %s] Player %s dropped at %s with game slot(burst:%s)", gamest.UID, this.name, this.position.toString(), gamest.slotAt(this.position).isBursted);
       if (this.position[0] === 0) { // 掉下最后一层
         this.alive = false;
         return;
       } else { // 掉进下一层
-        this.position[0]--;
+        this.position = [this.position[0] - 1, this.position[1], this.position[2]];
       }
     }
   }
@@ -300,7 +301,7 @@ export class Player {
             cur[2] += dy[i];
           }
         }
-        legalpos.push(pos);
+        legalpos.push([...pos]);
         if (pos[0] <= 2) {
           legalpos.push([pos[0] + 1, pos[1], pos[2]]);
         }
@@ -325,12 +326,10 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == 2) {
-          logger.verbose("pos: %s", pos);
           let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
-          logger.verbose("newpos: %s", newpos);
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
@@ -338,7 +337,7 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == 3) {
           let newpos: Position = [pos[0], pos[1], pos[2] + 1];
@@ -349,7 +348,7 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == -1) {
           let newpos: Position = [pos[0], pos[1], pos[2]];
