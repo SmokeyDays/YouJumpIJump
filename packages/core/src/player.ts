@@ -447,7 +447,7 @@ export class Player {
 
   playCard(gamest: GameState, cardid: string, para: ResponseParam) {
     const pos = this.position;
-    this.passby.push(pos);
+    this.passby.push([...pos]);
     switch (cardid) {
       case cardConfig.cardNameList[0]: {
         if (para.type == 'move') {
@@ -505,7 +505,6 @@ export class Player {
       }
       case cardConfig.cardNameList[5]: {
         if(para.type == 'move') {
-          this.toDestroy.push(pos);
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
@@ -562,7 +561,6 @@ export class Player {
           }
           this.position = para.val;
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
-          this.toDestroy.push(pos);
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
             this.toDestroy.push([cur[0], cur[1], cur[2]]);
@@ -658,7 +656,7 @@ export class Player {
           }
         }
         this.position = fpos;
-        this.passby.push(fpos);
+        this.passby.push([...fpos]);
         break;
       }
     }
