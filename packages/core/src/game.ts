@@ -191,7 +191,7 @@ export class GameState {
       '2': true, '5': true, '6': true, '7': true, '9': true, 'J': true, 'BJ': true, 'RJ': true,
     };
     let res: ResponseParam = await this.cardSignal(this.player[id].name, inst);
-    logger.verbose(res);
+    logger.verbose("[Game %s] Player %s cast operation %s with para %s as %s", this.UID, this.player[id].name, res.type, res.val, inst? "Instant": "Main");
 
     if (res != null && res.type == 'card') {
       if (!inst || (inst && ist[res.val])) {

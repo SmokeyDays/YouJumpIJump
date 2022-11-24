@@ -37,16 +37,16 @@ export class Room {
     await this.renew();
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<ResponseParam>((resolve, reject) => {
-      let visited = true;
-      const resolveWithPara = (para: ResponseParam) => {
-        visited = false;
+      let visited = false;
+      targetUser.socket.once("resolve-signal", (para: ResponseParam) => {
         if(!visited) {
+          visited = true;
           resolve(para);
         }
-      };
-      targetUser.socket.once("resolve-signal", resolveWithPara)
+      })
       setTimeout(()=>{
         if(!visited) {
+          visited = true;
           logger.error("Request player action Failed: %s action time out.", val.player);
           resolve(noneRes);
         }
