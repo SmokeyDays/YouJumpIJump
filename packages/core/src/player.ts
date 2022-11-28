@@ -244,10 +244,7 @@ export class Player {
           for (let i = 1; i <= 6; i++) {
             for (let j = 1; j <= 6; j++) {
               let newpos: Position = [pos[0], legalpos[i][1] + dx[i] + dx[j], legalpos[i][2] + dy[i] + dy[j]];
-              // logger.verbose("newpos: %s", newpos);
               if (gamest.slotAt(newpos).isBursted == false && !legalpos.includes(newpos)) {
-
-                // logger.verbose("ava: %s", newpos);
                 legalpos.push(newpos);
               }
             }

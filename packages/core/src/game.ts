@@ -245,7 +245,7 @@ export class GameState {
 
     this.global.stage = GameStage.MAIN_ACTION;
     await this.action(id, false);
-    //burst and drop
+    //burst and drop*
     this.player[id].passby.push(this.player[id].position);
 
     for (let i = 0; i < this.player.length; i++) {
