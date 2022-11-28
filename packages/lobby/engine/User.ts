@@ -14,6 +14,10 @@ export class User {
   joinRoom(name: string) {
       const roomManager = RoomManager.getInstance();
       const socket = this.socket;
+      if(name.length <= 2) {
+        socket.emit("alert-message", "加入房间失败：房间名长度至少为 3 ！");
+        return;
+      }
       if(this.userName == null) {
         socket.emit("alert-message", "请先登录");
         logger.warn('User with socket id %s tried to create room with name %s without login.', socket.id, name);
@@ -70,6 +74,10 @@ export class User {
     // Register user login event:
     // Now temporarily login without check.
     socket.on("user-login", (name: string) => {
+      if(name.length <= 2) {
+        socket.emit("alert-message", "登录失败：用户名长度至少为 3 ！");
+        return;
+      }
       logger.info('User with socket id %s has logined with name %s', socket.id, name);
       this.userName = name;
       socket.emit("user-login-successful", name);

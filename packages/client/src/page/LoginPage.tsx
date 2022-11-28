@@ -20,6 +20,8 @@ interface FormProps {
   buttonName: string,
   formVariables: Record<string,string>
   formClassName: string,
+  placeholder?: string,
+  defaultValue?: boolean,
   formButtonOnClick: (info: Record<string,string>) => void
 }
 
@@ -58,7 +60,8 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
         className= 'basic-info-input'
         name = {i}
         type = "text"
-        value = {val[i]}
+        value = {this.props.defaultValue !== false? val[i]: undefined}
+        placeholder = {this.props.placeholder !== undefined? this.props.placeholder: undefined}
         onChange={this.handleInputChange}/>);
     }
     return inputs;
@@ -137,8 +140,10 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
           }/>
           <img src={logo} className="login-logo" alt="logo"></img>
           {!this.props.userLoggedIn && <BasicInfoForm
-            formName='用户登录'
-            buttonName='登录'
+            formName='选择用户名'
+            buttonName='确认'
+            placeholder='给自己取个名吧！'
+            defaultValue = {false}
             formVariables={{
               userName: this.props.userName,
             }}

@@ -31,14 +31,14 @@ class TopTitle extends React.Component<TopTitleProps> {
         let fontSize: number = Math.min(20,window.innerWidth/25)
 
         if (this.props.isInRecast) {
-            tip = '   当前是你的重铸回合, 请重铸卡牌或者跳过   '
+            tip = '   当前是你的重铸阶段, 选择任意张卡牌弃置它们然后摸牌至智识数, 或者跳过   '
         }
         else {
             if (this.props.stage) {
-                tip = '   当前是你的主要回合, 请进行主要行动或者跳过   '
+                tip = '   当前是你的主要阶段, 选择任意卡牌并点击「主要行动」按钮打出, 或者跳过   '
             }
             else {
-                tip = '   当前是你的迅捷回合, 请进行迅捷行动或者跳过   '
+                tip = '   当前是你的迅捷回合, 选择迅捷卡牌并点击「迅捷行动」按钮打出, 或者跳过   '
             }
         }
         /*
