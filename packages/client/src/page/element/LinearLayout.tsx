@@ -297,6 +297,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                         opacity={this.props.opacity}
                         stroke={this.props.stroke}
                         strokeWidth={this.props.strokeWidth}
+                        lineJoin={'round'}
                         {...shadowProps}
                     ></KImage>
 
@@ -307,6 +308,7 @@ class LinearLayout extends React.Component<LinearLayoutProps, {}> {
                         fill={this.props.background}
                         opacity={this.props.opacity}
                         stroke={this.props.stroke}
+                        lineJoin={'round'}
                         strokeWidth={this.props.strokeWidth}
                         {...shadowProps}
                     ></Rect>

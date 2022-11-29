@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Line, Group, Circle } from 'react-konva';
+import { Text, Line, Group, Circle, Image as KImage } from 'react-konva';
 import Center from './Center';
 import { Player } from '../../regulates/Interfaces';
 import PlayerList from './PlayerList';
@@ -7,6 +7,7 @@ import { socket } from '../../communication/connection';
 import GamePage, { CurrentBoard } from '../GamePage';
 import CardShowcase from './CardShowcase';
 import KButton from './KButton';
+import BrokenImg from '../../assets/images/broken.png'
 
 const dx = Math.cos(Math.PI / 3);
 const dy = Math.sin(Math.PI / 3);
@@ -19,6 +20,7 @@ type SlotProps = typeof Slot.defaultProps & {
   x?: number;
   y?: number;
   index?: number;
+  willBroken?: boolean;
   onClick?: () => void;
 }
 export class Slot extends React.Component<SlotProps> {
@@ -31,9 +33,11 @@ export class Slot extends React.Component<SlotProps> {
     x: 0,
     y: 0,
     index: 0,
+    willBroken: false,
     onClick: () => { }
   }
 
+  brokenImg: HTMLImageElement;
   points: Array<number> = new Array<number>;
   constructor(props: any) {
     super(props)
@@ -41,6 +45,9 @@ export class Slot extends React.Component<SlotProps> {
     for (let i = Math.PI / 6; i < 2 * Math.PI; i += Math.PI / 3) {
       this.points.push(Math.cos(i) * props.radius, Math.sin(i) * props.radius);
     }
+
+    this.brokenImg = new Image();
+    this.brokenImg.src = BrokenImg;
   }
 
   render(): React.ReactNode {
@@ -70,6 +77,22 @@ export class Slot extends React.Component<SlotProps> {
           y={this.props.y}>
 
         </Center>
+        {this.props.willBroken &&
+          <Center
+            Type={KImage}
+            typeProps={{
+
+              height: 2 * this.props.radius,
+              width: 2 * this.props.radius,
+              image: this.brokenImg,
+            }}
+            x={this.props.x}
+            y={this.props.y}
+          >
+
+          </Center>
+        }
+
       </Group>
     );
   }
@@ -130,8 +153,9 @@ export class Board extends React.Component<BoardProps, BoardState> {
             key={index}
             color={KButton.changeColorByNum(info.slotTemplate.props.color, value.dis * 40, value.dis * 40, value.dis * 40)}
             stroke={this.props.freSlotList.indexOf(`${value.ix},${value.iy}`) != -1 ? 'orange' : this.props.accessSlotList.indexOf(`${value.ix},${value.iy}`) == -1 ? info.slotTemplate.props.stroke : info.accessColor}
+            willBroken={this.props.boardInfo.willBrokenSlotList.indexOf(`${value.ix},${value.iy}`) != -1}
             onClick={
-              ()=>this.onSlotClick(value)
+              () => this.onSlotClick(value)
             }
           >
           </Slot>
@@ -233,6 +257,10 @@ export class BoardInfo {
 
   }
 
+  addWillBrokenSlot(list: string[]) {
+    this.willBrokenSlotList=this.willBrokenSlotList.concat(list)
+  }
+
   //
   setSlotStatus(ix: number, iy: number, isBroken: boolean) {
     let index = this.slotMap[`${ix},${iy}`]
@@ -276,6 +304,7 @@ export class BoardInfo {
   brokeColor: string
   accessColor: string
   slotTemplate: React.ReactElement
+  willBrokenSlotList: string[] = []
 
   slotInfos: {
     x: number,

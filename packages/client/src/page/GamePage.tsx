@@ -29,6 +29,7 @@ interface GamePageState {
   currentBoard: number,
   currentRound: number,
   accessSlotList: string[][],
+  willBrokenSlotList: string[][],
   freSlotList: string[][],
   gameState: GameState,
   isInRecast: boolean,
@@ -55,6 +56,7 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       currentBoard: 2,
       currentRound: 1,
       accessSlotList: [[], [], []],
+      willBrokenSlotList: [[], [], []],
       freSlotList: [[], [], []],
       gameState: this.props.gameState,
       isInRecast: false,
@@ -154,6 +156,11 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
 
     let boards = state.board
     for (let i in this.state.gameState.player) {
+      if(this.state.gameState.player[i].passby && this.state.gameState.player[i].passby.length > 0)
+      {
+        this.setWillBrokenSlotList(this.state.gameState.player[i].passby)
+      }
+
       if (i == LocalPlayer.toString()) {
 
         this.publishLocalPlayerChange(this.state.gameState.player[i], state.player[i])
@@ -230,6 +237,18 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
       tmp[i[0]].push(`${i[1]},${i[2]}`)
     }
     this.setState({ accessSlotList: tmp })
+  }
+
+  setWillBrokenSlotList(slotList: [number, number, number][]) {
+    let tmp: string[][] = [[], [], []]
+    for (let i of slotList) {
+      tmp[i[0]].push(`${i[1]},${i[2]}`)
+    }
+    for (let i in tmp) {
+      if(tmp[i].length > 0) this.state.boards[i].addWillBrokenSlot(tmp[i])
+    }
+    console.log('willbroken', tmp)
+    this.setState({})
   }
 
   setFreSlotList(slotList: [number, number, number][]) {

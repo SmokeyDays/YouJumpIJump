@@ -15,6 +15,7 @@ interface CardShowcaseProps {
     parentRef?: any
     stage: number
     turn: number
+    canSkip: boolean
     clearState: () => void
     useCard: () => void
 }
@@ -112,8 +113,8 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
         let mFont = Math.max(18, this.props.width / 12)
         let sFont = Math.max(16, this.props.width / 18)
         let bHeight = Math.max(20, this.props.width / 6)
-        if(LocalPlayer != this.props.turn) {
-            return [<Text text={"当前不是你的回合"} width={this.props.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
+        if(LocalPlayer != this.props.turn || !this.props.canSkip) {
+            return [<Text text={"你现在不能出牌"} width={this.props.width - mFont} fontSize={mFont} fill='red'></Text>, this.renderCancalButton()]
         }
 
         if (this.props.stage == 0) {

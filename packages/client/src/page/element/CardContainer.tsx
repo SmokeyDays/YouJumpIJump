@@ -97,10 +97,10 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                     <KButton
                         x={-this.props.cardWidth * 0.35}
                         y={-this.props.cardWidth * 1.8}
-                        height={this.props.cardWidth * 0.3}
-                        width={this.props.cardWidth * 0.7}
+                        height={this.props.cardWidth * 0.6}
+                        width={this.props.cardWidth * 0.9}
                         background='#333355'
-                        opacity={0.9}
+                        opacity={0.6}
                         text='确定'
                         fontColor='white'
                         fontSize={18}
@@ -116,7 +116,7 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
 
     renderTip(index: number): React.ReactNode {
         let mid = (this.props.cardList.length - 1) / 2;
-        let theta = (90 - 30 * (index - mid)) / 180 * Math.PI
+        let theta = (90 + 30 * (index - mid)) / 180 * Math.PI
         let card = CardDescription[this.props.cardList[index]];
         if(card == undefined) return null;
         return (

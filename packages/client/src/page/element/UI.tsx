@@ -107,7 +107,7 @@ class UI extends React.Component<UIProps, UIState> {
             }
             else {
                 if (this.state.cardId == null) {
-                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                    if (this.props.canSkip &&( this.props.stage == 1 || isInstant(this.state.cardList[index]))) {
                         console.log('get-available-pos', this.state.cardList[index])
                         socket.emit('get-available-pos', this.state.cardList[index])
                     }
@@ -116,7 +116,7 @@ class UI extends React.Component<UIProps, UIState> {
                 }
                 else {
                     this.clearState();
-                    if (this.props.stage == 1 || isInstant(this.state.cardList[index])) {
+                    if (this.props.canSkip &&( this.props.stage == 1 || isInstant(this.state.cardList[index]))) {
                         console.log('get-available-pos', this.state.cardList[index])
                         socket.emit('get-available-pos', this.state.cardList[index])
                     }
@@ -195,6 +195,7 @@ class UI extends React.Component<UIProps, UIState> {
                         width={showcaseWidth}
                         parentRef={'1'}
                         stage={this.props.stage}
+                        canSkip={this.props.canSkip}
                     ></CardShowcase>
                     <Text></Text>
                 </LinearLayout>
