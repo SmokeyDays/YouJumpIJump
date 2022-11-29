@@ -34,6 +34,9 @@ export class Room {
       logger.error("Request player action Failed: player %s not found.", val.player);
       return noneRes;
     }
+    if(val.para.type === "action" && val.para.pos.length === 0) {
+      return noneRes;
+    }
     await this.renew();
     await targetUser.emit("request-signal", val.para);
     const res = await new Promise<ResponseParam>((resolve, reject) => {

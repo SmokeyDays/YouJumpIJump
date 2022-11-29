@@ -630,7 +630,9 @@ export class Player {
         break;
       }
       case cardConfig.cardNameList[16]: {
-        for (let i = 0; i < this.mastery; i++) {
+        // const draw0Num = this.mastery;
+        const draw0Num = 1;
+        for (let i = 0; i < draw0Num; i++) {
           this.hand.push('0');
         }
         let up: Position = [pos[0] + 1, pos[1], pos[2]];
