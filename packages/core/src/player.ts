@@ -99,18 +99,19 @@ export class Player {
   drop(gamest: GameState) {
     if (this.magician) return;
     while (gamest.slotAt(this.position).isBursted) {
+      logger.verbose("[Game %s] Player %s dropped at %s with game slot(burst:%s)", gamest.UID, this.name, this.position.toString(), gamest.slotAt(this.position).isBursted);
       if (this.position[0] === 0) { // 掉下最后一层
         this.alive = false;
         return;
       } else { // 掉进下一层
-        this.position[0]--;
+        this.position = [this.position[0] - 1, this.position[1], this.position[2]];
       }
     }
   }
 
   // 回合开始初始化
   turnBegin() {
-    this.laspos = this.position;
+    this.laspos = [...this.position];
     this.magician = false;
   }
 
@@ -240,14 +241,10 @@ export class Player {
           }
         }
         if (!instant) {
-          const laslen: number = legalpos.length;
-          for (let i = 0; i < laslen; i++) {
+          for (let i = 1; i <= 6; i++) {
             for (let j = 1; j <= 6; j++) {
-              let newpos: Position = [pos[0], legalpos[i][1] + dx[j], legalpos[i][2] + dy[j]];
-              // logger.verbose("newpos: %s", newpos);
+              let newpos: Position = [pos[0], legalpos[i][1] + dx[i] + dx[j], legalpos[i][2] + dy[i] + dy[j]];
               if (gamest.slotAt(newpos).isBursted == false && !legalpos.includes(newpos)) {
-
-                // logger.verbose("ava: %s", newpos);
                 legalpos.push(newpos);
               }
             }
@@ -300,7 +297,7 @@ export class Player {
             cur[2] += dy[i];
           }
         }
-        legalpos.push(pos);
+        legalpos.push([...pos]);
         if (pos[0] <= 2) {
           legalpos.push([pos[0] + 1, pos[1], pos[2]]);
         }
@@ -325,12 +322,10 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == 2) {
-          logger.verbose("pos: %s", pos);
           let newpos: Position = [pos[0], pos[1] + 1, pos[2] + 1];
-          logger.verbose("newpos: %s", newpos);
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
@@ -338,7 +333,7 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == 3) {
           let newpos: Position = [pos[0], pos[1], pos[2] + 1];
@@ -349,7 +344,7 @@ export class Player {
           if (gamest.slotAt(newpos).isBursted == false) {
             legalpos.push(newpos);
           }
-          legalpos.push(pos);
+          legalpos.push([...pos]);
         }
         if (spy == -1) {
           let newpos: Position = [pos[0], pos[1], pos[2]];
@@ -448,7 +443,7 @@ export class Player {
 
   playCard(gamest: GameState, cardid: string, para: ResponseParam) {
     const pos = this.position;
-    this.passby.push(pos);
+    this.passby.push([...pos]);
     switch (cardid) {
       case cardConfig.cardNameList[0]: {
         if (para.type == 'move') {
@@ -506,7 +501,6 @@ export class Player {
       }
       case cardConfig.cardNameList[5]: {
         if(para.type == 'move') {
-          this.toDestroy.push(pos);
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
@@ -563,7 +557,6 @@ export class Player {
           }
           this.position = para.val;
           const dx = [0, 1, -1, 0, 0, 1, -1], dy = [0, 0, 0, 1, -1, 1, -1];
-          this.toDestroy.push(pos);
           for(let i = 0; i < dx.length; i++) {
             let cur:Position = [para.val[0], para.val[1] + dx[i], para.val[2] + dy[i]];
             this.toDestroy.push([cur[0], cur[1], cur[2]]);
@@ -659,7 +652,7 @@ export class Player {
           }
         }
         this.position = fpos;
-        this.passby.push(fpos);
+        this.passby.push([...fpos]);
         break;
       }
     }
@@ -685,7 +678,8 @@ export class Player {
     for(const pos of this.toDestroy) {
       gamest.slotAt(pos).isBursted = true;
     }
-    this.passby = this.toDestroy = [];
+    this.passby = [];
+    this.toDestroy = [];
   }
 }
 

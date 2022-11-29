@@ -99,8 +99,8 @@ class CardContainer extends React.Component<CardContainerProps, CardContainerSta
                         y={-this.props.cardWidth * 1.8}
                         height={this.props.cardWidth * 0.3}
                         width={this.props.cardWidth * 0.7}
-                        background='#555577'
-                        opacity={0.8}
+                        background='#333355'
+                        opacity={0.9}
                         text='确定'
                         fontColor='white'
                         fontSize={18}

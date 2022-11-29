@@ -131,7 +131,7 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
                                 background='#ffc20e'
                                 width={this.props.width / 2 - sFont}
                                 height={bHeight}
-                                text="迅捷"
+                                text="迅捷行动"
                                 fontSize={mFont}
                                 fontColor='white'
                                 onClick={this.props.useCard}
@@ -158,7 +158,7 @@ class CardShowcase extends React.Component<CardShowcaseProps> {
                         background='#1d953f'
                         width={this.props.width / 2 - sFont}
                         height={bHeight}
-                        text="主要"
+                        text="主要行动"
                         fontSize={mFont}
                         fontColor='white'
                         onClick={this.props.useCard}

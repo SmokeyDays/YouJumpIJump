@@ -65,7 +65,7 @@ class App extends React.PureComponent<{},AppState> {
     super(props);
     this.state = {
       pageName: "LoginPage",
-      userName: "请登录",
+      userName: "",
       userLoggedIn: false,
       gameState: {
         player: [],
