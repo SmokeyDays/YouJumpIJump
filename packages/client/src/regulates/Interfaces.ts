@@ -43,6 +43,7 @@ export interface Player {
   prayer: number,
   magician: false,
   passby: [number, number, number][],
+  toDestroy: [number, number, number][],
 }
 
 // 服务端发送给客户端的格子集合
