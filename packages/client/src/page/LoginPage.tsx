@@ -138,7 +138,7 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
             <div className="info-popup">
               Credits:<br/>
               冯业齐：策划，架构，大厅编写<br/>
-              李诗阳：前端编写<br/>
+              李诗阳：前端显示和渲染编写<br/>
               陈开宇：游戏内核编写<br/>
               黄浚源：PM，材料撰写，联合调试<br/>
               特别鸣谢： hotwords 对 UI 作出的贡献<br/>
