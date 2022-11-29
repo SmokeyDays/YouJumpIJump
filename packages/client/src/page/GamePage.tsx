@@ -155,10 +155,10 @@ class GamePage extends React.Component<GamePageProps, GamePageState> {
   loadGameState(state: GameState) {
 
     let boards = state.board
-    for (let i in this.state.gameState.player) {
+    for (let i in state.player) {
       let willBroken: [number, number, number][] = []
-      willBroken = willBroken.concat(this.state.gameState.player[i].passby)
-      willBroken = willBroken.concat(this.state.gameState.player[i].toDestroy)
+      willBroken = willBroken.concat(state.player[i].passby)
+      willBroken = willBroken.concat(state.player[i].toDestroy)
       if(willBroken.length > 0)
       {
         this.setWillBrokenSlotList(willBroken)
