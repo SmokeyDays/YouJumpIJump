@@ -8,6 +8,7 @@ import { getUUID } from '../regulates/utils';
 import { PopupBtn } from './element/Popup';
 import helpSvg from "../assets/icons/help.svg";
 import infoSvg from "../assets/icons/info.svg";
+import githubSvg from "../assets/icons/github.svg";
 
 /* 主页面对应的 React 控件 */
 
@@ -115,8 +116,8 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
     return (
       <div className="login-scene">
         <header className="login-header">
-          <PopupBtn btnComponent={
-            <img src = {helpSvg} className="help-btn" alt = "help"></img>
+          {/* <PopupBtn btnComponent={
+            
           } windowComponent={
             <div className="help-popup">
               《你跳我也跳》是由你跳我也跳制作组自主研发的一款全新 PVP 策略游戏。游戏发生在一个被称作「多层棋盘」的幻想世界，在这里，有天赋的人将被放入棋盘，不断跳跃求生。你将扮演一位名为「玩家」的神秘角色，在多层棋盘上邂逅性格各异、能力独特的卡牌们，和他们一起击败各路对手，发现更深层的棋盘——同时，逐步发掘「最终胜利」的真相。<br/><br/>
@@ -125,7 +126,12 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
               你的弱点：踩过的格子都会裂开<br/>
               提示：动起来！
             </div>
-          }/>
+          }/> */}
+          <img src = {helpSvg} className="help-btn" alt = "help"
+            onClick={() => {
+              window.open("https://docs.qq.com/doc/DRWZvaEVlUkRUckhG");
+            }}
+          ></img>
           <PopupBtn btnComponent={
             <img src = {infoSvg} className="info-btn" alt = "info"></img>
           } windowComponent={
@@ -138,6 +144,11 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
               特别鸣谢： hotwords 对 UI 作出的贡献<br/>
             </div>
           }/>
+          <img src = {githubSvg} className="github-btn" alt = "github"
+            onClick={() => {
+              window.open("https://github.com/SmokeyDays/YouJumpIJump");
+            }}
+          ></img>
           <img src={logo} className="login-logo" alt="logo"></img>
           {!this.props.userLoggedIn && <BasicInfoForm
             formName='选择用户名'

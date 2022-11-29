@@ -6,6 +6,12 @@ import { serverURL } from "../regulates/settings";
 export const socket = io(serverURL, {
   transports: ['websocket', 'polling', 'flashsocket']
 });
+socket.io.on("error", (error) => {
+  PubSub.publish('alert-pubsub-message',{
+    str: "建立与服务端的连接失败",
+    dur: 1,
+  });
+});;
 
 export class Message{
   static setUserID(name: string) {

@@ -67,7 +67,9 @@
   background-color: rgba(127, 144, 160, 0.4);
 }
 
-.help-btn, .info-btn {
+.help-btn, .info-btn, .github-btn {
+  
+  cursor: pointer;
   position: absolute;
   top: 10px;
   width: 60px;
@@ -80,6 +82,10 @@
 
 .info-btn {
   left: 70px;
+}
+
+.github-btn {
+  right: 10px;
 }
 
 .help-popup, .info-popup {
