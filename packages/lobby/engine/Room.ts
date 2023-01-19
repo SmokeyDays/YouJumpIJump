@@ -53,7 +53,7 @@ export class Room {
           logger.error("Request player action Failed: %s action time out.", val.player);
           resolve(noneRes);
         }
-      },60*1000)
+      },120*1000)
     });
     return res;
   }
